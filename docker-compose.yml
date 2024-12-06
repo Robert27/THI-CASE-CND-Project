@@ -1,0 +1,21 @@
+services:
+  database:
+    image: postgres:17.2
+    container_name: db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: SecReT-PasSwOrD
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # object-management:
+  #   build: ./object-management
+  #   environment:
+  #     DATABASE_URL: postgres://postgres:password@database:5432/service1
+  #   depends_on:
+  #     - database
+
+volumes:
+  db_data:
