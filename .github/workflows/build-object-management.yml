@@ -66,5 +66,5 @@ jobs:
           file: object-management/src/main/docker/Dockerfile.jvm
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           tags: |
-            ghcr.io/Robert27/THI-CASE-CND-Project:object-management
+            ghcr.io/robert27/thi-case-cnd-project:object-management
             ${{ steps.meta.outputs.tags }}
