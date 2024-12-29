@@ -16,17 +16,19 @@ jobs:
     runs-on: ubuntu-latest
 
     defaults:
-        run:
-          working-directory: object-management/
+      run:
+        working-directory: object-management/
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
+
       - name: mvn package
         run: mvn -B -fae package
 
@@ -56,8 +58,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: src/main/docker/Dockerfile.jvm
+          context: object-management/
+          file: object-management/src/main/docker/Dockerfile.jvm
           # don't push dependabot branches
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           tags: ${{ steps.meta.outputs.tags }} # tags from the docker/metadata-action
