@@ -1,8 +1,8 @@
-name: build
+name: Build
 
 on:
   push:
-    branches: [ main ]
+    branches:  main 
     paths:
       - 'object-management/**'
 
@@ -13,6 +13,11 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    defaults:
+        run:
+          working-directory: object-management/
+
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 21
@@ -51,7 +56,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: object-management/src/main/docker/Dockerfile.jvm
+          file: src/main/docker/Dockerfile.jvm
           # don't push dependabot branches
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           tags: ${{ steps.meta.outputs.tags }} # tags from the docker/metadata-action
