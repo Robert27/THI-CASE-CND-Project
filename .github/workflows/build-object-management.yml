@@ -9,7 +9,7 @@ on:
 
 env:
   VERSION_TAG_PREFIX: 'object-management-'
-  IMAGE_NAME: 'thi-case-object-management'
+  IMAGE_NAME: ${{ github.repository }}/object-management
   REGISTRY: ghcr.io
 
 jobs:
