@@ -14,7 +14,11 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
+      packages: write
     defaults:
       run:
         working-directory: object-management/
