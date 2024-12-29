@@ -1,10 +1,11 @@
-name: Build
+name: Build Object Management
 
 on:
   push:
-    branches:  main 
+    branches: ['main']
     paths:
       - 'object-management/**'
+      - '.github/workflows/build-object-management.yml'
 
 env:
   BASE_IMAGE_NAME: ghcr.io/Robert27/THI-CASE-CND-Project
