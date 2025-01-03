@@ -28,4 +28,20 @@ public class JpaStorageObjectRepository implements StorageObjectPort {
         return StorageObjectMapper.toDomainList(storageObjectJpaEntities);
     }
 
+    @Override
+    public StorageObject update(StorageObject storageObject) {
+        StorageObjectJpaEntity storageObjectJpaEntity = StorageObjectMapper.toJpaEntity(storageObject);
+        StorageObjectJpaEntity updatedStorageObjectJpaEntity = panacheRepository.findById(String.valueOf(storageObject.getId()));
+        if (updatedStorageObjectJpaEntity == null) {
+            throw new IllegalArgumentException("Storage object not found");
+        }
+        updatedStorageObjectJpaEntity.setName(storageObjectJpaEntity.getName());
+        updatedStorageObjectJpaEntity.setDescription(storageObjectJpaEntity.getDescription());
+        updatedStorageObjectJpaEntity.setCategoryId(storageObjectJpaEntity.getCategoryId());
+        updatedStorageObjectJpaEntity.setReorderUrl(storageObjectJpaEntity.getReorderUrl());
+        // TODO: Update the updated timestamp
+        panacheRepository.persist(updatedStorageObjectJpaEntity);
+        return StorageObjectMapper.toDomainEntity(storageObjectJpaEntity);
+    }
+
 }

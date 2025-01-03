@@ -33,12 +33,16 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         if (reorderUrl == null || reorderUrl.isEmpty()) {
             throw new IllegalArgumentException("Reorder URL must be provided");
         }
-        System.out.println(categoryId);
-        System.out.println(categoryListUseCase.existsById(categoryId));
         if (!categoryListUseCase.existsById(categoryId)) {
             throw new IllegalArgumentException("Category ID does not exist");
         }
+        // TODO: infer userId from jwt
+        return storageObjectPort.save(new StorageObject(null, 1213, name, description, categoryId, reorderUrl));
+    }
 
-        return storageObjectPort.save(new StorageObject(null, name, description, categoryId, reorderUrl));
+    @Override
+    public StorageObject update(Integer id, String name, String description, Integer categoryId, String reorderUrl) {
+        // TODO: infer userId from jwt
+        return storageObjectPort.update(new StorageObject(id, 1213, name, description, categoryId, reorderUrl));
     }
 }

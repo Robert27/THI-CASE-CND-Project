@@ -14,11 +14,11 @@ import static dev.eggl.adapter.rest.common.ControllerCommons.serverErrorExceptio
 
 @Path("/object")
 @Produces(MediaType.APPLICATION_JSON)
-public class ListStorageObjectController {
+public class StorageObjectController {
 
     private final ListStorageObjectUseCase listStorageObjectUseCase;
 
-    public ListStorageObjectController(ListStorageObjectUseCase listStorageObjectUseCase) {
+    public StorageObjectController(ListStorageObjectUseCase listStorageObjectUseCase) {
         this.listStorageObjectUseCase = listStorageObjectUseCase;
     }
 
@@ -56,6 +56,35 @@ public class ListStorageObjectController {
             System.out.println(e.getMessage());
             throw serverErrorException(
                     Response.Status.INTERNAL_SERVER_ERROR, "Error while creating storage object");
+
+        }
+    }
+
+    @PUT
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Response update(@PathParam("id") Integer id, CreateStorageObjectModel createStorageObjectModel) {
+        System.out.println("id: " + id);
+        try {
+            StorageObject updated = listStorageObjectUseCase.update(
+                    id,
+                    createStorageObjectModel.name(),
+                    createStorageObjectModel.description(),
+                    createStorageObjectModel.categoryId(),
+                    createStorageObjectModel.reorderUrl()
+            );
+            System.out.println(updated);
+            return Response.status(Response.Status.OK)
+                    .entity(ListStorageObjectModel.fromDomainModel(updated))
+                    .build();
+        } catch (IllegalArgumentException e) {
+            throw clientErrorException(
+                    Response.Status.BAD_REQUEST, e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw serverErrorException(
+                    Response.Status.INTERNAL_SERVER_ERROR, "Error while updating storage object");
 
         }
     }

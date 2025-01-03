@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StorageObject {
     private Integer id;
+    private Integer userId;
     private String name;
     private String description;
     private Integer categoryId;
