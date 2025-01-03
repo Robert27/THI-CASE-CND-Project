@@ -9,6 +9,7 @@ import java.util.List;
 @ApplicationScoped
 public class JpaStorageObjectRepository implements StorageObjectPort {
     private final JpaStorageObjectPanacheRepository panacheRepository;
+    private static final String CONSTANT_MESSAGE = "Mapped storage objects: ";
 
 
     public JpaStorageObjectRepository(JpaStorageObjectPanacheRepository panacheRepository) {
@@ -24,7 +25,9 @@ public class JpaStorageObjectRepository implements StorageObjectPort {
     @Override
     public List<StorageObject> findAll() {
         List<StorageObjectJpaEntity> storageObjectJpaEntities = panacheRepository.findAll().list();
-        return StorageObjectMapper.toDomainList(storageObjectJpaEntities);
+        List<StorageObject> storageObjects = StorageObjectMapper.toDomainList(storageObjectJpaEntities);
+        System.out.println(CONSTANT_MESSAGE + storageObjects);
+        return storageObjects;
     }
 
 }

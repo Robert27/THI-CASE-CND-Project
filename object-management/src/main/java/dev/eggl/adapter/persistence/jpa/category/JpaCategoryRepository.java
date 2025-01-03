@@ -13,7 +13,6 @@ public class JpaCategoryRepository implements CategoryPort {
 
     public JpaCategoryRepository(JpaCategoryPanacheRepository panacheRepository) {
         this.panacheRepository = panacheRepository;
-
     }
 
     @Override
@@ -24,6 +23,7 @@ public class JpaCategoryRepository implements CategoryPort {
     @Override
     public List<Category> findAll() {
        List<CategoryJpaEntity> entities = panacheRepository.findAll().list();
+       System.out.println(entities);
          return CategoryMapper.toDomainList(entities);
     }
 

@@ -23,4 +23,5 @@ public class StorageObjectJpaEntity {
         @ManyToOne
         @JoinColumn(name = "category_id")
         private CategoryJpaEntity category;
+
 }
