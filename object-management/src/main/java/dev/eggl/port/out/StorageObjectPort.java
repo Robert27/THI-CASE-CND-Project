@@ -6,6 +6,9 @@ import java.util.List;
 
 public interface StorageObjectPort {
     StorageObject save(StorageObject storageObject);
+
     List<StorageObject> findAll();
+
+    StorageObject update(StorageObject storageObject);
 
 }

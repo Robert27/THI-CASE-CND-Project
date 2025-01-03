@@ -17,11 +17,12 @@ public class JpaCategoryRepository implements CategoryPort {
 
     @Override
     public List<Category> findAll() {
-       List<CategoryJpaEntity> entities = panacheRepository.findAll().list();
-         return CategoryMapper.toDomainList(entities);
+        List<CategoryJpaEntity> entities = panacheRepository.findAll().list();
+        return CategoryMapper.toDomainList(entities);
     }
 
-@Override
-public Boolean existsById(Integer id) {
-    return panacheRepository.count("id", id) > 0;
-}}
+    @Override
+    public Boolean existsById(Integer id) {
+        return panacheRepository.count("id", id) > 0;
+    }
+}

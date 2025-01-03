@@ -6,5 +6,8 @@ import java.util.List;
 
 public interface ListStorageObjectUseCase {
     List<StorageObject> findAll();
+
     StorageObject create(String name, String description, Integer categoryId, String reorderUrl);
+
+    StorageObject update(Integer id, String name, String description, Integer categoryId, String reorderUrl);
 }
