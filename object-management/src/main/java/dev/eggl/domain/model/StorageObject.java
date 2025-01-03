@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Object {
-    private Long id;
+public class StorageObject {
+    private Integer id;
     private String name;
     private String description;
-    private Category category; // New field
+    private Category category;
 }

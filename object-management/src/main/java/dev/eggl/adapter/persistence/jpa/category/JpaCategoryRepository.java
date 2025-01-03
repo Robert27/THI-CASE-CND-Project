@@ -1,4 +1,4 @@
-package dev.eggl.adapter.persistence.jpa;
+package dev.eggl.adapter.persistence.jpa.category;
 
 import dev.eggl.domain.model.Category;
 import dev.eggl.port.out.CategoryPort;
