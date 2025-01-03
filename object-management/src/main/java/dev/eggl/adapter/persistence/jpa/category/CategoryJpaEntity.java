@@ -1,4 +1,4 @@
-package dev.eggl.adapter.persistence.jpa;
+package dev.eggl.adapter.persistence.jpa.category;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

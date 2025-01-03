@@ -1,15 +1,15 @@
 package dev.eggl.application.service.category;
 
 import dev.eggl.domain.model.Category;
-import dev.eggl.port.in.CategoryListPort;
+import dev.eggl.port.in.category.CategoryListUseCase;
 import dev.eggl.port.out.CategoryPort;
 
 import java.util.List;
 
-public class CategoryListService implements CategoryListPort {
+public class ListCategoryService implements CategoryListUseCase {
     private final CategoryPort categoryPort;
 
-    public CategoryListService(CategoryPort categoryPort) {
+    public ListCategoryService(CategoryPort categoryPort) {
         this.categoryPort = categoryPort;
     }
 
