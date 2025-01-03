@@ -1,7 +1,7 @@
 package dev.eggl;
 
 import dev.eggl.application.service.category.ListCategoryService;
-import dev.eggl.application.service.category.ListStorageObjectService;
+import dev.eggl.application.service.object.StorageObjectService;
 import dev.eggl.port.in.category.CategoryListUseCase;
 import dev.eggl.port.in.storageObject.ListStorageObjectUseCase;
 import dev.eggl.port.out.CategoryPort;
@@ -27,6 +27,6 @@ public class AppConfig {
     @Produces
     @ApplicationScoped
     ListStorageObjectUseCase listStorageObjectUseCase() {
-        return new ListStorageObjectService(storageObjectPort.get());
+        return new StorageObjectService(storageObjectPort.get(), findCategoriesUseCase());
     }
 }

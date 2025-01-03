@@ -5,5 +5,5 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class JpaCategoryPanacheRepository
-        implements PanacheRepositoryBase<CategoryJpaEntity, String> {}
+        implements PanacheRepositoryBase<CategoryJpaEntity, Integer> {}
 

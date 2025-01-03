@@ -16,19 +16,12 @@ public class JpaCategoryRepository implements CategoryPort {
     }
 
     @Override
-    public void save(Category category) {
-        panacheRepository.getEntityManager().merge(CategoryMapper.toJpaEntity(category));
-    }
-
-    @Override
     public List<Category> findAll() {
        List<CategoryJpaEntity> entities = panacheRepository.findAll().list();
-       System.out.println(entities);
          return CategoryMapper.toDomainList(entities);
     }
 
-    @Override
-    public void delete(Long id) {
-        panacheRepository.deleteById(id.toString());
-    }
-}
+@Override
+public Boolean existsById(Integer id) {
+    return panacheRepository.count("id", id) > 0;
+}}

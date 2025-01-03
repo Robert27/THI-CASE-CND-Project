@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class StorageObjectJpaEntity {
         @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "id")
         private Integer id;
 
@@ -20,8 +21,9 @@ public class StorageObjectJpaEntity {
         @Column(name = "description")
         private String description;
 
-        @ManyToOne
-        @JoinColumn(name = "category_id")
-        private CategoryJpaEntity category;
+        @Column(name = "category_id")
+        private Integer categoryId;
 
+        @Column(name = "reorder_url")
+        private String reorderUrl;
 }

@@ -17,4 +17,9 @@ public class ListCategoryService implements CategoryListUseCase {
     public List<Category> findAll() {
         return categoryPort.findAll();
     }
+
+    @Override
+    public Boolean existsById(Integer id) {
+        return categoryPort.existsById(id);
+    }
 }

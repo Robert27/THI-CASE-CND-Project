@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface CategoryListUseCase {
     List<Category> findAll();
-
+    Boolean existsById(Integer id);
 }
