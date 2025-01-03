@@ -16,11 +16,13 @@ final class StorageObjectMapper {
         jpaEntity.setId(entity.getId());
         jpaEntity.setName(entity.getName());
         jpaEntity.setDescription(entity.getDescription());
+        jpaEntity.setCategoryId(entity.getCategoryId());
+        jpaEntity.setReorderUrl(entity.getReorderUrl());
         return jpaEntity;
     }
 
     static StorageObject toDomainEntity(StorageObjectJpaEntity jpaEntity) {
-        return new StorageObject(jpaEntity.getId(), jpaEntity.getName(), jpaEntity.getDescription(), new Category(jpaEntity.getCategory().getId(), jpaEntity.getCategory().getName(), jpaEntity.getCategory().getDescription()));
+        return new StorageObject(jpaEntity.getId(), jpaEntity.getName(), jpaEntity.getDescription(), jpaEntity.getCategoryId(), jpaEntity.getReorderUrl());
     }
 
     static List<StorageObject> toDomainList(List<StorageObjectJpaEntity> jpaEntities) {

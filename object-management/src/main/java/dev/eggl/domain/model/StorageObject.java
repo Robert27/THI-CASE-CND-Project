@@ -11,5 +11,6 @@ public class StorageObject {
     private Integer id;
     private String name;
     private String description;
-    private Category category;
+    private Integer categoryId;
+    private String reorderUrl;
 }

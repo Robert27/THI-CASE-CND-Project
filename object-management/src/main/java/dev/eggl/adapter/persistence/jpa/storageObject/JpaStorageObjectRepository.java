@@ -9,8 +9,6 @@ import java.util.List;
 @ApplicationScoped
 public class JpaStorageObjectRepository implements StorageObjectPort {
     private final JpaStorageObjectPanacheRepository panacheRepository;
-    private static final String CONSTANT_MESSAGE = "Mapped storage objects: ";
-
 
     public JpaStorageObjectRepository(JpaStorageObjectPanacheRepository panacheRepository) {
         this.panacheRepository = panacheRepository;
@@ -18,16 +16,16 @@ public class JpaStorageObjectRepository implements StorageObjectPort {
     }
 
     @Override
-    public void save(StorageObject storageObject) {
-        panacheRepository.getEntityManager().merge(StorageObjectMapper.toJpaEntity(storageObject));
+    public StorageObject save(StorageObject storageObject) {
+        StorageObjectJpaEntity storageObjectJpaEntity = StorageObjectMapper.toJpaEntity(storageObject);
+        panacheRepository.persist(storageObjectJpaEntity);
+        return StorageObjectMapper.toDomainEntity(storageObjectJpaEntity);
     }
 
     @Override
     public List<StorageObject> findAll() {
         List<StorageObjectJpaEntity> storageObjectJpaEntities = panacheRepository.findAll().list();
-        List<StorageObject> storageObjects = StorageObjectMapper.toDomainList(storageObjectJpaEntities);
-        System.out.println(CONSTANT_MESSAGE + storageObjects);
-        return storageObjects;
+        return StorageObjectMapper.toDomainList(storageObjectJpaEntities);
     }
 
 }

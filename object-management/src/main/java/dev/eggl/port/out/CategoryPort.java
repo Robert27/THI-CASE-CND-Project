@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface CategoryPort {
     List<Category> findAll();
-    void save(Category category);
-    void delete(Long id);
+    Boolean existsById(Integer id);
 }
