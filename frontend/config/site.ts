@@ -5,14 +5,6 @@ export const siteConfig = {
   description: "Haushaltsverwaltung und Nachbestellung",
   navItems: [
     {
-      label: "Home",
-      href: "/",
-    },
-    {
-      label: "Docs",
-      href: "https://case.eggl.dev",
-    },
-    {
       label: "Objects",
       href: "/objects",
     },
@@ -22,14 +14,6 @@ export const siteConfig = {
     },
   ],
   navMenuItems: [
-    {
-      label: "Home",
-      href: "/",
-    },
-    {
-      label: "Docs",
-      href: "https://case.eggl.dev",
-    },
     {
       label: "Objects",
       href: "/objects",
@@ -41,5 +25,6 @@ export const siteConfig = {
   ],
   links: {
     github: "https://github.com/nextui-org/nextui",
+    docs: "https://case.eggl.dev",
   },
 };
