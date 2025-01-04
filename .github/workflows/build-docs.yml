@@ -1,0 +1,51 @@
+name: Build Object Management
+
+on:
+  push:
+    branches: ['main']
+    paths:
+      - 'docs/**'
+      - '.github/workflows/build-docs.yml'
+
+env:
+  VERSION_TAG_PREFIX: 'object-management-'
+  IMAGE_NAME: ${{ github.repository }}/docs
+  REGISTRY: ghcr.io
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
+      packages: write
+    defaults:
+      run:
+        working-directory: object-management/
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: docs/
+          file: docs/Dockerfile
+          push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
