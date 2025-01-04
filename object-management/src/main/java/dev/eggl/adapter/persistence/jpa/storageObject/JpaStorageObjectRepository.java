@@ -44,4 +44,14 @@ public class JpaStorageObjectRepository implements StorageObjectPort {
         return StorageObjectMapper.toDomainEntity(storageObjectJpaEntity);
     }
 
+    @Override
+    public StorageObject delete(Integer id) {
+        StorageObjectJpaEntity storageObjectJpaEntity = panacheRepository.findById(String.valueOf(id));
+        if (storageObjectJpaEntity == null) {
+            throw new IllegalArgumentException("Storage object not found");
+        }
+        panacheRepository.delete(storageObjectJpaEntity);
+        return StorageObjectMapper.toDomainEntity(storageObjectJpaEntity);
+    }
+
 }

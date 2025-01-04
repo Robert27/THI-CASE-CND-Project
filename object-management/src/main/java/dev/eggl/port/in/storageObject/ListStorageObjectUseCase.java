@@ -10,4 +10,6 @@ public interface ListStorageObjectUseCase {
     StorageObject create(String name, String description, Integer categoryId, String reorderUrl);
 
     StorageObject update(Integer id, String name, String description, Integer categoryId, String reorderUrl);
+
+    StorageObject delete(Integer id);
 }
