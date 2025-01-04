@@ -1,4 +1,4 @@
-name: Build Object Management
+name: Build Docs
 
 on:
   push:
