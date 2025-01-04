@@ -12,7 +12,7 @@ hero:
   actions:
     - theme: brand
       text: Architektur und Services
-      link: /services/overview
+      link: /services/philosophy
     - theme: alt
       text: Verwendung
       link: /usage/installation
