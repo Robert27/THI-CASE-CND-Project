@@ -11,11 +11,11 @@ hero:
     alt: SmartOrder Logo
   actions:
     - theme: brand
-      text: Architektur
-      link: /architecture
+      text: Architektur und Services
+      link: /services/overview
     - theme: alt
       text: Verwendung
-      link: /usage
+      link: /usage/installation
 
 features:
   - title: Objektverwaltung
