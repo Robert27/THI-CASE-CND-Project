@@ -72,13 +72,11 @@ function sidebarServices(): DefaultTheme.SidebarItem[] {
       collapsed: false,
       items: [
         { text: "Objekt Verwaltung", link: "object-management" },
+        { text: "Zyklus-Prüfung", link: "cycle-check" },
         { text: "Nutzerverwaltung", link: "user-management" },
         { text: "Authentifizierung", link: "authentication" },
-        { text: "Zyklus-Prüfung", link: "cycle-check" },
-        { text: "Preisüberwachungs", link: "price-monitoring" },
-        { text: "URL Prüfung", link: "url-check"},
+        { text: "Preis- und URL-Überwachung", link: "price-url" },
         { text: "Bestellungsverwaltung", link: "order-management"},
-        { text: "Benachrichtigung", link: "notification"},
       ],
     },
   ];
