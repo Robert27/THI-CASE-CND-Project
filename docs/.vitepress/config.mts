@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitepress'
+import { DefaultTheme, defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -47,5 +47,53 @@ export default defineConfig({
         link: "https://github.com/Robert27/THI-CASE-CND-Project",
       },
     ],
+    sidebar: {
+      "/services/": { base: "/services/", items: sidebarServices() },
+      "/usage/": { base: "/usage/", items: sidebarUsage() },
+    },
+      
   },
 })
+
+function sidebarServices(): DefaultTheme.SidebarItem[] {
+  return [
+    {
+      text: "Architektur",
+      collapsed: false,
+      items: [
+        { text: "Philosophie", link: "philosophy" },
+        { text: "Aufbau", link: "structure" },
+        { text: "Limitationen", link: "limitations"},
+        { text: "Sicherheit", link: "security" },
+      ],
+    },
+    {
+      text: "Services",
+      collapsed: false,
+      items: [
+        { text: "Objekt Verwaltung", link: "object-management" },
+        { text: "Nutzerverwaltung", link: "user-management" },
+        { text: "Authentifizierung", link: "authentication" },
+        { text: "Zyklus-Prüfung", link: "cycle-check" },
+        { text: "Preisüberwachungs", link: "price-monitoring" },
+        { text: "URL Prüfung", link: "url-check"},
+        { text: "Bestellungsverwaltung", link: "order-management"},
+        { text: "Benachrichtigung", link: "notification"},
+      ],
+    },
+  ];
+}
+
+function sidebarUsage(): DefaultTheme.SidebarItem[] {
+  return [
+    {
+      text: "Verwendung",
+      collapsed: false,
+      items: [
+        { text: "Installation", link: "installation" },
+        { text: "Konfiguration", link: "configuration" },
+        { text: "Verwendung", link: "usage" },
+      ],
+    },
+  ];
+}
