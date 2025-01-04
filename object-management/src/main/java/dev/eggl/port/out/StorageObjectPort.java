@@ -11,4 +11,5 @@ public interface StorageObjectPort {
 
     StorageObject update(StorageObject storageObject);
 
+    StorageObject delete(Integer id);
 }

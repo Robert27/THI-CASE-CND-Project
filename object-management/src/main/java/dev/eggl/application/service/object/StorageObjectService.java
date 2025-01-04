@@ -45,4 +45,9 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         // TODO: infer userId from jwt
         return storageObjectPort.update(new StorageObject(id, 1213, name, description, categoryId, reorderUrl));
     }
+
+    @Override
+    public StorageObject delete(Integer id) {
+        return storageObjectPort.delete(id);
+    }
 }
