@@ -18,11 +18,23 @@ hero:
       link: /usage/installation
 
 features:
-  - title: Objektverwaltung
-    details: Ein Service zur Verwaltung von Objekten
   - title: Nutzerverwaltung
-    details: Ein Service zur Verwaltung von Nutzern
-  - title: Anmeldung
-    details: Ein Service zur Anmeldung von Nutzern
+    details: Ein hexagonaler Service zur Verwaltung des Nutzerkontos.
+    link: /services/user-management
+  - title: Authentifizierung
+    details: Ein hexagonaler Service zur Authentifizierung des Nutzers.
+    link: /services/authentication
+  - title: Objektverwaltung
+    details: Ein hexagonaler Service zur Verwaltung der Objekte.
+    link: /services/object-management
+  - title: Zyklus Prüfung
+    details: Ein Service zur Prüfung des Bestellzyklus.
+    link: /services/cycle-check
+  - title: Preis & URL Prüfung
+    details: Ein hexagonaler Service zur Prüfung der Produktpreise und URLs.
+    link: /services/price-url
+  - title: Bestellverwaltung
+    details: Ein Service zur Verwaltung der Bestellungen.
+    link: /services/order-management
 ---
 
