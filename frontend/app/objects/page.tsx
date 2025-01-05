@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { LuEllipsisVertical, LuSquarePen, LuTrash2 } from "react-icons/lu";
+import React, { useState } from "react";
 import {
   Table,
   TableHeader,
@@ -9,7 +10,6 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/table";
-import { useAsyncList } from "@react-stately/data";
 import {
   Button,
   Chip,
@@ -17,72 +17,69 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Input,
-  Textarea,
-  Form,
-  Select,
-  SelectItem,
 } from "@nextui-org/react";
-import { Modal, ModalContent, ModalHeader, ModalBody } from "@nextui-org/modal";
-import { LuEllipsisVertical } from "react-icons/lu";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-type StorageObject = {
-  id: number;
-  name: string;
-  description: string;
-  categoryId: number;
-  reorderUrl: string;
-};
-
-type Category = {
-  id: number;
-  name: string;
-  description: string;
-};
+import CreateObjectModal from "@/components/CreateObjectModal";
+import EditObjectModal from "@/components/EditObjectModal";
+import { StorageObject, Category } from "@/types";
 
 export default function PricingPage() {
-  const [categories, setCategories] = useState<Category[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalName, setModalName] = useState("");
-  const [modalDescription, setModalDescription] = useState("");
-  const [modalCategoryId, setModalCategoryId] = useState<number | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editObject, setEditObject] = useState<StorageObject | null>(null);
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
-  const [modalReorderUrl, setModalReorderUrl] = useState("");
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    fetch("http://localhost:8080/category")
-      .then((res) => res.json())
-      .then((data) => setCategories(data as Category[]))
-      .catch((err) => console.error("Error fetching categories:", err));
-  }, []);
+  const { data: categories = [] } = useQuery<Category[]>({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await fetch("http://localhost:8080/category");
 
-  const list = useAsyncList<StorageObject>({
-    async load({ signal }) {
-      const res = await fetch("http://localhost:8080/object", { signal });
-      const data = await res.json();
-
-      return {
-        items: data,
-      };
+      return res.json();
     },
-    async sort({ items, sortDescriptor }) {
-      return {
-        items: items.slice().sort((a, b) => {
-          const first = a[sortDescriptor.column as keyof StorageObject];
-          const second = b[sortDescriptor.column as keyof StorageObject];
-          let cmp =
-            (parseInt(first as string) || first) <
-            (parseInt(second as string) || second)
-              ? -1
-              : 1;
+  });
 
-          if (sortDescriptor.direction === "descending") {
-            cmp *= -1;
-          }
+  const { data: items = [] } = useQuery<StorageObject[]>({
+    queryKey: ["objects"],
+    queryFn: async () => {
+      const res = await fetch("http://localhost:8080/object");
 
-          return cmp;
-        }),
-      };
+      return res.json();
+    },
+  });
+
+  const createObjectMutation = useMutation<
+    void,
+    Error,
+    Omit<StorageObject, "id">
+  >({
+    mutationFn: async (newObjectData) => {
+      const res = await fetch("http://localhost:8080/object", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newObjectData),
+      });
+
+      if (!res.ok) {
+        let errorMsg = "Failed to create object";
+
+        try {
+          const data = await res.json();
+
+          console.log(data);
+          errorMsg = data.errorMessage || errorMsg;
+        } catch {}
+        throw new Error(errorMsg);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["objects"] });
+      setIsModalOpen(false);
+    },
+    onError: (error) => {
+      setAlertMessage(error.message);
     },
   });
 
@@ -90,66 +87,103 @@ export default function PricingPage() {
     setIsModalOpen(true);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const newObjectData = {
-      name: modalName,
-      description: modalDescription,
-      categoryId: modalCategoryId, // Send only the ID
-      reorderUrl: modalReorderUrl,
-    };
-
-    console.log(newObjectData);
-    try {
-      const res = await fetch("http://localhost:8080/object", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newObjectData),
-      });
-
-      if (res.ok) {
-        setIsModalOpen(false);
-        list.reload();
-      } else {
-        console.error("Failed to create new object");
-      }
-    } catch (err) {
-      console.error("Error creating new object:", err);
-    }
+  const handleSubmit = (newObjectData: Omit<StorageObject, "id">) => {
+    createObjectMutation.mutate(newObjectData);
   };
 
-  const handleDelete = async (id: number) => {
+  const deleteObjectMutation = useMutation<void, Error, number>({
+    mutationFn: async (id) => {
+      const res = await fetch(`http://localhost:8080/object/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        let errorMsg = "Failed to delete object";
+
+        try {
+          const data = await res.json();
+
+          errorMsg = data.message || errorMsg;
+        } catch {}
+        throw new Error(errorMsg);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["objects"] });
+    },
+    onError: (error) => {
+      alert(error.message);
+    },
+  });
+
+  const handleDelete = (id: number) => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this item?",
+      "Are you sure you want to delete this item?"
     );
 
     if (!confirmed) {
       return;
     }
 
-    try {
-      const res = await fetch(`http://localhost:8080/object/${id}`, {
-        method: "DELETE",
-      });
+    deleteObjectMutation.mutate(id);
+  };
 
-      if (res.ok) {
-        list.reload();
-      } else {
-        alert("Failed to delete object");
+  const handleEdit = (object: StorageObject) => {
+    setEditObject(object);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSubmit = (updatedObjectData: StorageObject) => {
+    updateObjectMutation.mutate(updatedObjectData);
+  };
+
+  const updateObjectMutation = useMutation<void, Error, StorageObject>({
+    mutationFn: async (updatedObjectData) => {
+      const res = await fetch(
+        `http://localhost:8080/object/${updatedObjectData.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedObjectData),
+        }
+      );
+
+      if (!res.ok) {
+        let errorMsg = "Failed to update object";
+
+        try {
+          const data = await res.json();
+
+          errorMsg = data.errorMessage || errorMsg;
+        } catch {}
+        throw new Error(errorMsg);
       }
-    } catch (err) {
-      if (err instanceof Error) {
-        alert("Error deleting object: " + err.message);
-      } else {
-        alert("Error deleting object");
-      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["objects"] });
+      setIsEditModalOpen(false);
+    },
+    onError: (error) => {
+      setAlertMessage(error.message);
+    },
+  });
+
+  const formatInterval = (minutes: number) => {
+    if (minutes < 60) {
+      return `${minutes} min`;
+    } else if (minutes < 1440) {
+      return `${(minutes / 60).toFixed(1)} hours`;
+    } else {
+      return `${(minutes / 1440).toFixed(1)} days`;
     }
   };
 
+  const handleAlertClose = () => {
+    setAlertMessage(null);
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="w-full px-4 ">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto text-left">
           <h1 className="text-2xl font-semibold text-primary">Your Objects</h1>
@@ -167,31 +201,26 @@ export default function PricingPage() {
       <div className="mt-8 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle">
-            <Table
-              aria-label="Objects Table"
-              selectionMode="none"
-              sortDescriptor={list.sortDescriptor}
-              onSortChange={list.sort}
-            >
+            <Table aria-label="Objects Table" selectionMode="none">
               <TableHeader>
-                <TableColumn allowsSorting>Name</TableColumn>
-                <TableColumn>Description</TableColumn>
-                <TableColumn allowsSorting>Category</TableColumn>
-                <TableColumn>Reorder URL</TableColumn>
+                <TableColumn>Name</TableColumn>
+                <TableColumn>Category</TableColumn>
+                <TableColumn>Quantity</TableColumn>
+                <TableColumn>Interval</TableColumn>
                 <TableColumn>Actions</TableColumn>
               </TableHeader>
-              <TableBody items={list.items}>
+              <TableBody items={items}>
                 {(item) => (
-                  <TableRow key={item.id}>
+                  <TableRow key={item.id} onClick={() => handleEdit(item)}>
                     <TableCell>{item.name}</TableCell>
-                    <TableCell>{item.description}</TableCell>
                     <TableCell>
                       <Chip color="primary">
                         {categories.find((c) => c.id === item.categoryId)
                           ?.name || "Unknown"}
                       </Chip>
                     </TableCell>
-                    <TableCell>{item.reorderUrl}</TableCell>
+                    <TableCell>{item.quantity}</TableCell>
+                    <TableCell>{formatInterval(item.interval)}</TableCell>
                     <TableCell>
                       <Dropdown className="bg-background border-1 border-default-200">
                         <DropdownTrigger>
@@ -201,15 +230,22 @@ export default function PricingPage() {
                             size="sm"
                             variant="light"
                           >
-                            <LuEllipsisVertical />
+                            <LuEllipsisVertical size={18} />
                           </Button>
                         </DropdownTrigger>
                         <DropdownMenu>
-                          <DropdownItem key="view">View & Edit</DropdownItem>
+                          <DropdownItem
+                            key="edit"
+                            endContent={<LuSquarePen size={16} />}
+                            onPress={() => handleEdit(item)}
+                          >
+                            Edit
+                          </DropdownItem>
                           <DropdownItem
                             key="delete"
                             className="text-danger"
                             color="danger"
+                            endContent={<LuTrash2 color="danger" size={16} />}
                             onPress={() => handleDelete(item.id)}
                           >
                             Delete
@@ -225,57 +261,24 @@ export default function PricingPage() {
         </div>
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <ModalContent>
-          <ModalHeader>
-            <h2>Create New Object</h2>
-          </ModalHeader>
-          <ModalBody>
-            <Form onSubmit={handleSubmit}>
-              <Input
-                isRequired
-                required
-                label="Name"
-                value={modalName}
-                onValueChange={(value) => setModalName(value)}
-              />
-              <Textarea
-                required
-                label="Description"
-                value={modalDescription}
-                onValueChange={(value) => setModalDescription(value)}
-              />
-              <Select
-                isRequired
-                label="Category"
-                placeholder="Select a category"
-                selectedKeys={
-                  modalCategoryId ? [modalCategoryId.toString()] : []
-                }
-                onSelectionChange={(keys) => {
-                  const selectedId = Array.from(keys)[0];
+      <CreateObjectModal
+        alertMessage={alertMessage}
+        categories={categories}
+        isOpen={isModalOpen}
+        onAlertClose={handleAlertClose}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleSubmit}
+      />
 
-                  setModalCategoryId(Number(selectedId));
-                }}
-              >
-                {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id.toString()}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </Select>
-              <Input
-                label="Reorder URL"
-                value={modalReorderUrl}
-                onValueChange={(value) => setModalReorderUrl(value)}
-              />
-              <Button color="primary" type="submit">
-                Create
-              </Button>
-            </Form>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      <EditObjectModal
+        alertMessage={alertMessage}
+        categories={categories}
+        editObject={editObject}
+        isOpen={isEditModalOpen}
+        onAlertClose={handleAlertClose}
+        onClose={() => setIsEditModalOpen(false)}
+        onSubmit={handleEditSubmit}
+      />
     </div>
   );
 }

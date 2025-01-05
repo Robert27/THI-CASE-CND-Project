@@ -29,6 +29,20 @@ public class JpaStorageObjectRepository implements StorageObjectPort {
     }
 
     @Override
+    public StorageObject findById(Integer id) {
+        StorageObjectJpaEntity storageObjectJpaEntity = panacheRepository.findById(String.valueOf(id));
+        if (storageObjectJpaEntity == null) {
+            throw new IllegalArgumentException("Storage object not found");
+        }
+        return StorageObjectMapper.toDomainEntity(storageObjectJpaEntity);
+    }
+
+    @Override
+    public Boolean existsByUrl(String reorderUrl) {
+        return panacheRepository.count("reorderUrl", reorderUrl) > 0;
+    }
+
+    @Override
     public StorageObject update(StorageObject storageObject) {
         StorageObjectJpaEntity storageObjectJpaEntity = StorageObjectMapper.toJpaEntity(storageObject);
         StorageObjectJpaEntity updatedStorageObjectJpaEntity = panacheRepository.findById(String.valueOf(storageObject.getId()));
@@ -52,6 +66,11 @@ public class JpaStorageObjectRepository implements StorageObjectPort {
         }
         panacheRepository.delete(storageObjectJpaEntity);
         return StorageObjectMapper.toDomainEntity(storageObjectJpaEntity);
+    }
+
+    @Override
+    public boolean existsByNameAndCategory(String name, Integer categoryId) {
+        return panacheRepository.count("name = ?1 and categoryId = ?2", name, categoryId) > 0;
     }
 
 }
