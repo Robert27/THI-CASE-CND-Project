@@ -88,4 +88,24 @@ public class StorageObjectController {
 
         }
     }
+
+    @DELETE
+    @Path("/{id}")
+    @Transactional
+    public Response delete(@PathParam("id") Integer id) {
+        try {
+            StorageObject deleted = listStorageObjectUseCase.delete(id);
+            return Response.status(Response.Status.OK)
+                    .entity(ListStorageObjectModel.fromDomainModel(deleted))
+                    .build();
+        } catch (IllegalArgumentException e) {
+            throw clientErrorException(
+                    Response.Status.BAD_REQUEST, e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw serverErrorException(
+                    Response.Status.INTERNAL_SERVER_ERROR, "Error while deleting storage object");
+
+        }
+    }
 }
