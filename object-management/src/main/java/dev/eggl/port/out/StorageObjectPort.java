@@ -9,7 +9,13 @@ public interface StorageObjectPort {
 
     List<StorageObject> findAll();
 
+    StorageObject findById(Integer id);
+
+    Boolean existsByUrl(String reorderUrl);
+
     StorageObject update(StorageObject storageObject);
 
     StorageObject delete(Integer id);
+
+    boolean existsByNameAndCategory(String name, Integer categoryId);
 }

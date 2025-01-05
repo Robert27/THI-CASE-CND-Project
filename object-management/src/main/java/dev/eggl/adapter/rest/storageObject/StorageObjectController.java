@@ -44,7 +44,9 @@ public class StorageObjectController {
                     createStorageObjectModel.name(),
                     createStorageObjectModel.description(),
                     createStorageObjectModel.categoryId(),
-                    createStorageObjectModel.reorderUrl()
+                    createStorageObjectModel.reorderUrl(),
+                    createStorageObjectModel.quantity(),
+                    createStorageObjectModel.interval()
             );
             return Response.status(Response.Status.CREATED)
                     .entity(ListStorageObjectModel.fromDomainModel(created))
@@ -72,7 +74,9 @@ public class StorageObjectController {
                     createStorageObjectModel.name(),
                     createStorageObjectModel.description(),
                     createStorageObjectModel.categoryId(),
-                    createStorageObjectModel.reorderUrl()
+                    createStorageObjectModel.reorderUrl(),
+                    createStorageObjectModel.quantity(),
+                    createStorageObjectModel.interval()
             );
             System.out.println(updated);
             return Response.status(Response.Status.OK)
