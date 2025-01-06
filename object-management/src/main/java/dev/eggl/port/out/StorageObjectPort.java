@@ -11,6 +11,8 @@ public interface StorageObjectPort {
 
     StorageObject findById(Integer id);
 
+    List<StorageObject> findByIds(List<Integer> ids);
+
     Boolean existsByUrl(String reorderUrl);
 
     StorageObject update(StorageObject storageObject);

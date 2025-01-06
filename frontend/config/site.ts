@@ -9,7 +9,7 @@ export const siteConfig = {
       href: "/objects",
     },
     {
-      label: "Bestellungen",
+      label: "Orders",
       href: "/orders",
     },
   ],
@@ -24,7 +24,7 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: "https://github.com/nextui-org/nextui",
+    github: "https://github.com/Robert27/THI-CASE-CND-Project",
     docs: "https://case.eggl.dev",
   },
 };
