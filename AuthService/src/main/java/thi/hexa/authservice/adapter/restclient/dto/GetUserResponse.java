@@ -9,10 +9,10 @@ import thi.hexa.authservice.domain.User;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetUserResponse {
-    private int id;
+    private int user_id;
     private String username;
 
     public User toUser() {
-        return new User(id, username);
+        return new User(user_id, username);
     }
 }

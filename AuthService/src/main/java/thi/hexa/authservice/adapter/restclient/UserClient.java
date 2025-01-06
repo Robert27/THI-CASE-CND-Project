@@ -42,7 +42,7 @@ public class UserClient {
                 System.out.println("failed to get user");
                 throw new Exception();
             }
-            System.out.println(getUserResponse.getId());
+            System.out.println(getUserResponse.getUser_id());
             return getUserResponse.toUser();
         }catch (Exception e) {
             return null;
