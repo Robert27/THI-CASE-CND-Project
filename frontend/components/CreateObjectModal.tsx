@@ -80,9 +80,9 @@ export default function CreateObjectModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalContent>
+      <ModalContent className="py-4">
         <ModalHeader>
-          <h2>Create New Object</h2>
+          <h2 className="text-2xl font-semibold">Create New Object</h2>
         </ModalHeader>
         <ModalBody>
           {alertMessage && (

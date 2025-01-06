@@ -186,9 +186,9 @@ export default function PricingPage() {
     <div className="w-full px-4 ">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto text-left">
-          <h1 className="text-2xl font-semibold text-primary">Your Objects</h1>
-          <p className="mt-2 text-sm text-default-500">
-            Click on a column header to sort
+          <h1 className="text-3xl font-semibold text-primary">Your Objects</h1>
+          <p className="mt-2 text-m text-default-500">
+            Manage your objects and their categories
           </p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
