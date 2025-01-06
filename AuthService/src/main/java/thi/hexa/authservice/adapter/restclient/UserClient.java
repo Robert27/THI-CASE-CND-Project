@@ -18,10 +18,10 @@ public class UserClient {
         this.restTemplate = restTemplate;
     }
 
-    public boolean validatePassword(String username, String password) {
+    public boolean validatePassword(int user_id, String password) {
         try {
             String url = userServiceUrl + "/checkpassword";
-            ValidatePasswordRequest v = new ValidatePasswordRequest(username, password);
+            ValidatePasswordRequest v = new ValidatePasswordRequest(user_id, password);
             ValidatePasswordReply vr = restTemplate.postForObject(url, v, ValidatePasswordReply.class);
             if (vr==null) {
                 System.out.println("Invalid password");

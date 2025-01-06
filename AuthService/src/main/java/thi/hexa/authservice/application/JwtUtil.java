@@ -17,10 +17,10 @@ public class JwtUtil {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-    public static String generateToken(String username) {
+    public static String generateToken(Integer user_id) {
         return Jwts.builder()
                 .header().type("JWT").and()
-                .subject(username)
+                .subject(user_id.toString())
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();

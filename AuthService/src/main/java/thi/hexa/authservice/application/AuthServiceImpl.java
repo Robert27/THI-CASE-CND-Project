@@ -16,12 +16,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String login(String username, String password) throws AuthException {
-        if (!userClient.validatePassword(username,password)){
+    public String login(int user_id, String password) throws AuthException {
+        if (!userClient.validatePassword(user_id,password)){
             throw new AuthException("failded to authenticate");
         }
-        System.out.println(username + " " + password);
-        return JwtUtil.generateToken(username);
+        System.out.println(user_id + " " + password);
+        return JwtUtil.generateToken(user_id);
     }
 
     @Override
