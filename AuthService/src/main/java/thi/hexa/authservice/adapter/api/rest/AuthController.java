@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import thi.hexa.authservice.adapter.api.rest.dto.LoginReply;
 import thi.hexa.authservice.adapter.api.rest.dto.LoginRequest;
 import thi.hexa.authservice.domain.AuthService;
+import thi.hexa.authservice.domain.exception.AuthException;
 
 @RestController
 public class AuthController {
@@ -14,7 +16,14 @@ public class AuthController {
     AuthService authService;
 
     @PostMapping("/login")
-    String login(@RequestBody LoginRequest loginRequest) {
-        return authService.login(loginRequest.getUsername(), loginRequest.getPassword());
+    LoginReply login(@RequestBody LoginRequest loginRequest) {
+
+        String token = null;
+        try {
+            token = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
+        } catch (AuthException e) {
+            return new LoginReply(null,false,e.getMessage());
+        }
+        return new LoginReply(token,true,"");
     }
 }

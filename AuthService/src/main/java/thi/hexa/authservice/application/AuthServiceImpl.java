@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import thi.hexa.authservice.adapter.restclient.UserClient;
 import thi.hexa.authservice.domain.AuthService;
 import thi.hexa.authservice.domain.User;
+import thi.hexa.authservice.domain.exception.AuthException;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -15,13 +16,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String login(String username, String password) {
+    public String login(String username, String password) throws AuthException {
         if (!userClient.validatePassword(username,password)){
-            System.out.println(username + " " + password);
-            return JwtUtil.generateToken(username);
+            throw new AuthException("failded to authenticate");
         }
-
-        return null;
+        System.out.println(username + " " + password);
+        return JwtUtil.generateToken(username);
     }
 
     @Override
