@@ -4,6 +4,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import thi.hexa.authservice.domain.User;
 
 
 import java.security.Key;
@@ -17,10 +18,11 @@ public class JwtUtil {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-    public static String generateToken(Integer user_id) {
+    public static String generateToken(User user) {
         return Jwts.builder()
                 .header().type("JWT").and()
-                .subject(user_id.toString())
+                .subject(String.valueOf(user.getUser_id()))
+                .claim("username", user.getUsername())
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
