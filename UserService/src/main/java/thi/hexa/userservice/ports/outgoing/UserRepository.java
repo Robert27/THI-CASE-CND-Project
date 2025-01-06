@@ -5,9 +5,9 @@ import thi.hexa.userservice.domain.User;
 import java.util.Optional;
 
 public interface UserRepository {
-    boolean save(User user);
-    boolean existsByUsername(String username);
-    Optional<User> findByUsername(String username);
+    User save(User user);
+    boolean existsByUserID(int user_id);
+    Optional<User> findByUserID(int user_id);
     boolean update(User user);
-    boolean deleteByUsername(String name);
+    boolean deleteByUserID(int user_id);
 }

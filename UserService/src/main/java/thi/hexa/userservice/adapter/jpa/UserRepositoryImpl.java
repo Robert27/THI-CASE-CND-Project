@@ -16,24 +16,24 @@ public class UserRepositoryImpl implements UserRepository {
     private JpaUserRepository jpaUserRepository;
 
     @Override
-    public boolean save(User user) {
+    public User save(User user) {
         UserEntity userEntity = new UserEntity(user);
         try {
-            jpaUserRepository.save(userEntity);
+            UserEntity u = jpaUserRepository.save(userEntity);
+            return u.toUser();
         } catch (IllegalArgumentException | OptimisticLockingFailureException e) {
-            return false;
+            return null;
         }
-        return true;
     }
 
     @Override
-    public boolean existsByUsername(String username) {
-        return jpaUserRepository.existsById(username);
+    public boolean existsByUserID(int user_id) {
+        return jpaUserRepository.existsById(user_id);
     }
 
     @Override
-    public Optional<User> findByUsername(String username) {
-        Optional<UserEntity> oue = jpaUserRepository.findById(username);
+    public Optional<User> findByUserID(int user_id) {
+        Optional<UserEntity> oue = jpaUserRepository.findById(user_id);
         if (oue.isEmpty()) {
             return Optional.empty();
         } else {
@@ -45,7 +45,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean update(User user) {
-        if (existsByUsername(user.getUsername())) {
+        if (existsByUserID(user.getUser_id())) {
             try {
                 jpaUserRepository.save(new UserEntity(user));
             } catch (IllegalArgumentException | OptimisticLockingFailureException e) {
@@ -57,9 +57,9 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public boolean deleteByUsername(String name) {
+    public boolean deleteByUserID(int user_id) {
         try {
-            jpaUserRepository.deleteById(name);
+            jpaUserRepository.deleteById(user_id);
         }catch (IllegalArgumentException e){
             return false;
         }
