@@ -12,4 +12,6 @@ public interface ListStorageObjectUseCase {
     StorageObject update(Integer id, String name, String description, Integer categoryId, String reorderUrl, Integer quantity, Integer interval);
 
     StorageObject delete(Integer id);
+
+    List<StorageObject> findByIds(List<Integer> ids);
 }

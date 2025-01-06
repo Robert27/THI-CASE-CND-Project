@@ -38,6 +38,11 @@ public class JpaStorageObjectRepository implements StorageObjectPort {
     }
 
     @Override
+    public List<StorageObject> findByIds(List<Integer> ids) {
+        return StorageObjectMapper.toDomainList(panacheRepository.find("id in ?1", ids).list());
+    }
+
+    @Override
     public Boolean existsByUrl(String reorderUrl) {
         return panacheRepository.count("reorderUrl", reorderUrl) > 0;
     }

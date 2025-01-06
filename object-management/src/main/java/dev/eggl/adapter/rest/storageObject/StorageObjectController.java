@@ -7,6 +7,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static dev.eggl.adapter.rest.common.ControllerCommons.clientErrorException;
@@ -27,6 +28,23 @@ public class StorageObjectController {
         List<StorageObject> storageObjects;
         try {
             storageObjects = listStorageObjectUseCase.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("Error while fetching storage objects", e);
+        }
+        return storageObjects.stream()
+                .map(ListStorageObjectModel::fromDomainModel)
+                .toList();
+    }
+
+    @GET
+    @Path("/{ids}")
+    public List<ListStorageObjectModel> findByIds(@PathParam("ids") String ids) {
+        List<Integer> idList = Arrays.stream(ids.split(","))
+                .map(Integer::parseInt)
+                .toList();
+        List<StorageObject> storageObjects;
+        try {
+            storageObjects = listStorageObjectUseCase.findByIds(idList);
         } catch (Exception e) {
             throw new RuntimeException("Error while fetching storage objects", e);
         }

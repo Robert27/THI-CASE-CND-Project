@@ -77,4 +77,9 @@ public class StorageObjectService implements ListStorageObjectUseCase {
     public StorageObject delete(Integer id) {
         return storageObjectPort.delete(id);
     }
+
+    @Override
+    public List<StorageObject> findByIds(List<Integer> ids) {
+        return storageObjectPort.findByIds(ids);
+    }
 }
