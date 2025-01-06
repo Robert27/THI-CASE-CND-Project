@@ -27,7 +27,10 @@ export default function EditObjectModal({
   editObject,
   alertMessage,
   onAlertClose,
-}: EditObjectModalProps & { alertMessage: string | null; onAlertClose: () => void }) {
+}: EditObjectModalProps & {
+  alertMessage: string | null;
+  onAlertClose: () => void;
+}) {
   const [localEditObject, setLocalEditObject] = useState<StorageObject | null>(
     editObject
   );
@@ -49,9 +52,9 @@ export default function EditObjectModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalContent>
+      <ModalContent className="py-4">
         <ModalHeader>
-          <h2>Edit Object</h2>
+          <h2 className="text-2xl font-semibold">Edit Object</h2>
         </ModalHeader>
         <ModalBody>
           {alertMessage && (
