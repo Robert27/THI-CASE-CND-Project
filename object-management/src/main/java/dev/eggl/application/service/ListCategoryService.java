@@ -1,7 +1,7 @@
-package dev.eggl.application.service.category;
+package dev.eggl.application.service;
 
 import dev.eggl.domain.model.Category;
-import dev.eggl.port.in.category.CategoryListUseCase;
+import dev.eggl.port.in.CategoryListUseCase;
 import dev.eggl.port.out.CategoryPort;
 
 import java.util.List;

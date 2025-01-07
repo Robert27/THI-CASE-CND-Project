@@ -1,6 +1,7 @@
 package dev.eggl.adapter.http.validation;
 
 import dev.eggl.port.out.UrlValidationPort;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.io.IOException;
 import java.net.URI;
@@ -11,7 +12,8 @@ import java.net.http.HttpResponse;
 /**
  * Adapter for the URL validation service
  */
-public class HttpUrlValidationAdapter implements UrlValidationPort {
+@ApplicationScoped
+public class HttpUrlValidationController implements UrlValidationPort {
 
     private static final HttpClient client = HttpClient.newHttpClient();
 

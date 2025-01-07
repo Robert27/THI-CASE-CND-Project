@@ -10,9 +10,9 @@ import java.util.List;
 public class JpaStorageObjectRepository implements StorageObjectPort {
     private final JpaStorageObjectPanacheRepository panacheRepository;
 
-    public JpaStorageObjectRepository(JpaStorageObjectPanacheRepository panacheRepository) {
-        this.panacheRepository = panacheRepository;
 
+    public JpaStorageObjectRepository() {
+        this.panacheRepository = new JpaStorageObjectPanacheRepository();
     }
 
     @Override
@@ -23,14 +23,14 @@ public class JpaStorageObjectRepository implements StorageObjectPort {
     }
 
     @Override
-    public List<StorageObject> findAll() {
-        List<StorageObjectJpaEntity> storageObjectJpaEntities = panacheRepository.findAll().list();
+    public List<StorageObject> findAll(Integer userId) {
+        List<StorageObjectJpaEntity> storageObjectJpaEntities = panacheRepository.find("userId", userId).list();
         return StorageObjectMapper.toDomainList(storageObjectJpaEntities);
     }
 
     @Override
-    public StorageObject findById(Integer id) {
-        StorageObjectJpaEntity storageObjectJpaEntity = panacheRepository.findById(String.valueOf(id));
+    public StorageObject findById(Integer id, Integer userId) {
+        StorageObjectJpaEntity storageObjectJpaEntity = panacheRepository.find("id = ?1 and userId = ?2", id).firstResult();
         if (storageObjectJpaEntity == null) {
             throw new IllegalArgumentException("Storage object not found");
         }
@@ -38,13 +38,13 @@ public class JpaStorageObjectRepository implements StorageObjectPort {
     }
 
     @Override
-    public List<StorageObject> findByIds(List<Integer> ids) {
-        return StorageObjectMapper.toDomainList(panacheRepository.find("id in ?1", ids).list());
+    public List<StorageObject> findByIds(List<Integer> ids, Integer userId) {
+        return StorageObjectMapper.toDomainList(panacheRepository.find("id in ?1 and userId = ?2", ids, userId).list());
     }
 
     @Override
-    public Boolean existsByUrl(String reorderUrl) {
-        return panacheRepository.count("reorderUrl", reorderUrl) > 0;
+    public Boolean existsByUrl(String reorderUrl, Integer userId) {
+        return panacheRepository.count("reorderUrl = ?1 and userId = ?2", reorderUrl, userId) > 0;
     }
 
     @Override
@@ -64,8 +64,8 @@ public class JpaStorageObjectRepository implements StorageObjectPort {
     }
 
     @Override
-    public StorageObject delete(Integer id) {
-        StorageObjectJpaEntity storageObjectJpaEntity = panacheRepository.findById(String.valueOf(id));
+    public StorageObject delete(Integer id, Integer userId) {
+        StorageObjectJpaEntity storageObjectJpaEntity = panacheRepository.find("id = ?1 and userId = ?2", id, userId).firstResult();
         if (storageObjectJpaEntity == null) {
             throw new IllegalArgumentException("Storage object not found");
         }
@@ -74,8 +74,8 @@ public class JpaStorageObjectRepository implements StorageObjectPort {
     }
 
     @Override
-    public boolean existsByNameAndCategory(String name, Integer categoryId) {
-        return panacheRepository.count("name = ?1 and categoryId = ?2", name, categoryId) > 0;
+    public boolean existsByNameAndCategory(String name, Integer categoryId, Integer userId) {
+        return panacheRepository.count("name = ?1 and categoryId = ?2 and userId = ?3", name, categoryId, userId) > 0;
     }
 
 }

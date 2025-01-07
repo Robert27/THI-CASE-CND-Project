@@ -1,17 +1,19 @@
 package dev.eggl.adapter.rest.storageObject;
 
 import dev.eggl.domain.model.StorageObject;
-import dev.eggl.port.in.storageObject.ListStorageObjectUseCase;
+import dev.eggl.port.in.ListStorageObjectUseCase;
+import io.quarkus.security.AuthenticationFailedException;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static dev.eggl.adapter.rest.common.ControllerCommons.clientErrorException;
-import static dev.eggl.adapter.rest.common.ControllerCommons.serverErrorException;
+import static dev.eggl.adapter.rest.common.ControllerCommons.*;
 
 @Path("/object")
 @Produces(MediaType.APPLICATION_JSON)
@@ -24,12 +26,22 @@ public class StorageObjectController {
     }
 
     @GET
-    public List<ListStorageObjectModel> findAll() {
+    public List<ListStorageObjectModel> findAll(@Context HttpHeaders headers) {
+
+
         List<StorageObject> storageObjects;
+
         try {
-            storageObjects = listStorageObjectUseCase.findAll();
+            String token = extractJwt(headers);
+            storageObjects = listStorageObjectUseCase.findAll(token);
+
         } catch (Exception e) {
-            throw new RuntimeException("Error while fetching storage objects", e);
+            if (e instanceof AuthenticationFailedException) {
+                throw clientErrorException(
+                        Response.Status.UNAUTHORIZED, e.getMessage());
+            }
+            throw serverErrorException(
+                    Response.Status.INTERNAL_SERVER_ERROR, "Error while fetching storage objects");
         }
         return storageObjects.stream()
                 .map(ListStorageObjectModel::fromDomainModel)
@@ -38,55 +50,78 @@ public class StorageObjectController {
 
     @GET
     @Path("/{ids}")
-    public List<ListStorageObjectModel> findByIds(@PathParam("ids") String ids) {
+    public List<ListStorageObjectModel> findByIds(@PathParam("ids") String ids, @Context HttpHeaders headers) {
         List<Integer> idList = Arrays.stream(ids.split(","))
                 .map(Integer::parseInt)
                 .toList();
-        List<StorageObject> storageObjects;
+
+
         try {
-            storageObjects = listStorageObjectUseCase.findByIds(idList);
+            String token = extractJwt(headers);
+            List<StorageObject> storageObjects = listStorageObjectUseCase.findByIds(idList, token);
+            return storageObjects.stream()
+                    .map(ListStorageObjectModel::fromDomainModel)
+                    .toList();
+
         } catch (Exception e) {
-            throw new RuntimeException("Error while fetching storage objects", e);
+            if (e instanceof AuthenticationFailedException) {
+                throw clientErrorException(
+                        Response.Status.UNAUTHORIZED, e.getMessage());
+            } else {
+                throw serverErrorException(
+                        Response.Status.INTERNAL_SERVER_ERROR, "Error while fetching storage objects");
+            }
         }
-        return storageObjects.stream()
-                .map(ListStorageObjectModel::fromDomainModel)
-                .toList();
+
+
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response create(CreateStorageObjectModel createStorageObjectModel) {
+    public Response create(CreateStorageObjectModel createStorageObjectModel, @Context HttpHeaders headers) {
+
+
         try {
+            String token = extractJwt(headers);
             StorageObject created = listStorageObjectUseCase.create(
                     createStorageObjectModel.name(),
                     createStorageObjectModel.description(),
                     createStorageObjectModel.categoryId(),
                     createStorageObjectModel.reorderUrl(),
                     createStorageObjectModel.quantity(),
-                    createStorageObjectModel.interval()
+                    createStorageObjectModel.interval(),
+                    token
             );
             return Response.status(Response.Status.CREATED)
                     .entity(ListStorageObjectModel.fromDomainModel(created))
                     .build();
-        } catch (IllegalArgumentException e) {
-            throw clientErrorException(
-                    Response.Status.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw serverErrorException(
-                    Response.Status.INTERNAL_SERVER_ERROR, "Error while creating storage object");
+            if (e instanceof AuthenticationFailedException) {
+                throw clientErrorException(
+                        Response.Status.UNAUTHORIZED, e.getMessage());
+            } else if (e instanceof IllegalArgumentException) {
+                throw clientErrorException(
+                        Response.Status.BAD_REQUEST, e.getMessage());
 
+            } else {
+                throw serverErrorException(
+                        Response.Status.INTERNAL_SERVER_ERROR, "Error while creating storage object");
+            }
         }
+
+
     }
+
 
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response update(@PathParam("id") Integer id, CreateStorageObjectModel createStorageObjectModel) {
-        System.out.println("id: " + id);
+    public Response update(@PathParam("id") Integer id, CreateStorageObjectModel createStorageObjectModel, @Context HttpHeaders headers) {
+
         try {
+            String token = extractJwt(headers);
             StorageObject updated = listStorageObjectUseCase.update(
                     id,
                     createStorageObjectModel.name(),
@@ -94,40 +129,51 @@ public class StorageObjectController {
                     createStorageObjectModel.categoryId(),
                     createStorageObjectModel.reorderUrl(),
                     createStorageObjectModel.quantity(),
-                    createStorageObjectModel.interval()
+                    createStorageObjectModel.interval(),
+                    token
             );
-            System.out.println(updated);
             return Response.status(Response.Status.OK)
                     .entity(ListStorageObjectModel.fromDomainModel(updated))
                     .build();
-        } catch (IllegalArgumentException e) {
-            throw clientErrorException(
-                    Response.Status.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw serverErrorException(
-                    Response.Status.INTERNAL_SERVER_ERROR, "Error while updating storage object");
+            if (e instanceof AuthenticationFailedException) {
+                throw clientErrorException(
+                        Response.Status.UNAUTHORIZED, e.getMessage());
+            } else if (e instanceof IllegalArgumentException) {
+                throw clientErrorException(
+                        Response.Status.BAD_REQUEST, e.getMessage());
 
+            } else {
+                throw serverErrorException(
+                        Response.Status.INTERNAL_SERVER_ERROR, "Error while updating storage object");
+            }
         }
     }
 
     @DELETE
     @Path("/{id}")
     @Transactional
-    public Response delete(@PathParam("id") Integer id) {
+    public Response delete(@PathParam("id") Integer id, @Context HttpHeaders headers) {
+
         try {
-            StorageObject deleted = listStorageObjectUseCase.delete(id);
+            String token = extractJwt(headers);
+            StorageObject deleted = listStorageObjectUseCase.delete(id, token);
             return Response.status(Response.Status.OK)
                     .entity(ListStorageObjectModel.fromDomainModel(deleted))
                     .build();
-        } catch (IllegalArgumentException e) {
-            throw clientErrorException(
-                    Response.Status.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw serverErrorException(
-                    Response.Status.INTERNAL_SERVER_ERROR, "Error while deleting storage object");
+            if (e instanceof AuthenticationFailedException) {
+                throw clientErrorException(
+                        Response.Status.UNAUTHORIZED, e.getMessage());
+            } else if (e instanceof IllegalArgumentException) {
+                throw clientErrorException(
+                        Response.Status.BAD_REQUEST, e.getMessage());
 
+            } else {
+                throw serverErrorException(
+                        Response.Status.INTERNAL_SERVER_ERROR, "Error while deleting storage object");
+            }
         }
+
     }
 }

@@ -7,17 +7,17 @@ import java.util.List;
 public interface StorageObjectPort {
     StorageObject save(StorageObject storageObject);
 
-    List<StorageObject> findAll();
+    List<StorageObject> findAll(Integer userId);
 
-    StorageObject findById(Integer id);
+    StorageObject findById(Integer id, Integer userId);
 
-    List<StorageObject> findByIds(List<Integer> ids);
+    List<StorageObject> findByIds(List<Integer> ids, Integer userId);
 
-    Boolean existsByUrl(String reorderUrl);
+    Boolean existsByUrl(String reorderUrl, Integer userId);
 
     StorageObject update(StorageObject storageObject);
 
-    StorageObject delete(Integer id);
+    StorageObject delete(Integer id, Integer userId);
 
-    boolean existsByNameAndCategory(String name, Integer categoryId);
+    boolean existsByNameAndCategory(String name, Integer categoryId, Integer userId);
 }
