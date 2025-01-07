@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   database:
     image: postgres:17.2
@@ -15,17 +17,17 @@ services:
       interval: 5s
       timeout: 10s
       retries: 5
+
   object-management:
     build:
       context: ./object-management
       dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}
     environment:
-      QUARKUS_DATASOURCE_DB_KIND: postgresql
-      QUARKUS_DATASOURCE_USERNAME: postgres
-      QUARKUS_DATASOURCE_PASSWORD: SecReT-PasSwOrD
-      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://database:5432/database
-    ports:
-      - "8080:8080"
+      DB_USERNAME: postgres
+      DB_PASSWORD: SecReT-PasSwOrD
+      DB_PORT: 5432
+      DB_HOST: database
+      DB_NAME: database
     depends_on:
       database:
         condition: service_healthy

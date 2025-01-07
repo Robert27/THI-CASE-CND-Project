@@ -1,2 +1,2 @@
-ALTER TABLE db.public.objects
+ALTER TABLE objects
     ADD COLUMN quantity INT NOT NULL DEFAULT 1;
