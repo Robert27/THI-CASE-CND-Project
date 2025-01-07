@@ -51,9 +51,10 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         if (reorderUrl == null || reorderUrl.isEmpty()) {
             throw new IllegalArgumentException("Reorder URL must be provided");
         }
-        if (!urlValidationPort.validateUrl(reorderUrl)) {
-            throw new IllegalArgumentException("Reorder URL is invalid or unreachable");
-        }
+        // TODO: validate URL
+//        if (!urlValidationPort.validateUrl(reorderUrl)) {
+//            throw new IllegalArgumentException("Reorder URL is invalid or unreachable");
+//        }
         if (!categoryPort.existsById(categoryId)) {
             throw new IllegalArgumentException("Category ID does not exist");
         }
@@ -80,7 +81,6 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         if (storageObjectPort.existsByNameAndCategory(name, categoryId, user.getUserId())) {
             throw new IllegalArgumentException("Storage object with the same name and category already exists");
         }
-        // TODO: infer userId from jwt
         return storageObjectPort.save(new StorageObject(null, user.getUserId(), name, description, categoryId, reorderUrl, quantity, interval, new Date()));
     }
 

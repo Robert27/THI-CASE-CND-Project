@@ -3,7 +3,6 @@ package dev.eggl;
 import dev.eggl.application.service.ListCategoryService;
 import dev.eggl.application.service.StorageObjectService;
 import dev.eggl.port.in.AuthenticationUseCase;
-import dev.eggl.port.in.CategoryListUseCase;
 import dev.eggl.port.in.ListStorageObjectUseCase;
 import dev.eggl.port.out.CategoryPort;
 import dev.eggl.port.out.StorageObjectPort;
@@ -31,10 +30,9 @@ public class AppConfig {
 
     @Produces
     @ApplicationScoped
-    CategoryListUseCase findCategoriesUseCase() {
+    ListCategoryService listCategoryService() {
         return new ListCategoryService(categoriesUseCase.get());
     }
-
 
     @Produces
     @ApplicationScoped
