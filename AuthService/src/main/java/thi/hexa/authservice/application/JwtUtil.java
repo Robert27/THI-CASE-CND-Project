@@ -51,6 +51,8 @@ public class JwtUtil {
                 .header().type("JWT").and()
                 .subject(String.valueOf(user.getUser_id()))
                 .claim("username", user.getUsername())
+                .issuedAt(new Date())
+                .issuer("AuthService")
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getPrivateKey(), SignatureAlgorithm.RS256) // Use RS256 for signing
                 .compact();
