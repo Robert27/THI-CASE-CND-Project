@@ -1,4 +1,4 @@
-package dev.eggl.adapter.rest.validation;
+package dev.eggl.adapter.http.validation;
 
 import dev.eggl.port.out.UrlValidationPort;
 
