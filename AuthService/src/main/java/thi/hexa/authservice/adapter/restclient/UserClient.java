@@ -23,6 +23,7 @@ public class UserClient {
     public boolean validatePassword(int user_id, String password) {
         try {
             String url = userServiceUrl + "/checkpassword";
+            System.out.println(url);
             ValidatePasswordRequest v = new ValidatePasswordRequest(user_id, password);
             ValidatePasswordReply vr = restTemplate.postForObject(url, v, ValidatePasswordReply.class);
             if (vr==null) {
@@ -30,6 +31,7 @@ public class UserClient {
             }
             return vr.isSuccess();
         }catch (Exception e) {
+            System.out.println(e.getMessage());
             return false;
         }
     }
