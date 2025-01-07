@@ -1,0 +1,5 @@
+services:
+  userservice:
+    build:
+      context: .
+      dockerfile: Dockerfile
