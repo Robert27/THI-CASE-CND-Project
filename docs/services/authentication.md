@@ -13,4 +13,4 @@ Der Microsrvice Authservice ist verandwortlich für den Login von Usern und dami
 
 | Method | Path                            | Description                                                          |
 | ------ | ------------------------------- | -------------------------------------------------------------------- |
-| POST   | [/login](#postlogin)            | Ein neues Objekt für einen authentifizierten Nutzer erstellen        |
+| POST   | [/login](#postlogin)            | Anmelden mit bereits bestehenden Nutzer um JWT zu erhalten           |
