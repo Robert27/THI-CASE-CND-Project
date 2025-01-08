@@ -10,4 +10,5 @@ public interface UserRepository {
     Optional<User> findByUserID(int user_id);
     boolean update(User user);
     boolean deleteByUserID(int user_id);
+    Optional<User> findByUsername(String username);
 }

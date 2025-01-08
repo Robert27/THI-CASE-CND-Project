@@ -51,10 +51,17 @@ public class UserServiceImpl implements UserService {
         return userRepository.update(user);
     }
 
+    @Override
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElse(null);
+    }
+
     public static String hashPassword(String password) {
         // Generate a salt
         String salt = BCrypt.gensalt();
         // Hash the password with the salt
         return BCrypt.hashpw(password, salt);
     }
+
+
 }

@@ -17,6 +17,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User save(User user) {
+        if(jpaUserRepository.existsByUsername(user.getUsername())) {
+            return null;
+        }
         UserEntity userEntity = new UserEntity(user);
         try {
             UserEntity u = jpaUserRepository.save(userEntity);
@@ -64,5 +67,17 @@ public class UserRepositoryImpl implements UserRepository {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        Optional<UserEntity> oue =jpaUserRepository.findByUsername(username);
+        if (oue.isEmpty()) {
+            return Optional.empty();
+        } else {
+            UserEntity ue =oue.get();
+            User u = ue.toUser();
+            return Optional.of(u);
+        }
     }
 }

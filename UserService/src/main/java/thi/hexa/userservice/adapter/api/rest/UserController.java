@@ -3,6 +3,7 @@ package thi.hexa.userservice.adapter.api.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import thi.hexa.userservice.adapter.api.rest.dto.*;
+import thi.hexa.userservice.adapter.api.rest.exception.BadRequestException;
 import thi.hexa.userservice.adapter.api.rest.exception.ResourceNotFoundException;
 import thi.hexa.userservice.domain.User;
 import thi.hexa.userservice.domain.UserService;
@@ -24,11 +25,20 @@ public class UserController {
         throw new ResourceNotFoundException("User with userid " + user_id + " not found");
     }
 
+    @GetMapping("username/{username}")
+    public UserResponse findUserByUsername(@PathVariable String username){
+        User u = userService.getUserByUsername(username);
+        if(u != null){
+            return new UserResponse(u.getUser_id(), u.getUsername());
+        }
+        throw new ResourceNotFoundException("User with username " + username + " not found");
+    }
+
     @PostMapping
     public UserResponse createUser(@RequestBody CreateUserRequest createUserRequest){
         User u = userService.createUser(createUserRequest.getUsername(), createUserRequest.getPassword());
         if (u != null){return new UserResponse(u.getUser_id(), u.getUsername());}
-        throw new ResourceNotFoundException("User with username " + createUserRequest.getUsername() + " allready exists");
+        throw new BadRequestException("User with username " + createUserRequest.getUsername() + " allready exists");
     }
 
     @PostMapping("/checkpassword")
