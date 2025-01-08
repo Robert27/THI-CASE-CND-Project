@@ -19,3 +19,4 @@ public class StorageObject {
     private Integer quantity;
     private Date createdAt;
 }
+

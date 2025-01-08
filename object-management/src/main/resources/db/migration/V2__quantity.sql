@@ -1,2 +1,0 @@
-ALTER TABLE objects
-    ADD COLUMN quantity INT NOT NULL DEFAULT 1;
