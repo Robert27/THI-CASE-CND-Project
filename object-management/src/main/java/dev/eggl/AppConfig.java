@@ -4,8 +4,8 @@ import dev.eggl.application.service.ListCategoryService;
 import dev.eggl.application.service.StorageObjectService;
 import dev.eggl.port.in.AuthenticationUseCase;
 import dev.eggl.port.in.ListStorageObjectUseCase;
-import dev.eggl.port.out.CategoryPort;
-import dev.eggl.port.out.StorageObjectPort;
+import dev.eggl.port.out.CategoryRepository;
+import dev.eggl.port.out.StorageObjectRepository;
 import dev.eggl.port.out.UrlValidationPort;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
@@ -20,10 +20,10 @@ public class AppConfig {
     Instance<AuthenticationUseCase> authenticationUseCase;
 
     @Inject
-    Instance<CategoryPort> categoriesUseCase;
+    Instance<CategoryRepository> categoriesUseCase;
 
     @Inject
-    Instance<StorageObjectPort> storageObjectPort;
+    Instance<StorageObjectRepository> storageObjectPort;
 
     @Inject
     Instance<UrlValidationPort> urlValidationPort;

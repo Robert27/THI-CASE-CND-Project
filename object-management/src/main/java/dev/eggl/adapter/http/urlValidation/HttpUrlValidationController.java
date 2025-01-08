@@ -1,4 +1,4 @@
-package dev.eggl.adapter.http.validation;
+package dev.eggl.adapter.http.urlValidation;
 
 import dev.eggl.port.out.UrlValidationPort;
 import jakarta.enterprise.context.ApplicationScoped;

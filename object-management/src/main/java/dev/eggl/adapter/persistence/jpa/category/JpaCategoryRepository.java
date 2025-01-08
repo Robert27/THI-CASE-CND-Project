@@ -1,13 +1,13 @@
 package dev.eggl.adapter.persistence.jpa.category;
 
 import dev.eggl.domain.model.Category;
-import dev.eggl.port.out.CategoryPort;
+import dev.eggl.port.out.CategoryRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
 
 @ApplicationScoped
-public class JpaCategoryRepository implements CategoryPort {
+public class JpaCategoryRepository implements CategoryRepository {
     private final JpaCategoryPanacheRepository panacheRepository;
 
 

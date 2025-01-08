@@ -2,20 +2,20 @@ package dev.eggl.application.service;
 
 import dev.eggl.domain.model.Category;
 import dev.eggl.port.in.CategoryListUseCase;
-import dev.eggl.port.out.CategoryPort;
+import dev.eggl.port.out.CategoryRepository;
 
 import java.util.List;
 
 public class ListCategoryService implements CategoryListUseCase {
-    private final CategoryPort categoryPort;
+    private final CategoryRepository categoryRepository;
 
-    public ListCategoryService(CategoryPort categoryPort) {
-        this.categoryPort = categoryPort;
+    public ListCategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
     public List<Category> findAll() {
-        return categoryPort.findAll();
+        return categoryRepository.findAll();
     }
 
 }

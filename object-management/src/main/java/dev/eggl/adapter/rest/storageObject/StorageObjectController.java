@@ -10,7 +10,6 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static dev.eggl.adapter.rest.common.ControllerCommons.*;
@@ -48,33 +47,33 @@ public class StorageObjectController {
                 .toList();
     }
 
-    @GET
-    @Path("/{ids}")
-    public List<ListStorageObjectModel> findByIds(@PathParam("ids") String ids, @Context HttpHeaders headers) {
-        List<Integer> idList = Arrays.stream(ids.split(","))
-                .map(Integer::parseInt)
-                .toList();
-
-
-        try {
-            String token = extractJwt(headers);
-            List<StorageObject> storageObjects = listStorageObjectUseCase.findByIds(idList, token);
-            return storageObjects.stream()
-                    .map(ListStorageObjectModel::fromDomainModel)
-                    .toList();
-
-        } catch (Exception e) {
-            if (e instanceof AuthenticationFailedException) {
-                throw clientErrorException(
-                        Response.Status.UNAUTHORIZED, e.getMessage());
-            } else {
-                throw serverErrorException(
-                        Response.Status.INTERNAL_SERVER_ERROR, "Error while fetching storage objects");
-            }
-        }
-
-
-    }
+//    @GET
+//    @Path("/{ids}")
+//    public List<ListStorageObjectModel> findByIds(@PathParam("ids") String ids, @Context HttpHeaders headers) {
+//        List<Integer> idList = Arrays.stream(ids.split(","))
+//                .map(Integer::parseInt)
+//                .toList();
+//
+//
+//        try {
+//            String token = extractJwt(headers);
+//            List<StorageObject> storageObjects = listStorageObjectUseCase.findByIds(idList, token);
+//            return storageObjects.stream()
+//                    .map(ListStorageObjectModel::fromDomainModel)
+//                    .toList();
+//
+//        } catch (Exception e) {
+//            if (e instanceof AuthenticationFailedException) {
+//                throw clientErrorException(
+//                        Response.Status.UNAUTHORIZED, e.getMessage());
+//            } else {
+//                throw serverErrorException(
+//                        Response.Status.INTERNAL_SERVER_ERROR, "Error while fetching storage objects");
+//            }
+//        }
+//
+//
+//    }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

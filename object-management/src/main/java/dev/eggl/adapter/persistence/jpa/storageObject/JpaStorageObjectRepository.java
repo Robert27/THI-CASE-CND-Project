@@ -1,13 +1,13 @@
 package dev.eggl.adapter.persistence.jpa.storageObject;
 
 import dev.eggl.domain.model.StorageObject;
-import dev.eggl.port.out.StorageObjectPort;
+import dev.eggl.port.out.StorageObjectRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
 
 @ApplicationScoped
-public class JpaStorageObjectRepository implements StorageObjectPort {
+public class JpaStorageObjectRepository implements StorageObjectRepository {
     private final JpaStorageObjectPanacheRepository panacheRepository;
 
 
@@ -38,8 +38,8 @@ public class JpaStorageObjectRepository implements StorageObjectPort {
     }
 
     @Override
-    public List<StorageObject> findByIds(List<Integer> ids, Integer userId) {
-        return StorageObjectMapper.toDomainList(panacheRepository.find("id in ?1 and userId = ?2", ids, userId).list());
+    public List<StorageObject> findByIds(List<Integer> ids) {
+        return StorageObjectMapper.toDomainList(panacheRepository.find("id in ?1", ids).list());
     }
 
     @Override
@@ -76,6 +76,11 @@ public class JpaStorageObjectRepository implements StorageObjectPort {
     @Override
     public boolean existsByNameAndCategory(String name, Integer categoryId, Integer userId) {
         return panacheRepository.count("name = ?1 and categoryId = ?2 and userId = ?3", name, categoryId, userId) > 0;
+    }
+
+    @Override
+    public List<StorageObject> findByWeekDay(Integer weekDay, Integer userId) {
+        return StorageObjectMapper.toDomainList(panacheRepository.find("weekDay = ?1 and userId = ?2", weekDay, userId).list());
     }
 
 }
