@@ -90,7 +90,6 @@ public class StorageObjectController {
                     createStorageObjectModel.categoryId(),
                     createStorageObjectModel.reorderUrl(),
                     createStorageObjectModel.quantity(),
-                    createStorageObjectModel.interval(),
                     token
             );
             return Response.status(Response.Status.CREATED)
@@ -129,7 +128,6 @@ public class StorageObjectController {
                     createStorageObjectModel.categoryId(),
                     createStorageObjectModel.reorderUrl(),
                     createStorageObjectModel.quantity(),
-                    createStorageObjectModel.interval(),
                     token
             );
             return Response.status(Response.Status.OK)

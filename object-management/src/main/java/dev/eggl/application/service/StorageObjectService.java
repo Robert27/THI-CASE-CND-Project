@@ -37,7 +37,7 @@ public class StorageObjectService implements ListStorageObjectUseCase {
     }
 
     @Override
-    public StorageObject create(String name, String description, Integer categoryId, String reorderUrl, Integer quantity, Integer interval, String token)
+    public StorageObject create(String name, String description, Integer categoryId, String reorderUrl, Integer quantity, String token)
             throws IllegalArgumentException {
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Authorization token must be provided");
@@ -61,9 +61,6 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         if (quantity == null || quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be greater than 0");
         }
-        if (interval == null || interval <= 0) {
-            throw new IllegalArgumentException("Interval must be at least 1 minute");
-        }
 
         // try to authenticate the user
         AuthenticatedUser user;
@@ -81,11 +78,11 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         if (storageObjectPort.existsByNameAndCategory(name, categoryId, user.getUserId())) {
             throw new IllegalArgumentException("Storage object with the same name and category already exists");
         }
-        return storageObjectPort.save(new StorageObject(null, user.getUserId(), name, description, categoryId, reorderUrl, quantity, interval, new Date()));
+        return storageObjectPort.save(new StorageObject(null, user.getUserId(), name, description, categoryId, reorderUrl, quantity, new Date()));
     }
 
     @Override
-    public StorageObject update(Integer id, String name, String description, Integer categoryId, String reorderUrl, Integer quantity, Integer interval, String token)
+    public StorageObject update(Integer id, String name, String description, Integer categoryId, String reorderUrl, Integer quantity, String token)
             throws IllegalArgumentException {
         AuthenticatedUser user;
         try {
@@ -98,7 +95,7 @@ public class StorageObjectService implements ListStorageObjectUseCase {
             throw new IllegalArgumentException("Storage object not found");
         }
         // TODO: infer userId from jwt
-        return storageObjectPort.update(new StorageObject(id, 1213, name, description, categoryId, reorderUrl, quantity, interval, existing.getCreatedAt()));
+        return storageObjectPort.update(new StorageObject(id, 1213, name, description, categoryId, reorderUrl, quantity, existing.getCreatedAt()));
     }
 
     @Override

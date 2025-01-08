@@ -34,9 +34,6 @@ public class StorageObjectJpaEntity {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "interval_min")
-    private Integer interval;
-
     @Column(name = "created_at")
     private Date createdAt;
 }

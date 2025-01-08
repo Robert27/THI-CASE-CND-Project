@@ -17,6 +17,5 @@ public class StorageObject {
     private Integer categoryId;
     private String reorderUrl;
     private Integer quantity;
-    private Integer interval;
     private Date createdAt;
 }

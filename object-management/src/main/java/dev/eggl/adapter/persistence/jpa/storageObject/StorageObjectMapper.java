@@ -18,7 +18,6 @@ final class StorageObjectMapper {
         jpaEntity.setCategoryId(entity.getCategoryId());
         jpaEntity.setReorderUrl(entity.getReorderUrl());
         jpaEntity.setQuantity(entity.getQuantity());
-        jpaEntity.setInterval(entity.getInterval());
         jpaEntity.setCreatedAt(entity.getCreatedAt());
         return jpaEntity;
     }
@@ -32,7 +31,6 @@ final class StorageObjectMapper {
                 jpaEntity.getCategoryId(),
                 jpaEntity.getReorderUrl(),
                 jpaEntity.getQuantity(),
-                jpaEntity.getInterval(),
                 jpaEntity.getCreatedAt()
         );
     }
