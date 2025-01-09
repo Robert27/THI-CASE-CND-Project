@@ -1,16 +1,16 @@
 syntax = "proto3";
 
 option java_multiple_files = false;
-option java_package = "dev.eggl.storageObjects";
+option java_package = "dev.eggl.objects";
 option java_outer_classname = "StorageObjectsProto";
 
+package objects;
 
 // The storage service definition.
-service StorageService {
+service ObjectService {
   rpc GetStorageObjectsByIds (StorageObjectIdsRequest) returns (StorageObjectsReply) {}
   rpc GetStorageObjectsByUserId (UserIdRequest) returns (StorageObjectsReply) {}
 }
-
 
 
 // The request message containing the list of storage object IDs.
@@ -31,6 +31,5 @@ message StorageObjectsReply {
 // The storage object message.
 message StorageObject {
   int32 id = 1;
-  string name = 2;
-  string description = 3;
+  string name = 2; // TODO: Remove for production
 }

@@ -1,9 +1,9 @@
 package dev.eggl.adapter.grpc;
 
 import dev.eggl.domain.model.StorageObject;
+import dev.eggl.objects.ObjectService;
+import dev.eggl.objects.StorageObjectsProto;
 import dev.eggl.port.in.ListStorageObjectUseCase;
-import dev.eggl.storageObjects.StorageObjectsProto;
-import dev.eggl.storageObjects.StorageService;
 import io.quarkus.grpc.GrpcService;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @GrpcService
-public class GrpcController implements StorageService {
+public class GrpcController implements ObjectService {
 
     private final ListStorageObjectUseCase listStorageObjectUseCase;
 
@@ -37,6 +37,7 @@ public class GrpcController implements StorageService {
 
     @Override
     public Uni<StorageObjectsProto.StorageObjectsReply> getStorageObjectsByUserId(StorageObjectsProto.UserIdRequest request) {
+        System.out.println("getStorageObjectsByUserId");
         return Uni.createFrom().item(request.getUserId())
                 .onItem().transformToUni(userId -> Uni.createFrom().item(() -> listStorageObjectUseCase.findAll(userId))
                         .runSubscriptionOn(Infrastructure.getDefaultExecutor()))
@@ -54,7 +55,6 @@ public class GrpcController implements StorageService {
         return StorageObjectsProto.StorageObject.newBuilder()
                 .setId(storageObject.getId())
                 .setName(storageObject.getName())
-                .setDescription(storageObject.getDescription())
                 .build();
     }
 }
