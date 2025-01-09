@@ -3,6 +3,7 @@ package dev.eggl.port.out;
 import dev.eggl.domain.model.StorageObject;
 
 import java.util.List;
+import java.util.Map;
 
 public interface StorageObjectRepository {
     StorageObject save(StorageObject storageObject);
@@ -13,7 +14,7 @@ public interface StorageObjectRepository {
 
     List<StorageObject> findByIds(List<Integer> ids);
 
-    List<StorageObject> findByWeekDay(Integer weekDay, Integer userId);
+    Map<Integer, List<Integer>> findAllDayUsers(Integer weekDay, List<Integer> userIds);
 
     Boolean existsByUrl(String reorderUrl, Integer userId);
 

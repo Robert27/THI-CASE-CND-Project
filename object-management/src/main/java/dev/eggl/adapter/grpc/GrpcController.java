@@ -37,24 +37,48 @@ public class GrpcController implements ObjectService {
 
     @Override
     public Uni<StorageObjectsProto.StorageObjectsReply> getStorageObjectsByUserId(StorageObjectsProto.UserIdRequest request) {
-        System.out.println("getStorageObjectsByUserId");
-        return Uni.createFrom().item(request.getUserId())
-                .onItem().transformToUni(userId -> Uni.createFrom().item(() -> listStorageObjectUseCase.findAll(userId))
-                        .runSubscriptionOn(Infrastructure.getDefaultExecutor()))
-                .onItem().transform(storageObjects -> {
-                    List<StorageObjectsProto.StorageObject> protoStorageObjects = storageObjects.stream()
-                            .map(this::toProto)
-                            .collect(Collectors.toList());
-                    return StorageObjectsProto.StorageObjectsReply.newBuilder()
-                            .addAllStorageObjects(protoStorageObjects)
+        return null;
+    }
+
+    @Override
+    public Uni<StorageObjectsProto.DayUsersReply> findAllDayUsers(StorageObjectsProto.DayUsersRequest request) {
+        return Uni.createFrom().item(request)
+                .onItem().transformToUni(req ->
+                        // findAllDayUsers now returns a Map<Integer, List<StorageObject>>
+                        Uni.createFrom().item(() -> listStorageObjectUseCase.findAllDayUsers(req.getWeekDay(), req.getUserIdsList()))
+                                .runSubscriptionOn(Infrastructure.getDefaultExecutor())
+                )
+                .onItem().transform(storageObjectsByUser -> {
+                    List<StorageObjectsProto.UserObjectIds> userObjectIdsList =
+                            storageObjectsByUser.entrySet().stream() // Access key-value pairs
+                                    .map(entry ->
+                                            StorageObjectsProto.UserObjectIds.newBuilder()
+                                                    .setUserId(entry.getKey()) // Set the user ID
+                                                    .addAllObjectIds(
+                                                            entry.getValue()
+
+                                                    )
+                                                    .build()
+                                    )
+                                    .collect(Collectors.toList());
+
+                    return StorageObjectsProto.DayUsersReply.newBuilder()
+                            .addAllUserObjectIds(userObjectIdsList)
                             .build();
                 });
     }
 
+
     private StorageObjectsProto.StorageObject toProto(StorageObject storageObject) {
-        return StorageObjectsProto.StorageObject.newBuilder()
+        StorageObjectsProto.StorageObject.Builder protoBuilder = StorageObjectsProto.StorageObject.newBuilder()
                 .setId(storageObject.getId())
-                .setName(storageObject.getName())
-                .build();
+                .setName(storageObject.getName() != null ? storageObject.getName() : "")
+                .setDescription(storageObject.getDescription() != null ? storageObject.getDescription() : "")
+                .setCategoryId(storageObject.getCategoryId() != null ? storageObject.getCategoryId() : 0)
+                .setReorderUrl(storageObject.getReorderUrl() != null ? storageObject.getReorderUrl() : "")
+                .setQuantity(storageObject.getQuantity() != null ? storageObject.getQuantity() : 0)
+                .setWeekday(storageObject.getWeekday() != null ? storageObject.getWeekday() : 0);
+
+        return protoBuilder.build();
     }
 }

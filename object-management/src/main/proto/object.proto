@@ -10,8 +10,8 @@ package objects;
 service ObjectService {
   rpc GetStorageObjectsByIds (StorageObjectIdsRequest) returns (StorageObjectsReply) {}
   rpc GetStorageObjectsByUserId (UserIdRequest) returns (StorageObjectsReply) {}
+  rpc FindAllDayUsers (DayUsersRequest) returns (DayUsersReply) {}
 }
-
 
 // The request message containing the list of storage object IDs.
 message StorageObjectIdsRequest {
@@ -23,6 +23,23 @@ message UserIdRequest {
   int32 userId = 1;
 }
 
+// The request message for finding all day users.
+message DayUsersRequest {
+  int32 weekDay = 1;         // Integer for the weekday
+  repeated int32 userIds = 2; // List of user IDs
+}
+
+// The response message containing storage object IDs grouped by user ID.
+message DayUsersReply {
+  repeated UserObjectIds userObjectIds = 1;
+}
+
+// The message for grouping storage object IDs by user ID.
+message UserObjectIds {
+  int32 userId = 1;           // User ID
+  repeated int32 objectIds = 2; // List of object IDs for the user
+}
+
 // The response message containing the list of storage objects.
 message StorageObjectsReply {
   repeated StorageObject storageObjects = 1;
@@ -31,5 +48,10 @@ message StorageObjectsReply {
 // The storage object message.
 message StorageObject {
   int32 id = 1;
-  string name = 2; // TODO: Remove for production
+  string name = 2;
+  string description = 3;
+  int32 categoryId = 4;
+  string reorderUrl = 5;
+  int32 quantity = 6;
+  int32 weekday = 8; // The day of the week
 }

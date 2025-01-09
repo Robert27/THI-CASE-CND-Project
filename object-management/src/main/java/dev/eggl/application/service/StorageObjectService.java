@@ -10,6 +10,7 @@ import dev.eggl.port.out.UrlValidationPort;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class StorageObjectService implements ListStorageObjectUseCase {
     private final StorageObjectRepository storageObjectRepository;
@@ -37,12 +38,12 @@ public class StorageObjectService implements ListStorageObjectUseCase {
     }
 
     @Override
-    public List<StorageObject> findAll(Integer userId) {
-        return storageObjectRepository.findAll(userId);
+    public Map<Integer, List<Integer>> findAllDayUsers(Integer weekDay, List<Integer> userIds) {
+        return storageObjectRepository.findAllDayUsers(weekDay, userIds);
     }
 
     @Override
-    public StorageObject create(String name, String description, Integer categoryId, String reorderUrl, Integer quantity, String token)
+    public StorageObject create(String name, String description, Integer categoryId, String reorderUrl, Integer quantity, Integer weekday, String token)
             throws IllegalArgumentException {
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Authorization token must be provided");
@@ -56,6 +57,7 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         if (reorderUrl == null || reorderUrl.isEmpty()) {
             throw new IllegalArgumentException("Reorder URL must be provided");
         }
+
         // TODO: validate URL
 //        if (!urlValidationPort.validateUrl(reorderUrl)) {
 //            throw new IllegalArgumentException("Reorder URL is invalid or unreachable");
@@ -83,11 +85,12 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         if (storageObjectRepository.existsByNameAndCategory(name, categoryId, user.getUserId())) {
             throw new IllegalArgumentException("Storage object with the same name and category already exists");
         }
-        return storageObjectRepository.save(new StorageObject(null, user.getUserId(), name, description, categoryId, reorderUrl, quantity, new Date()));
+        return storageObjectRepository.save(new StorageObject(null, user.getUserId(), name, description, categoryId, reorderUrl, quantity, new Date(), weekday));
     }
 
     @Override
-    public StorageObject update(Integer id, String name, String description, Integer categoryId, String reorderUrl, Integer quantity, String token)
+    public StorageObject update(Integer id, String name, String description, Integer categoryId, String reorderUrl, Integer quantity, Integer weekday,
+                                String token)
             throws IllegalArgumentException {
         AuthenticatedUser user;
         try {
@@ -99,8 +102,7 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         if (existing == null) {
             throw new IllegalArgumentException("Storage object not found");
         }
-        // TODO: infer userId from jwt
-        return storageObjectRepository.update(new StorageObject(id, 1213, name, description, categoryId, reorderUrl, quantity, existing.getCreatedAt()));
+        return storageObjectRepository.update(new StorageObject(id, user.getUserId(), name, description, categoryId, reorderUrl, quantity, existing.getCreatedAt(), weekday));
     }
 
     @Override
@@ -116,7 +118,8 @@ public class StorageObjectService implements ListStorageObjectUseCase {
 
     @Override
     public List<StorageObject> findByIds(List<Integer> ids) {
-        return storageObjectRepository.findByIds(ids);
+        List<StorageObject> rest = storageObjectRepository.findByIds(ids);
+        return rest;
     }
 
 

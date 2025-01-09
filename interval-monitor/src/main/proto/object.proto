@@ -1,34 +1,30 @@
 syntax = "proto3";
 
-option java_multiple_files = true;
-option java_package = "dev.eggl";
-option java_outer_classname = "ObjectsClientProto";
+option java_multiple_files = false;
+option java_package = "dev.eggl.objects";
+option java_outer_classname = "StorageObjectsProto";
 
 package objects;
+
 // The storage service definition.
 service ObjectService {
-  rpc GetStorageObjectsByIds (StorageObjectIdsRequest) returns (StorageObjectsReply) {}
-  rpc GetStorageObjectsByUserId (UserIdRequest) returns (StorageObjectsReply) {}
+  rpc FindAllDayUsers (DayUsersRequest) returns (DayUsersReply) {}
 }
 
-
-// The request message containing the list of storage object IDs.
-message StorageObjectIdsRequest {
-  repeated int32 ids = 1;
+// The request message for finding all day users.
+message DayUsersRequest {
+  int32 weekDay = 1;         // Integer for the weekday
+  repeated int32 userIds = 2; // List of user IDs
 }
 
-// The request message containing the user ID.
-message UserIdRequest {
-  int32 userId = 1;
+// The response message containing storage object IDs grouped by user ID.
+message DayUsersReply {
+  repeated UserObjectIds userObjectIds = 1;
 }
 
-// The response message containing the list of storage objects.
-message StorageObjectsReply {
-  repeated StorageObject storageObjects = 1;
+// The message for grouping storage object IDs by user ID.
+message UserObjectIds {
+  int32 userId = 1;           // User ID
+  repeated int32 objectIds = 2; // List of object IDs for the user
 }
 
-// The storage object message.
-message StorageObject {
-  int32 id = 1;
-  string name = 2; // TODO: Remove for production
-}

@@ -18,5 +18,6 @@ public class StorageObject {
     private String reorderUrl;
     private Integer quantity;
     private Date createdAt;
+    private Integer weekday;
 }
 

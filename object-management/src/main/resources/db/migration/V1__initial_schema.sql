@@ -6,7 +6,7 @@ create table if not exists users
     username      varchar(255)
 );
 
-create table categories
+create table if not exists categories
 (
     id          serial
         primary key,
@@ -15,7 +15,7 @@ create table categories
     description text
 );
 
-create table objects
+create table if not exists objects
 (
     id               serial
         primary key,

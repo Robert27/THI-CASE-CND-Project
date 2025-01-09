@@ -34,6 +34,9 @@ public class StorageObjectJpaEntity {
     @Column(name = "quantity")
     private Integer quantity;
 
+    @Column(name = "weekday")
+    private Integer weekday;
+    
     @Column(name = "created_at")
     private Date createdAt;
 }
