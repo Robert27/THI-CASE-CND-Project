@@ -1,15 +1,15 @@
-name: Build Object Management
+name: Build Interval Monitor
 
 on:
   push:
     branches: ['main']
     paths:
-      - 'object-management/**'
-      - '.github/workflows/build-object-management.yml'
+      - 'interval-monitor/**'
+      - '.github/workflows/build-interval-monitor.yml'
 
 env:
-  VERSION_TAG_PREFIX: 'object-management-'
-  IMAGE_NAME: ${{ github.repository }}/object-management
+  VERSION_TAG_PREFIX: 'interval-monitor-'
+  IMAGE_NAME: ${{ github.repository }}/interval-monitor
   REGISTRY: ghcr.io
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
       packages: write
     defaults:
       run:
-        working-directory: object-management/
+        working-directory: interval-monitor/
 
     steps:
       - uses: actions/checkout@v4
@@ -51,8 +51,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: object-management/
-          file: object-management/src/main/docker/Dockerfile.jvm
+          context: interval-monitor/
+          file: interval-monitor/src/main/docker/Dockerfile.jvm
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
