@@ -40,7 +40,7 @@ export default function PricingPage() {
   const { data: categories = [] } = useQuery<Category[]>({
     queryKey: ["categories"],
     queryFn: async () => {
-      const res = await fetch("http://localhost:8084/category");
+      const res = await fetch("http://localhost:8082/category");
 
       console.log("res", res);
 
@@ -52,7 +52,7 @@ export default function PricingPage() {
     queryKey: ["objects"],
     queryFn: async () => {
       if (!session?.user) throw new Error("No token found");
-      const res = await fetch("http://localhost:8084/object", {
+      const res = await fetch("http://localhost:8082/object", {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
         },
@@ -73,7 +73,7 @@ export default function PricingPage() {
   >({
     mutationFn: async (newObjectData) => {
       if (!session?.user) throw new Error("No token found");
-      const res = await fetch("http://localhost:8084/object", {
+      const res = await fetch("http://localhost:8082/object", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -114,7 +114,7 @@ export default function PricingPage() {
   const deleteObjectMutation = useMutation<void, Error, number>({
     mutationFn: async (id) => {
       if (!session?.user) throw new Error("No token found");
-      const res = await fetch(`http://localhost:8084/object/${id}`, {
+      const res = await fetch(`http://localhost:8082/object/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -166,7 +166,7 @@ export default function PricingPage() {
       if (!session?.user) throw new Error("No token found");
       console.log("updatedObjectData", updatedObjectData);
       const res = await fetch(
-        `http://localhost:8084/object/${updatedObjectData.id}`,
+        `http://localhost:8082/object/${updatedObjectData.id}`,
         {
           method: "PUT",
           headers: {

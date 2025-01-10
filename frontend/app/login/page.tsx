@@ -20,12 +20,12 @@ const Login: React.FC = () => {
     try {
       console.log("credentials", {
         redirect: false,
-        user_id: username,
+        username,
         password,
       });
       const res = await signIn("credentials", {
         redirect: false,
-        user_id: username,
+        username,
         password,
       });
 

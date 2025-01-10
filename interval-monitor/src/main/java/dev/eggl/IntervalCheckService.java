@@ -16,18 +16,37 @@ public class IntervalCheckService {
     @Inject
     ObjectClientService objectClientService;
 
-    @Scheduled(every = "5s")
-    void checkMissingEntries() {
-        List<Integer> userIds = List.of(1, 2, 3);
-        List<Integer> missingUserIds = repository.findMissingEntriesForUsersAndDay(userIds, LocalDate.now());
+    @Inject
+    UserClientService userClientService;
 
-        // For each batch of 5 missing user IDs, request the day users from the object service
-        for (int i = 0; i < missingUserIds.size(); i += 5) {
-            List<Integer> batch = missingUserIds.subList(i, Math.min(i + 5, missingUserIds.size()));
-            objectClientService.findAllDayUsers(0, batch)
-                    .subscribe().with(reply -> {
-                        System.out.println("Received day users: " + reply);
-                    });
-        }
+    @Scheduled(every = "10s")
+    void checkMissingEntries() {
+        userClientService.getUserIds()
+                .subscribe().with(userIdsResponse -> {
+                    List<Integer> userIds = userIdsResponse.userIds;
+                    System.out.println("Received user IDs: " + userIds);
+
+                    // Process in batches of 5
+                    for (int i = 0; i < userIds.size(); i += 5) {
+                        List<Integer> batch = userIds.subList(i, Math.min(i + 5, userIds.size()));
+                        objectClientService.findAllDayUsers(0, batch)
+                                .subscribe().with(dayUsersResponse -> {
+                                    System.out.println("Received day users: " + dayUsersResponse);
+
+                                    // Fix print logic: iterate over each UserObjectIds
+                                    for (ObjectClientService.UserObjectIds userObjectIds : dayUsersResponse.userObjectIds) {
+                                        System.out.println("Current user ID: " + userObjectIds.userId);
+                                        System.out.println("Current user object IDs: " + userObjectIds.objectIds);
+                                    }
+                                });
+                    }
+                    List<Integer> missingUserIds = repository.findMissingEntriesForUsersAndDay(userIds,
+                            LocalDate.now());
+
+                    // For each missing user, call ObjectClientService to fetch items
+                    for (Integer userId : missingUserIds) {
+                        System.out.println("Fetching items for user ID " + userId);
+                    }
+                });
     }
 }

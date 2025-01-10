@@ -7,7 +7,7 @@ const authOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        user_id: { label: "Username", type: "text" },
+        username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
