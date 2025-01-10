@@ -38,7 +38,7 @@ public class UserClient {
 
     public User getUser(String username) {
         try {
-            String url = userServiceUrl+ "/" + username;
+            String url = userServiceUrl+ "/username/" + username;
             GetUserResponse getUserResponse = restTemplate.getForObject(url, GetUserResponse.class);
             if (getUserResponse==null) {
                 System.out.println("failed to get user");

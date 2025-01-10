@@ -48,7 +48,7 @@ public class UserController {
     public CheckPasswordResponse checkPassword(@RequestBody CheckPasswordRequest checkPasswordRequest){
         User u = userService.getUserByUsername(checkPasswordRequest.getUsername());
         if(u == null){
-            throw new ResourceNotFoundException("User with username " + checkPasswordRequest.getUsername() + " not found");
+           return  new CheckPasswordResponse(false);
         }
         boolean b = userService.verifyPassword(u, checkPasswordRequest.getPassword());
         return new CheckPasswordResponse(b);

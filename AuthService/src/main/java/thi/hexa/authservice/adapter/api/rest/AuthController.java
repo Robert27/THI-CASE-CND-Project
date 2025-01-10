@@ -20,6 +20,7 @@ public class AuthController {
 
         String token = null;
         try {
+            System.out.println("username " + loginRequest.getUsername()+ " password " + loginRequest.getPassword() );
             token = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
         } catch (AuthException e) {
             return new LoginReply(null,false,e.getMessage());

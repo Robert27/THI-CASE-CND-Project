@@ -2,10 +2,20 @@ syntax = "proto3";
 
 option java_multiple_files = true;
 option java_package = "thi.hexa.userservice.usergrpc";
-option java_outer_classname = "PostProto";
+option java_outer_classname = "UserProto";
 
-service HelloService {
+service GrpcUserService {
   rpc sayHello (HelloRequest) returns (HelloResponse);
+  rpc getUserIds(UserIdsRequest) returns (UserIdsResponse);
+
+}
+
+message UserIdsRequest {
+
+}
+
+message UserIdsResponse {
+  repeated  int32 user_ids =1;
 }
 
 message HelloRequest {
