@@ -13,25 +13,25 @@ import java.util.List;
 @ApplicationScoped
 public class IntervalStatusRepository implements PanacheRepositoryBase<IntervalStatus, Integer> {
 
-    public List<Integer> findMissingEntriesForUsersAndDay(List<Integer> userIds, LocalDate date) {
+    public List<Integer> findMissingEntriesForUsersAndDay(List<Integer> objectIds, LocalDate date) {
         Instant startOfDay = date.atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant endOfDay = date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant();
 
         // 1. Find all user IDs that DO have an interval_status entry for today
         TypedQuery<Integer> query = getEntityManager().createQuery(
-                "SELECT DISTINCT i.userId FROM IntervalStatus i " +
-                        "WHERE i.userId IN :userIds " +
+                "SELECT DISTINCT i.objectId FROM IntervalStatus i " +
+                        "WHERE i.objectId IN :objectIds " +
                         "  AND i.createdAt >= :startOfDay " +
                         "  AND i.createdAt < :endOfDay",
                 Integer.class);
-        query.setParameter("userIds", userIds);
+        query.setParameter("objectIds", objectIds);
         query.setParameter("startOfDay", startOfDay);
         query.setParameter("endOfDay", endOfDay);
 
         List<Integer> existingUserIds = query.getResultList();
 
         // 2. Create a new list for missing user IDs
-        List<Integer> missingUserIds = new ArrayList<>(userIds);
+        List<Integer> missingUserIds = new ArrayList<>(objectIds);
         missingUserIds.removeAll(existingUserIds);
 
         // The remaining IDs in missingUserIds have no entry for today

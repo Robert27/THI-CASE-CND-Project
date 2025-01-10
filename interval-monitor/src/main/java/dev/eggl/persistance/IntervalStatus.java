@@ -20,8 +20,8 @@ public class IntervalStatus extends PanacheEntityBase {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    @Column(name = "object_id", nullable = false)
+    private Integer objectId;
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
