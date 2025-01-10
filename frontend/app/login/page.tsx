@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Alert, Button, Input } from "@nextui-org/react";
 import { LuChevronRight } from "react-icons/lu";
@@ -10,11 +10,10 @@ import { LuChevronRight } from "react-icons/lu";
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const [pending, setPending] = useState(false);
-  const { status } = useSession();
   const router = useRouter();
-  const formSubmitted = async (event) => {
+  const formSubmitted = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     setPending(true);
 
@@ -98,7 +97,7 @@ const Login: React.FC = () => {
   );
 };
 
-function LoginButton({ pending }) {
+function LoginButton({ pending }: { pending: boolean }) {
   return (
     <Button
       aria-disabled={pending}

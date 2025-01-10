@@ -72,6 +72,7 @@ export default function PricingPage() {
     Omit<StorageObject, "id">
   >({
     mutationFn: async (newObjectData) => {
+      if (!session?.user) throw new Error("No token found");
       const res = await fetch("http://localhost:8084/object", {
         method: "POST",
         headers: {
@@ -112,6 +113,7 @@ export default function PricingPage() {
 
   const deleteObjectMutation = useMutation<void, Error, number>({
     mutationFn: async (id) => {
+      if (!session?.user) throw new Error("No token found");
       const res = await fetch(`http://localhost:8084/object/${id}`, {
         method: "DELETE",
         headers: {
@@ -161,6 +163,7 @@ export default function PricingPage() {
 
   const updateObjectMutation = useMutation<void, Error, StorageObject>({
     mutationFn: async (updatedObjectData) => {
+      if (!session?.user) throw new Error("No token found");
       console.log("updatedObjectData", updatedObjectData);
       const res = await fetch(
         `http://localhost:8084/object/${updatedObjectData.id}`,
