@@ -11,4 +11,5 @@ FROM openjdk:23-jdk-slim AS app
 WORKDIR /app
 COPY --from=builder /tmp/build/libs/*.jar /app/app.jar
 EXPOSE 8080
+EXPOSE 9091
 ENTRYPOINT ["java", "-jar", "app.jar"]

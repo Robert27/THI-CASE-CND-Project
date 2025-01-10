@@ -28,6 +28,7 @@ services:
       DB_PASSWORD: SecReT-PasSwOrD
     ports:
       - "8080:8080"
+      - "9091:9019"
     depends_on:
       database:
         condition: service_healthy
