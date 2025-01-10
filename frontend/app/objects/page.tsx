@@ -17,14 +17,19 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Alert,
 } from "@nextui-org/react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 
 import CreateObjectModal from "@/components/CreateObjectModal";
 import EditObjectModal from "@/components/EditObjectModal";
 import { StorageObject, Category } from "@/types";
 
 export default function PricingPage() {
+  const { data: session, status } = useSession();
+
+  console.log("session", session, status);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editObject, setEditObject] = useState<StorageObject | null>(null);
@@ -35,16 +40,27 @@ export default function PricingPage() {
   const { data: categories = [] } = useQuery<Category[]>({
     queryKey: ["categories"],
     queryFn: async () => {
-      const res = await fetch("http://localhost:8080/category");
+      const res = await fetch("http://localhost:8084/category");
+
+      console.log("res", res);
 
       return res.json();
     },
   });
 
-  const { data: items = [] } = useQuery<StorageObject[]>({
+  const { data: items = [], error: fetchError } = useQuery<StorageObject[]>({
     queryKey: ["objects"],
     queryFn: async () => {
-      const res = await fetch("http://localhost:8080/object");
+      if (!session?.user) throw new Error("No token found");
+      const res = await fetch("http://localhost:8084/object", {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch objects");
+      }
 
       return res.json();
     },
@@ -56,9 +72,12 @@ export default function PricingPage() {
     Omit<StorageObject, "id">
   >({
     mutationFn: async (newObjectData) => {
-      const res = await fetch("http://localhost:8080/object", {
+      const res = await fetch("http://localhost:8084/object", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.accessToken}`,
+        },
         body: JSON.stringify(newObjectData),
       });
 
@@ -93,8 +112,11 @@ export default function PricingPage() {
 
   const deleteObjectMutation = useMutation<void, Error, number>({
     mutationFn: async (id) => {
-      const res = await fetch(`http://localhost:8080/object/${id}`, {
+      const res = await fetch(`http://localhost:8084/object/${id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
       });
 
       if (!res.ok) {
@@ -118,7 +140,7 @@ export default function PricingPage() {
 
   const handleDelete = (id: number) => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this item?"
+      "Are you sure you want to delete this item?",
     );
 
     if (!confirmed) {
@@ -139,13 +161,17 @@ export default function PricingPage() {
 
   const updateObjectMutation = useMutation<void, Error, StorageObject>({
     mutationFn: async (updatedObjectData) => {
+      console.log("updatedObjectData", updatedObjectData);
       const res = await fetch(
-        `http://localhost:8080/object/${updatedObjectData.id}`,
+        `http://localhost:8084/object/${updatedObjectData.id}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.accessToken}`,
+          },
           body: JSON.stringify(updatedObjectData),
-        }
+        },
       );
 
       if (!res.ok) {
@@ -168,16 +194,6 @@ export default function PricingPage() {
     },
   });
 
-  const formatInterval = (minutes: number) => {
-    if (minutes < 60) {
-      return `${minutes} min`;
-    } else if (minutes < 1440) {
-      return `${(minutes / 60).toFixed(1)} hours`;
-    } else {
-      return `${(minutes / 1440).toFixed(1)} days`;
-    }
-  };
-
   const handleAlertClose = () => {
     setAlertMessage(null);
   };
@@ -198,6 +214,15 @@ export default function PricingPage() {
         </div>
       </div>
 
+      {fetchError && (
+        <Alert
+          color="danger"
+          description={fetchError.message}
+          title="Error"
+          onClose={handleAlertClose}
+        />
+      )}
+
       <div className="mt-8 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle">
@@ -206,7 +231,7 @@ export default function PricingPage() {
                 <TableColumn>Name</TableColumn>
                 <TableColumn>Category</TableColumn>
                 <TableColumn>Quantity</TableColumn>
-                <TableColumn>Interval</TableColumn>
+                <TableColumn>Weekday</TableColumn>
                 <TableColumn>Actions</TableColumn>
               </TableHeader>
               <TableBody items={items}>
@@ -220,7 +245,7 @@ export default function PricingPage() {
                       </Chip>
                     </TableCell>
                     <TableCell>{item.quantity}</TableCell>
-                    <TableCell>{formatInterval(item.interval)}</TableCell>
+                    <TableCell>{item.weekday}</TableCell>
                     <TableCell>
                       <Dropdown className="bg-background border-1 border-default-200">
                         <DropdownTrigger>

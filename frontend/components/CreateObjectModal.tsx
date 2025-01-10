@@ -45,21 +45,20 @@ export default function CreateObjectModal({
   const [modalName, setModalName] = useState("");
   const [modalDescription, setModalDescription] = useState("");
   const [modalCategoryId, setModalCategoryId] = useState<number | null>(null);
-  const [modalInterval, setModalInterval] = useState(1); // 1 minute
-  const [modalquantity, setModalQuantity] = useState(1); // 1 unit
+  const [modalWeekday, setModalWeekday] = useState<number | null>(null); // 0-6 for Monday to Sunday
+  const [modalQuantity, setModalQuantity] = useState(1); // 1 unit
   const [modalReorderUrl, setModalReorderUrl] = useState("");
 
   const canCreate =
     modalName.trim() !== "" &&
-    modalDescription.trim() !== "" &&
     modalCategoryId !== null &&
     modalReorderUrl.trim() !== "" &&
-    modalInterval > 0 &&
-    modalquantity > 0;
+    modalWeekday !== null &&
+    modalQuantity > 0;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (modalCategoryId === null) {
+    if (modalCategoryId === null || modalWeekday === null) {
       return;
     }
     const newObjectData = {
@@ -67,8 +66,8 @@ export default function CreateObjectModal({
       description: modalDescription,
       categoryId: modalCategoryId, // Send only the ID
       reorderUrl: modalReorderUrl,
-      interval: modalInterval,
-      quantity: modalquantity,
+      weekday: modalWeekday,
+      quantity: modalQuantity,
     };
 
     onSubmit(newObjectData);
@@ -128,21 +127,48 @@ export default function CreateObjectModal({
                 </SelectItem>
               ))}
             </Select>
+            <Select
+              isRequired
+              label="Weekday"
+              placeholder="Select a weekday"
+              selectedKeys={
+                modalWeekday !== null ? [modalWeekday.toString()] : []
+              }
+              onSelectionChange={(keys) => {
+                const selectedId = Array.from(keys)[0];
+
+                setModalWeekday(Number(selectedId));
+              }}
+            >
+              <SelectItem key="0" value="0">
+                Monday
+              </SelectItem>
+              <SelectItem key="1" value="1">
+                Tuesday
+              </SelectItem>
+              <SelectItem key="2" value="2">
+                Wednesday
+              </SelectItem>
+              <SelectItem key="3" value="3">
+                Thursday
+              </SelectItem>
+              <SelectItem key="4" value="4">
+                Friday
+              </SelectItem>
+              <SelectItem key="5" value="5">
+                Saturday
+              </SelectItem>
+              <SelectItem key="6" value="6">
+                Sunday
+              </SelectItem>
+            </Select>
             <div className="flex gap-4">
-              <Input
-                isRequired
-                label="Interval (minutes)"
-                min={1}
-                type="number"
-                value={modalInterval.toString()}
-                onValueChange={(value) => setModalInterval(Number(value))}
-              />
               <Input
                 isRequired
                 label="Quantity"
                 min={1}
                 type="number"
-                value={modalquantity.toString()}
+                value={modalQuantity.toString()}
                 onValueChange={(value) => setModalQuantity(Number(value))}
               />
             </div>

@@ -10,8 +10,8 @@ export type StorageObject = {
   description: string;
   categoryId: number;
   reorderUrl: string;
+  weekday: number;
   quantity: number;
-  interval: number;
 };
 
 export type Category = {

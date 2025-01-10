@@ -31,8 +31,9 @@ export default function EditObjectModal({
   alertMessage: string | null;
   onAlertClose: () => void;
 }) {
+  console.log("editObject", editObject);
   const [localEditObject, setLocalEditObject] = useState<StorageObject | null>(
-    editObject
+    editObject,
   );
 
   useEffect(() => {
@@ -111,34 +112,46 @@ export default function EditObjectModal({
                 </SelectItem>
               ))}
             </Select>
-            <div className="flex gap-4">
-              <Input
-                isRequired
-                label="Interval (minutes)"
-                min={1}
-                type="number"
-                value={localEditObject.interval.toString()}
-                onValueChange={(value) =>
-                  setLocalEditObject({
-                    ...localEditObject,
-                    interval: Number(value),
-                  })
-                }
-              />
-              <Input
-                isRequired
-                label="Quantity"
-                min={1}
-                type="number"
-                value={localEditObject.quantity.toString()}
-                onValueChange={(value) =>
-                  setLocalEditObject({
-                    ...localEditObject,
-                    quantity: Number(value),
-                  })
-                }
-              />
-            </div>
+            <Select
+              isRequired
+              label="Weekday"
+              placeholder="Select a weekday"
+              selectedKeys={
+                localEditObject.weekday !== null
+                  ? [localEditObject.weekday.toString()]
+                  : []
+              }
+              onSelectionChange={(keys) => {
+                const selectedId = Array.from(keys)[0];
+
+                setLocalEditObject({
+                  ...localEditObject,
+                  weekday: Number(selectedId),
+                });
+              }}
+            >
+              <SelectItem key="0" value="0">
+                Monday
+              </SelectItem>
+              <SelectItem key="1" value="1">
+                Tuesday
+              </SelectItem>
+              <SelectItem key="2" value="2">
+                Wednesday
+              </SelectItem>
+              <SelectItem key="3" value="3">
+                Thursday
+              </SelectItem>
+              <SelectItem key="4" value="4">
+                Friday
+              </SelectItem>
+              <SelectItem key="5" value="5">
+                Saturday
+              </SelectItem>
+              <SelectItem key="6" value="6">
+                Sunday
+              </SelectItem>
+            </Select>
             <Input
               isRequired
               required

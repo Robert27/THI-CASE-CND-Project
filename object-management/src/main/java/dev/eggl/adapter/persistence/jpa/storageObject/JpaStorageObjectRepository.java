@@ -30,7 +30,7 @@ public class JpaStorageObjectRepository implements StorageObjectRepository {
 
     @Override
     public StorageObject findById(Integer id, Integer userId) {
-        StorageObjectJpaEntity storageObjectJpaEntity = panacheRepository.find("id = ?1 and userId = ?2", id)
+        StorageObjectJpaEntity storageObjectJpaEntity = panacheRepository.find("id = ?1 and userId = ?2", id, userId)
                 .firstResult();
         if (storageObjectJpaEntity == null) {
             throw new IllegalArgumentException("Storage object not found");

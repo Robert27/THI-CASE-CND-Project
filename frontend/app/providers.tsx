@@ -7,6 +7,7 @@ import { NextUIProvider } from "@nextui-org/system";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SessionProvider } from "next-auth/react";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -26,12 +27,14 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   const queryClient = new QueryClient();
 
   return (
-    <NextUIProvider navigate={router.push}>
-      <NextThemesProvider {...themeProps}>
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
-      </NextThemesProvider>
-    </NextUIProvider>
+    <SessionProvider>
+      <NextUIProvider navigate={router.push}>
+        <NextThemesProvider {...themeProps}>
+          <QueryClientProvider client={queryClient}>
+            {children}
+          </QueryClientProvider>
+        </NextThemesProvider>
+      </NextUIProvider>
+    </SessionProvider>
   );
 }
