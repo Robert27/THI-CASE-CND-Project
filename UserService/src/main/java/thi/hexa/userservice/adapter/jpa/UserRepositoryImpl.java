@@ -7,6 +7,8 @@ import thi.hexa.userservice.adapter.jpa.entities.UserEntity;
 import thi.hexa.userservice.domain.User;
 import thi.hexa.userservice.ports.outgoing.UserRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -79,5 +81,15 @@ public class UserRepositoryImpl implements UserRepository {
             User u = ue.toUser();
             return Optional.of(u);
         }
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        List<UserEntity> ue =jpaUserRepository.findAll();
+        List<User> ul = new ArrayList<>();
+        for (UserEntity userEntity : ue) {
+            ul.add(userEntity.toUser());
+        }
+        return ul;
     }
 }

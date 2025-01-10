@@ -5,5 +5,5 @@ import thi.hexa.authservice.domain.exception.AuthException;
 
 public interface AuthService {
 
-    String login(int user_id, String password) throws AuthException;
+    String login(String username, String password) throws AuthException;
 }

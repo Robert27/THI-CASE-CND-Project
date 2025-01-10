@@ -20,11 +20,11 @@ public class UserClient {
         this.restTemplate = restTemplate;
     }
 
-    public boolean validatePassword(int user_id, String password) {
+    public boolean validatePassword(String username, String password) {
         try {
             String url = userServiceUrl + "/checkpassword";
             System.out.println(url);
-            ValidatePasswordRequest v = new ValidatePasswordRequest(user_id, password);
+            ValidatePasswordRequest v = new ValidatePasswordRequest(username, password);
             ValidatePasswordReply vr = restTemplate.postForObject(url, v, ValidatePasswordReply.class);
             if (vr==null) {
                 return false;
@@ -36,15 +36,14 @@ public class UserClient {
         }
     }
 
-    public User getUser(int user_id) {
+    public User getUser(String username) {
         try {
-            String url = userServiceUrl+ "/" + user_id;
+            String url = userServiceUrl+ "/" + username;
             GetUserResponse getUserResponse = restTemplate.getForObject(url, GetUserResponse.class);
             if (getUserResponse==null) {
                 System.out.println("failed to get user");
                 throw new Exception();
             }
-            System.out.println(getUserResponse.getUser_id());
             return getUserResponse.toUser();
         }catch (Exception e) {
             return null;

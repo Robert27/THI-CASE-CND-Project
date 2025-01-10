@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ValidatePasswordRequest {
-    private int user_id;
+    private String username;
     private String password;
 }

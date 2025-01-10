@@ -8,6 +8,9 @@ import thi.hexa.userservice.adapter.api.rest.exception.ResourceNotFoundException
 import thi.hexa.userservice.domain.User;
 import thi.hexa.userservice.domain.UserService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("user")
 @CrossOrigin(origins = "*")
@@ -43,9 +46,9 @@ public class UserController {
 
     @PostMapping("/checkpassword")
     public CheckPasswordResponse checkPassword(@RequestBody CheckPasswordRequest checkPasswordRequest){
-        User u = userService.getUser(checkPasswordRequest.getUser_id());
+        User u = userService.getUserByUsername(checkPasswordRequest.getUsername());
         if(u == null){
-            throw new ResourceNotFoundException("User with user_id " + checkPasswordRequest.getUser_id() + " not found");
+            throw new ResourceNotFoundException("User with username " + checkPasswordRequest.getUsername() + " not found");
         }
         boolean b = userService.verifyPassword(u, checkPasswordRequest.getPassword());
         return new CheckPasswordResponse(b);
@@ -63,5 +66,15 @@ public class UserController {
     @DeleteMapping("/{user_id}")
     public void deleteUser(@PathVariable int user_id){
         userService.deleteUser(user_id);
+    }
+
+    @GetMapping("/userids")
+    public UserIdsResponse getUserIds(){
+        List<User> ul = userService.getAllUsers();
+        List<Integer> il = new ArrayList<>();
+        for (User u : ul) {
+            il.add(u.getUser_id());
+        }
+        return new UserIdsResponse(il);
     }
 }

@@ -1,5 +1,7 @@
 package thi.hexa.userservice.domain;
 
+import java.util.List;
+
 public interface UserService {
     User createUser(String username, String password);
     User getUser(int userId);
@@ -8,5 +10,6 @@ public interface UserService {
     boolean verifyPassword(User user, String password);
     boolean updateUser(User user);
     User getUserByUsername(String username);
+    List<User> getAllUsers();
 
 }

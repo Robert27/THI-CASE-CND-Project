@@ -7,6 +7,8 @@ import thi.hexa.userservice.domain.User;
 import thi.hexa.userservice.domain.UserService;
 import thi.hexa.userservice.ports.outgoing.UserRepository;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -54,6 +56,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username).orElse(null);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.getAllUsers();
     }
 
     public static String hashPassword(String password) {

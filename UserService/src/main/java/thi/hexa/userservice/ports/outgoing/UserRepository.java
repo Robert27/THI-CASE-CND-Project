@@ -2,6 +2,7 @@ package thi.hexa.userservice.ports.outgoing;
 
 import thi.hexa.userservice.domain.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
@@ -11,4 +12,5 @@ public interface UserRepository {
     boolean update(User user);
     boolean deleteByUserID(int user_id);
     Optional<User> findByUsername(String username);
+    List<User> getAllUsers();
 }
