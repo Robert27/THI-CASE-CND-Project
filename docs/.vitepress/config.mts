@@ -9,7 +9,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: "Dokumentation", link: "/services/philosophy" },
-      { text: "Verwendung", link: "/usage/installation" },
+      { text: "Verwendung", link: "/usage/local" },
     ],
     search: {
       provider: "local",
