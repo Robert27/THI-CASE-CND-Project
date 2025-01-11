@@ -88,7 +88,7 @@ const Login: React.FC = () => {
         </form>
         <div className="mt-4 text-center text-sm">
           New user?{" "}
-          <Link className="underline" href="#">
+          <Link className="underline" href="register">
             Register here
           </Link>
         </div>

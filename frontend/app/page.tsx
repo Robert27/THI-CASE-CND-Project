@@ -1,15 +1,24 @@
+"use client";
 import { Link } from "@nextui-org/link";
 import { Snippet } from "@nextui-org/snippet";
 import { button as buttonStyles } from "@nextui-org/theme";
+import { useSession } from "next-auth/react";
 
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
 
 export default function Home() {
+  const { data: session } = useSession();
+
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       <div className="inline-block max-w-xl text-center justify-center">
+        {session?.user?.username && (
+          <div className="text-3xl font-bold mb-4">
+            Hello {session.user.username} 👋
+          </div>
+        )}
         <span className={title()}>Welcome to&nbsp;</span>
         <span className={title({ color: "blue" })}>SmartOrder&nbsp;</span>
         <br />

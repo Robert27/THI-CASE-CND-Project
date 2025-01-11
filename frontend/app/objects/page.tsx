@@ -142,7 +142,7 @@ export default function PricingPage() {
 
   const handleDelete = (id: number) => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this item?",
+      "Are you sure you want to delete this item?"
     );
 
     if (!confirmed) {
@@ -175,7 +175,7 @@ export default function PricingPage() {
         return acc;
       }, {} as Partial<StorageObject>);
 
-      const res = await fetch(`http://localhost:4000/object/item${id}`, {
+      const res = await fetch(`http://localhost:4000/object/item/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -290,6 +290,7 @@ export default function PricingPage() {
       </div>
 
       <CreateObjectModal
+        key={String(isModalOpen)}
         alertMessage={alertMessage}
         categories={categories}
         isOpen={isModalOpen}

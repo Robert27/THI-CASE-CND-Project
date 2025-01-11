@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import jwt, { JwtPayload } from "jsonwebtoken"; // Install this package
 
 const authOptions = {
   url: "http://localhost:4000/auth",
@@ -11,7 +12,6 @@ const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // the server runs on localhost:8081 /login and return the jwt token
         const res = await fetch("http://localhost:4000/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -21,7 +21,7 @@ const authOptions = {
         const user = await res.json();
 
         if (res.ok && user) {
-          return user;
+          return user; // This object should include the token
         } else {
           return null;
         }
@@ -30,16 +30,39 @@ const authOptions = {
   ],
   callbacks: {
     async jwt({ token, user }: { token: any; user?: any }) {
-      if (user) {
+      console.log("JWT callback invoked with token and user:", token, user); // Debugging
+
+      if (user && user.token) {
         token.accessToken = user.token;
+
+        // Decode the token and add claims
+        try {
+          const decoded = jwt.decode(user.token) as JwtPayload;
+
+          token.username = decoded?.username || null;
+          token.sub = decoded?.sub || null;
+        } catch (err) {
+          console.error("Failed to decode JWT:", err);
+        }
       }
 
       return token;
     },
+
     async session({ session, token }: { session: any; token: any }) {
+      console.log("Session callback invoked with token:", token); // Debugging
+
       if (token) {
-        session.accessToken = token.accessToken;
+        session.accessToken = token.accessToken || null;
+
+        // Add user details
+        session.user = {
+          username: token.username || null,
+          sub: token.sub || null,
+        };
       }
+
+      console.log("Session object:", session); // Debugging
 
       return session;
     },

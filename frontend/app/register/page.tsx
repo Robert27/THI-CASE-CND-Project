@@ -14,7 +14,7 @@ const Register: React.FC = () => {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch("http://localhost:4000/userservice/user", {
+      const res = await fetch("http://localhost:4000/user/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

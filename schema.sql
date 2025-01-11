@@ -39,7 +39,6 @@ create table if not exists objects
     created_at   timestamp default CURRENT_TIMESTAMP,
     user_id      bigint              not null,
     quantity     integer   default 1 not null,
-    interval_min integer   default 1 not null,
     weekday      integer,
     constraint unique_reorder_url
         unique (user_id, reorder_url),

@@ -1,5 +1,6 @@
 "use client";
 import {
+  Avatar,
   Button,
   Dropdown,
   DropdownItem,
@@ -8,27 +9,31 @@ import {
   Link,
 } from "@nextui-org/react";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import React from "react";
-import { LuLogOut, LuUserCog, LuCircleUser } from "react-icons/lu";
+import { LuLogOut, LuUserCog } from "react-icons/lu";
 
 export default function LoginButton() {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
+  console.log("username", session?.user?.username);
   const handleLogout = () => {
     signOut({ redirect: false });
     localStorage.removeItem("next-auth.session-token");
+    router.push("/");
   };
 
   return status === "authenticated" ? (
     <Dropdown>
       <DropdownTrigger>
-        <LuCircleUser size={22} />
+        <Avatar alt="User" color="primary" name={session?.user?.username} />
       </DropdownTrigger>
       <DropdownMenu>
         <DropdownItem
           key="profile"
           endContent={<LuUserCog size={22} />}
-          href="/profile"
+          href="/account"
         >
           Profile
         </DropdownItem>
