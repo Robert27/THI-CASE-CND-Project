@@ -10,9 +10,9 @@ Dem Projekt liegt eine `docker-compose.yml` bei, die alle Services des Projekts 
 docker-compose up
 ```
 
-### Vorgebauter Container verwenden
+### Vorgebaute Container verwenden
 
-Alternativ können die vorgebauten Container aus der GitHub Container Registry verwendet werden.
+Alternativ können die vorgebauten Container aus der GitHub Container Registry verwendet werden. Diese werden automatisch beim Pushes des jeweiligen Service Ordners gebaut und veröffentlicht. Die selben Zugriffsrechte wie für das Repository sind notwendig.
 
 ```sh
 docker login ghcr.io

@@ -47,7 +47,7 @@ Gehen Sie wie folgt vor:
 
    ```sh
    git clone https://github.com/roberteggl/THI-CASE-CND-Projekt.git
-   cd THI-CASE-CND-Projekt/interval-monitor
+   cd THI-CASE-CND-Projekt/object-management
    ```
 
 3. **Maven Build**: Führen Sie den Maven-Build aus, um die Anwendung zu erstellen.

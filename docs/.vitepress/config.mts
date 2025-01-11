@@ -80,6 +80,7 @@ function sidebarServices(): DefaultTheme.SidebarItem[] {
         { text: "Authentifizierung", link: "authentication" },
         { text: "Preis- und URL-Überwachung", link: "price-url" },
         { text: "Bestellungsverwaltung", link: "order-management" },
+        { text: "Frontend", link: "frontend" },
       ],
     },
   ];
