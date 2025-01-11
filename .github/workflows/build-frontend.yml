@@ -2,13 +2,13 @@ name: Build Frontend
 
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
     paths:
-      - 'frontend/**'
-      - '.github/workflows/build-frontend.yml'
+      - "frontend/**"
+      - ".github/workflows/build-frontend.yml"
 
 env:
-  VERSION_TAG_PREFIX: 'frontend-'
+  VERSION_TAG_PREFIX: "frontend-"
   IMAGE_NAME: ${{ github.repository }}/frontend
   REGISTRY: ghcr.io
 
