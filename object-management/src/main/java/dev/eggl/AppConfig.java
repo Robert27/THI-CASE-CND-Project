@@ -1,8 +1,10 @@
 package dev.eggl;
 
+import dev.eggl.application.service.InternalStorageObjectService;
 import dev.eggl.application.service.ListCategoryService;
 import dev.eggl.application.service.StorageObjectService;
 import dev.eggl.port.in.AuthenticationUseCase;
+import dev.eggl.port.in.InternalStorageObjectUseCase;
 import dev.eggl.port.in.ListStorageObjectUseCase;
 import dev.eggl.port.out.CategoryRepository;
 import dev.eggl.port.out.StorageObjectRepository;
@@ -32,6 +34,13 @@ public class AppConfig {
     @ApplicationScoped
     ListCategoryService listCategoryService() {
         return new ListCategoryService(categoriesUseCase.get());
+    }
+
+    @Produces
+    @ApplicationScoped
+    InternalStorageObjectUseCase internalStorageObjectUseCase() {
+        return new InternalStorageObjectService(storageObjectPort.get()) {
+        };
     }
 
     @Produces

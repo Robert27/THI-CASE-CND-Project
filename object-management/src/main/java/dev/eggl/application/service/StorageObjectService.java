@@ -10,7 +10,6 @@ import dev.eggl.port.out.UrlValidationPort;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class StorageObjectService implements ListStorageObjectUseCase {
     private final StorageObjectRepository storageObjectRepository;
@@ -19,7 +18,7 @@ public class StorageObjectService implements ListStorageObjectUseCase {
     private final AuthenticationUseCase authenticationUseCase;
 
     public StorageObjectService(StorageObjectRepository storageObjectRepository, CategoryRepository categoryRepository,
-            UrlValidationPort urlValidationPort, AuthenticationUseCase authenticationUseCase) {
+                                UrlValidationPort urlValidationPort, AuthenticationUseCase authenticationUseCase) {
         this.storageObjectRepository = storageObjectRepository;
         this.categoryRepository = categoryRepository;
         this.urlValidationPort = urlValidationPort;
@@ -37,14 +36,10 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         return storageObjectRepository.findAll(user.getUserId());
     }
 
-    @Override
-    public Map<Integer, List<Integer>> findAllDayUsers(Integer weekDay, List<Integer> userIds) {
-        return storageObjectRepository.findAllDayUsers(weekDay, userIds);
-    }
 
     @Override
     public StorageObject create(String name, String description, Integer categoryId, String reorderUrl,
-            Integer quantity, Integer weekday, String token)
+                                Integer quantity, Integer weekday, String token)
             throws IllegalArgumentException {
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Authorization token must be provided");
@@ -93,7 +88,7 @@ public class StorageObjectService implements ListStorageObjectUseCase {
 
     @Override
     public StorageObject update(Integer id, String name, String description, Integer categoryId, String reorderUrl,
-            Integer quantity, Integer weekday, String token)
+                                Integer quantity, Integer weekday, String token)
             throws IllegalArgumentException {
         AuthenticatedUser user;
         try {
@@ -136,12 +131,6 @@ public class StorageObjectService implements ListStorageObjectUseCase {
             throw new IllegalArgumentException("Invalid authorization token");
         }
         return storageObjectRepository.delete(id, user.getUserId());
-    }
-
-    @Override
-    public List<StorageObject> findByIds(List<Integer> ids) {
-        List<StorageObject> rest = storageObjectRepository.findByIds(ids);
-        return rest;
     }
 
 }

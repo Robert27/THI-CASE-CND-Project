@@ -3,7 +3,7 @@ package dev.eggl.adapter.grpc;
 import dev.eggl.domain.model.StorageObject;
 import dev.eggl.objects.ObjectService;
 import dev.eggl.objects.StorageObjectsProto;
-import dev.eggl.port.in.ListStorageObjectUseCase;
+import dev.eggl.port.in.InternalStorageObjectUseCase;
 import io.quarkus.grpc.GrpcService;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
@@ -14,16 +14,16 @@ import java.util.stream.Collectors;
 @GrpcService
 public class GrpcController implements ObjectService {
 
-    private final ListStorageObjectUseCase listStorageObjectUseCase;
+    private final InternalStorageObjectUseCase internalListStorageObjectUseCase;
 
-    public GrpcController(ListStorageObjectUseCase listStorageObjectUseCase) {
-        this.listStorageObjectUseCase = listStorageObjectUseCase;
+    public GrpcController(InternalStorageObjectUseCase internalListStorageObjectUseCase) {
+        this.internalListStorageObjectUseCase = internalListStorageObjectUseCase;
     }
 
     @Override
     public Uni<StorageObjectsProto.StorageObjectsReply> getStorageObjectsByIds(StorageObjectsProto.StorageObjectIdsRequest request) {
         return Uni.createFrom().item(request.getIdsList())
-                .onItem().transformToUni(ids -> Uni.createFrom().item(() -> listStorageObjectUseCase.findByIds(ids))
+                .onItem().transformToUni(ids -> Uni.createFrom().item(() -> internalListStorageObjectUseCase.findByIds(ids))
                         .runSubscriptionOn(Infrastructure.getDefaultExecutor()))
                 .onItem().transform(storageObjects -> {
                     List<StorageObjectsProto.StorageObject> protoStorageObjects = storageObjects.stream()
@@ -40,7 +40,7 @@ public class GrpcController implements ObjectService {
         return Uni.createFrom().item(request)
                 .onItem().transformToUni(req ->
                         // findAllDayUsers now returns a Map<Integer, List<StorageObject>>
-                        Uni.createFrom().item(() -> listStorageObjectUseCase.findAllDayUsers(req.getWeekDay(), req.getUserIdsList()))
+                        Uni.createFrom().item(() -> internalListStorageObjectUseCase.findAllDayUsers(req.getWeekDay(), req.getUserIdsList()))
                                 .runSubscriptionOn(Infrastructure.getDefaultExecutor())
                 )
                 .onItem().transform(storageObjectsByUser -> {
