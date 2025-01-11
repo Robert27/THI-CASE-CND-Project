@@ -8,33 +8,42 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @ApplicationScoped
 public class IntervalStatusRepository implements PanacheRepositoryBase<IntervalStatus, Integer> {
 
-    public List<Integer> findMissingEntriesForUsersAndDay(List<Integer> objectIds, LocalDate date) {
+    public List<Integer> findMissingEntriesForUsersAndDay(List<Integer> userIds, LocalDate date) {
+        // Convert the given LocalDate to a start/end Instant for the day
         Instant startOfDay = date.atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant endOfDay = date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant();
 
-        // 1. Find all user IDs that DO have an interval_status entry for today
+        // Find all userIds that DO have an entry for the given LocalDate
         TypedQuery<Integer> query = getEntityManager().createQuery(
-                "SELECT DISTINCT i.objectId FROM IntervalStatus i " +
-                        "WHERE i.objectId IN :objectIds " +
+                "SELECT DISTINCT i.userId FROM IntervalStatus i " +
+                        "WHERE i.userId IN :userIds " +
                         "  AND i.createdAt >= :startOfDay " +
                         "  AND i.createdAt < :endOfDay",
                 Integer.class);
-        query.setParameter("objectIds", objectIds);
-        query.setParameter("startOfDay", startOfDay);
-        query.setParameter("endOfDay", endOfDay);
+        query.setParameter("userIds", userIds);
+        query.setParameter("startOfDay", Date.from(startOfDay));
+        query.setParameter("endOfDay", Date.from(endOfDay));
 
         List<Integer> existingUserIds = query.getResultList();
 
-        // 2. Create a new list for missing user IDs
-        List<Integer> missingUserIds = new ArrayList<>(objectIds);
+        // Create a new list for missing user IDs
+        List<Integer> missingUserIds = new ArrayList<>(userIds);
         missingUserIds.removeAll(existingUserIds);
 
-        // The remaining IDs in missingUserIds have no entry for today
         return missingUserIds;
+    }
+
+    // store a confirmed user id with the current timestamp in the database
+    public void storeConfirmedUserId(int userId) {
+        IntervalStatus intervalStatus = new IntervalStatus();
+        intervalStatus.setUserId(userId);
+        intervalStatus.setCreatedAt(new Date());
+        persist(intervalStatus);
     }
 }

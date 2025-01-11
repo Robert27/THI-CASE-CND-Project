@@ -82,9 +82,9 @@ create table if not exists interval_status
 (
     id         serial
         primary key,
-    object_id  integer   not null
-        constraint interval_status_objects_id_fk
-            references objects,
+    user_id  integer   not null
+        constraint fk_user
+            references users on delete cascade,
     created_at timestamp not null
 );
 

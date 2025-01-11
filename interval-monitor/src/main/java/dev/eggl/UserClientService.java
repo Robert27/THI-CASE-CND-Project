@@ -3,9 +3,8 @@ package dev.eggl;
 import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
-import thi.hexa.users.UserIdsRequest;
-import thi.hexa.users.UsersProto;
-import thi.hexa.users.GrpcUserService;
+import dev.eggl.users.UserIdsRequest;
+import dev.eggl.users.GrpcUserService;
 
 import java.util.List;
 

@@ -8,11 +8,11 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "interval_status")
-@Getter
-@Setter
 public class IntervalStatus extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "interval_status_id_gen")
@@ -20,10 +20,26 @@ public class IntervalStatus extends PanacheEntityBase {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "object_id", nullable = false)
-    private Integer objectId;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private Date createdAt;
+
+    void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    Integer getUserId() {
+        return userId;
+    }
+
+    Date getCreatedAt() {
+        return createdAt;
+    }
 
 }

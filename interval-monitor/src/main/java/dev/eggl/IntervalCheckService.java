@@ -4,6 +4,7 @@ import dev.eggl.persistance.IntervalStatusRepository;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,33 +20,51 @@ public class IntervalCheckService {
     @Inject
     UserClientService userClientService;
 
+    @Inject
+    IntervalClientService orderClientService;
+
     @Scheduled(every = "10s")
     void checkMissingEntries() {
+        // 1) Load user list
         userClientService.getUserIds()
                 .subscribe().with(userIdsResponse -> {
                     List<Integer> userIds = userIdsResponse.userIds;
                     System.out.println("Received user IDs: " + userIds);
 
-                    // Process in batches of 5
-                    for (int i = 0; i < userIds.size(); i += 5) {
-                        List<Integer> batch = userIds.subList(i, Math.min(i + 5, userIds.size()));
-                        objectClientService.findAllDayUsers(0, batch)
-                                .subscribe().with(dayUsersResponse -> {
-                                    System.out.println("Received day users: " + dayUsersResponse);
-
-                                    // Fix print logic: iterate over each UserObjectIds
-                                    for (ObjectClientService.UserObjectIds userObjectIds : dayUsersResponse.userObjectIds) {
-                                        System.out.println("Current user ID: " + userObjectIds.userId);
-                                        System.out.println("Current user object IDs: " + userObjectIds.objectIds);
-                                    }
-                                });
-                    }
+                    // 2) Run findMissingEntriesForUsersAndDay for today
                     List<Integer> missingUserIds = repository.findMissingEntriesForUsersAndDay(userIds,
                             LocalDate.now());
+                    System.out.println("Missing user IDs for today's entries: " + missingUserIds);
 
-                    // For each missing user, call ObjectClientService to fetch items
-                    for (Integer userId : missingUserIds) {
-                        System.out.println("Fetching items for user ID " + userId);
+                    // 3) Use ObjectClientService to fetch object IDs per batch of 5 users
+                    for (int i = 0; i < missingUserIds.size(); i += 5) {
+                        List<Integer> batch = missingUserIds.subList(i, Math.min(i + 5, missingUserIds.size()));
+                        System.out.println("Fetching objects for batch: " + batch);
+                        objectClientService.findAllDayUsers(5, batch)
+                                .subscribe().with(dayUsersResponse -> {
+                                    System.out.println("Received day users: " + dayUsersResponse);
+                                    dayUsersResponse.userObjectIds.forEach(userObjectIds -> {
+                                        System.out.println("User ID: " + userObjectIds.userId);
+                                        System.out.println("Object IDs: " + userObjectIds.objectIds);
+
+                                        // 4) Submit missing order for each user
+                                        orderClientService
+                                                .submitMissingOrder(userObjectIds.userId, userObjectIds.objectIds,
+                                                        Instant.now())
+                                                .subscribe().with(success -> {
+                                                    if (success) {
+                                                        System.out.println(
+                                                                "Successfully submitted missing order for user ID: "
+                                                                        + userObjectIds.userId);
+                                                        repository.storeConfirmedUserId(userObjectIds.userId);
+                                                    } else {
+                                                        System.err
+                                                                .println("Failed to submit missing order for user ID: "
+                                                                        + userObjectIds.userId);
+                                                    }
+                                                });
+                                    });
+                                });
                     }
                 });
     }
