@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-cloud.yml --out kubernetes
+    kompose.version: 1.35.0 (HEAD)
+  labels:
+    io.kompose.service: interval-monitor
+  name: interval-monitor
+spec:
+  ports:
+    - name: "8083"
+      port: 8083
+      targetPort: 8080
+  selector:
+    io.kompose.service: interval-monitor
