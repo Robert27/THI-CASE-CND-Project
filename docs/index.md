@@ -15,7 +15,7 @@ hero:
       link: /services/philosophy
     - theme: alt
       text: Verwendung
-      link: /usage/installation
+      link: /usage/local
 
 features:
   - title: Nutzerverwaltung
@@ -27,7 +27,7 @@ features:
   - title: Objektverwaltung
     details: Ein hexagonaler Service zur Verwaltung der Objekte.
     link: /services/object-management
-  - title: Zyklus Prüfung
+  - title: Intervall Monitoring
     details: Ein Service zur Prüfung des Bestellzyklus.
     link: /services/interval-monitor
   - title: Preis & URL Prüfung
@@ -37,4 +37,3 @@ features:
     details: Ein Service zur Verwaltung der Bestellungen.
     link: /services/order-management
 ---
-

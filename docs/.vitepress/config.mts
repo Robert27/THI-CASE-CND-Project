@@ -7,6 +7,10 @@ export default defineConfig({
   cleanUrls: true,
   lang: "de-DE",
   themeConfig: {
+    nav: [
+      { text: "Dokumentation", link: "/services/philosophy" },
+      { text: "Verwendung", link: "/usage/installation" },
+    ],
     search: {
       provider: "local",
       options: {
@@ -87,9 +91,10 @@ function sidebarUsage(): DefaultTheme.SidebarItem[] {
       text: "Verwendung",
       collapsed: false,
       items: [
-        { text: "Installation", link: "installation" },
+        { text: "Ohne Docker", link: "local" },
+        { text: "Docker", link: "docker" },
+        { text: "Kubernetes", link: "kubernetes" },
         { text: "Konfiguration", link: "configuration" },
-        { text: "Verwendung", link: "usage" },
       ],
     },
   ];
