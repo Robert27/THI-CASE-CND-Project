@@ -18,7 +18,8 @@ Die REST API bietet die Möglichkeit, Objekte zu erstellen, bearbeiten und lösc
 #### Host
 
 Standalone ist der Service unter `http://localhost:8080` erreichbar.
-Wird die Anwendung jedoch in einem Docker Container gestartet, ist der Service unter http://localhost:4000/object erreichbar. Dies ist durch den Reverse Proxy NGINX gewährleistet.
+
+Wird die Anwendung jedoch in einem Docker Container gestartet, ist der Service unter `http://localhost:4000/object` erreichbar. Dies ist durch den Reverse Proxy NGINX gewährleistet.
 
 #### Endpunkte
 
@@ -32,6 +33,9 @@ Wird die Anwendung jedoch in einem Docker Container gestartet, ist der Service u
 
 ### gRPC
 
+gRPC dient zur Kommunikation zwischen den Services und ist daher nicht von außen erreichbar.
+Der Objekt Management Service bietet als Server die folgenden Services an:
+
 #### ObjectService
 
 | Method                 | Request Type            | Response Type       | Description                                   |
@@ -41,7 +45,31 @@ Wird die Anwendung jedoch in einem Docker Container gestartet, ist der Service u
 
 ## Architketur Skizze
 
-tbd
+### Domain
+
+- **Object**: Ein Objekt, das von einem Nutzer erstellt wurde.
+- **Category**: Eine Kategorie, die einem Objekt zugeordnet werden kann.
+
+### Ports
+
+#### Inbound
+
+- **Authentication**: Authentifizierung des Nutzers.
+- **CategoryList**: Abrufen der verfügbaren Kategorien.
+- **ObjectList**: Abrufen der Objekte eines Nutzers.
+
+#### Outbound
+
+- **ObjectRepository**: Speichern, Aktualisieren und Löschen von Objekten.
+- **CategoryRepository**: Abrufen der verfügbaren Kategorien.
+- **URLValidation**: Validierung von angegebenen URLs.
+
+### Adapter
+
+- **REST API**: Kommunikation mit dem Nutzer.
+- **gRPC**: Kommunikation mit anderen Services.
+- **Database**: Persistenz der Objekte.
+- **JWT**: Authentifizierung des Nutzers.
 
 ## Start ohne Docker
 

@@ -87,9 +87,9 @@ const Login: React.FC = () => {
           <LoginButton pending={pending} />
         </form>
         <div className="mt-4 text-center text-sm">
-          Forgot Password?{" "}
+          New user?{" "}
           <Link className="underline" href="#">
-            Contact Admin
+            Register here
           </Link>
         </div>
       </div>
