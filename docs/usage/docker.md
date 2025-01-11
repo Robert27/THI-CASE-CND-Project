@@ -3,7 +3,7 @@
 ## Docker Compose
 
 Neben den einzelnen Backend Services und dem Frontend enthält das Docker Compose Setup auch eine PostgreSQL Datenbank und NGINX als Reverse Proxy. Beim Startup werden alle Services gebaut und gestartet. Mit einem Skirpt wird die Datenbank initialisiert und die Migrationen ausgeführt.
-NGINX leitet die Anfragen an die entsprechenden Services weiter, sodass alle Backend Services über den gemeinsamen Port 4000 erreichbar sind. Das Frontend ist über Port 3000 erreichbar.
+NGINX leitet die Anfragen an die entsprechenden Services weiter, sodass alle Backend Services über den gemeinsamen Port 4000 erreichbar sind, die einzelnen Pfade sind der jeweiligen Service Dokumentation zu entnehmen. Das Frontend ist über Port 3000 erreichbar.
 
 ### Lokales bauen und starten
 

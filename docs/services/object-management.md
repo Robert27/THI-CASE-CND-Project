@@ -13,13 +13,22 @@ Der Objekt Management Service ist ein Service zur Verwaltung von Objekten.
 
 ### REST API
 
-| Method | Path                            | Description                                                          |
-| ------ | ------------------------------- | -------------------------------------------------------------------- |
-| GET    | [/category](#getcategory)       | Alle verfügbaren Kategorien abrufen                                  |
-| GET    | [/object](#getobject)           | Alle Objekte für einen authentifizierten Nutzer abrufen              |
-| POST   | [/object](#postobject)          | Ein neues Objekt für einen authentifizierten Nutzer erstellen        |
-| PATCH  | [/object/{id}](#putobjectid)    | Ein bestehendes Objekt für einen authentifizierten Nutzer bearbeiten |
-| DELETE | [/object/{id}](#deleteobjectid) | Ein bestehendes Objekt für einen authentifizierten Nutzer löschen    |
+Die REST API bietet die Möglichkeit, Objekte zu erstellen, bearbeiten und löschen. Die API ist durch die JWT Authentifizierung geschützt.
+
+#### Host
+
+Standalone ist der Service unter `http://localhost:8080` erreichbar.
+Wird die Anwendung jedoch in einem Docker Container gestartet, ist der Service unter http://localhost:4000/object erreichbar. Dies ist durch den Reverse Proxy NGINX gewährleistet.
+
+#### Endpunkte
+
+| Method | Path                          | Description                                                          |
+| ------ | ----------------------------- | -------------------------------------------------------------------- |
+| GET    | [/category](#getcategory)     | Alle verfügbaren Kategorien abrufen                                  |
+| GET    | [/item](#getobject)           | Alle Objekte für einen authentifizierten Nutzer abrufen              |
+| POST   | [/item](#postobject)          | Ein neues Objekt für einen authentifizierten Nutzer erstellen        |
+| PATCH  | [/item/{id}](#putobjectid)    | Ein bestehendes Objekt für einen authentifizierten Nutzer bearbeiten |
+| DELETE | [/item/{id}](#deleteobjectid) | Ein bestehendes Objekt für einen authentifizierten Nutzer löschen    |
 
 ### gRPC
 

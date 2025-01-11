@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 const authOptions = {
-  url: "http://localhost:8081",
+  url: "http://localhost:4000/auth",
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -12,7 +12,7 @@ const authOptions = {
       },
       async authorize(credentials) {
         // the server runs on localhost:8081 /login and return the jwt token
-        const res = await fetch("http://localhost:8081/login", {
+        const res = await fetch("http://localhost:4000/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(credentials),

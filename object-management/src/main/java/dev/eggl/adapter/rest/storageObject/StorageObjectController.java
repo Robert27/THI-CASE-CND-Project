@@ -14,7 +14,7 @@ import java.util.List;
 
 import static dev.eggl.adapter.rest.common.ControllerCommons.*;
 
-@Path("/object")
+@Path("/item")
 @Produces(MediaType.APPLICATION_JSON)
 public class StorageObjectController {
 
