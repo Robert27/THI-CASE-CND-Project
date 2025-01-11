@@ -164,18 +164,25 @@ export default function PricingPage() {
   const updateObjectMutation = useMutation<void, Error, StorageObject>({
     mutationFn: async (updatedObjectData) => {
       if (!session?.user) throw new Error("No token found");
-      console.log("updatedObjectData", updatedObjectData);
-      const res = await fetch(
-        `http://localhost:8082/object/${updatedObjectData.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.accessToken}`,
-          },
-          body: JSON.stringify(updatedObjectData),
+
+      const { id, ...rest } = updatedObjectData;
+      // Only send changed fields
+      const changes = Object.entries(rest).reduce((acc, [key, val]) => {
+        if (val !== editObject?.[key as keyof StorageObject]) {
+          (acc as any)[key as keyof StorageObject] = val;
+        }
+
+        return acc;
+      }, {} as Partial<StorageObject>);
+
+      const res = await fetch(`http://localhost:8082/object/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.accessToken}`,
         },
-      );
+        body: JSON.stringify(changes),
+      });
 
       if (!res.ok) {
         let errorMsg = "Failed to update object";
@@ -188,15 +195,8 @@ export default function PricingPage() {
         throw new Error(errorMsg);
       }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["objects"] });
-      setIsEditModalOpen(false);
-    },
-    onError: (error) => {
-      setAlertMessage(error.message);
-    },
+    // ...existing code...
   });
-
   const handleAlertClose = () => {
     setAlertMessage(null);
   };

@@ -9,7 +9,6 @@ package objects;
 // The storage service definition.
 service ObjectService {
   rpc GetStorageObjectsByIds (StorageObjectIdsRequest) returns (StorageObjectsReply) {}
-  rpc GetStorageObjectsByUserId (UserIdRequest) returns (StorageObjectsReply) {}
   rpc FindAllDayUsers (DayUsersRequest) returns (DayUsersReply) {}
 }
 
@@ -18,10 +17,6 @@ message StorageObjectIdsRequest {
   repeated int32 ids = 1;
 }
 
-// The request message containing the user ID.
-message UserIdRequest {
-  int32 userId = 1;
-}
 
 // The request message for finding all day users.
 message DayUsersRequest {

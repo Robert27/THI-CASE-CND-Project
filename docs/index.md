@@ -29,7 +29,7 @@ features:
     link: /services/object-management
   - title: Zyklus Prüfung
     details: Ein Service zur Prüfung des Bestellzyklus.
-    link: /services/cycle-check
+    link: /services/interval-monitor
   - title: Preis & URL Prüfung
     details: Ein hexagonaler Service zur Prüfung der Produktpreise und URLs.
     link: /services/price-url

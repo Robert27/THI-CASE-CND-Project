@@ -18,7 +18,8 @@ public class StorageObjectService implements ListStorageObjectUseCase {
     private final UrlValidationPort urlValidationPort;
     private final AuthenticationUseCase authenticationUseCase;
 
-    public StorageObjectService(StorageObjectRepository storageObjectRepository, CategoryRepository categoryRepository, UrlValidationPort urlValidationPort, AuthenticationUseCase authenticationUseCase) {
+    public StorageObjectService(StorageObjectRepository storageObjectRepository, CategoryRepository categoryRepository,
+            UrlValidationPort urlValidationPort, AuthenticationUseCase authenticationUseCase) {
         this.storageObjectRepository = storageObjectRepository;
         this.categoryRepository = categoryRepository;
         this.urlValidationPort = urlValidationPort;
@@ -28,8 +29,7 @@ public class StorageObjectService implements ListStorageObjectUseCase {
 
     @Override
     public List<StorageObject> findAll(
-            String token
-    ) {
+            String token) {
         AuthenticatedUser user;
 
         user = authenticationUseCase.authenticate(token);
@@ -43,7 +43,8 @@ public class StorageObjectService implements ListStorageObjectUseCase {
     }
 
     @Override
-    public StorageObject create(String name, String description, Integer categoryId, String reorderUrl, Integer quantity, Integer weekday, String token)
+    public StorageObject create(String name, String description, Integer categoryId, String reorderUrl,
+            Integer quantity, Integer weekday, String token)
             throws IllegalArgumentException {
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Authorization token must be provided");
@@ -59,9 +60,9 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         }
 
         // TODO: validate URL
-//        if (!urlValidationPort.validateUrl(reorderUrl)) {
-//            throw new IllegalArgumentException("Reorder URL is invalid or unreachable");
-//        }
+        // if (!urlValidationPort.validateUrl(reorderUrl)) {
+        // throw new IllegalArgumentException("Reorder URL is invalid or unreachable");
+        // }
         if (!categoryRepository.existsById(categoryId)) {
             throw new IllegalArgumentException("Category ID does not exist");
         }
@@ -81,16 +82,18 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         if (storageObjectRepository.existsByUrl(reorderUrl, user.getUserId())) {
             throw new IllegalArgumentException("Storage object with the same reorder URL already exists");
         }
-        // if there is already a storage object with the same name and category, throw an exception
+        // if there is already a storage object with the same name and category, throw
+        // an exception
         if (storageObjectRepository.existsByNameAndCategory(name, categoryId, user.getUserId())) {
             throw new IllegalArgumentException("Storage object with the same name and category already exists");
         }
-        return storageObjectRepository.save(new StorageObject(null, user.getUserId(), name, description, categoryId, reorderUrl, quantity, new Date(), weekday));
+        return storageObjectRepository.save(new StorageObject(null, user.getUserId(), name, description, categoryId,
+                reorderUrl, quantity, new Date(), weekday));
     }
 
     @Override
-    public StorageObject update(Integer id, String name, String description, Integer categoryId, String reorderUrl, Integer quantity, Integer weekday,
-                                String token)
+    public StorageObject update(Integer id, String name, String description, Integer categoryId, String reorderUrl,
+            Integer quantity, Integer weekday, String token)
             throws IllegalArgumentException {
         AuthenticatedUser user;
         try {
@@ -98,11 +101,30 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid authorization token");
         }
-        StorageObject existing = storageObjectRepository.findById(id, user.getUserId());
-        if (existing == null) {
+        StorageObject existingObject = storageObjectRepository.findById(id, user.getUserId());
+        if (existingObject == null) {
             throw new IllegalArgumentException("Storage object not found");
         }
-        return storageObjectRepository.update(new StorageObject(id, user.getUserId(), name, description, categoryId, reorderUrl, quantity, existing.getCreatedAt(), weekday));
+
+        if (name != null) {
+            existingObject.setName(name);
+        }
+        if (name != null) {
+            existingObject.setDescription(description);
+        }
+        if (categoryId != null) {
+            existingObject.setCategoryId(categoryId);
+        }
+        if (reorderUrl != null) {
+            existingObject.setReorderUrl(reorderUrl);
+        }
+        if (quantity != null) {
+            existingObject.setQuantity(quantity);
+        }
+        if (weekday != null) {
+            existingObject.setWeekday(weekday);
+        }
+        return storageObjectRepository.update(existingObject);
     }
 
     @Override
@@ -121,6 +143,5 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         List<StorageObject> rest = storageObjectRepository.findByIds(ids);
         return rest;
     }
-
 
 }

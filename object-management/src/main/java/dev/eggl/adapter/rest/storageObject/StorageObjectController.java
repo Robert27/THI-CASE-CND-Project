@@ -27,7 +27,6 @@ public class StorageObjectController {
     @GET
     public List<ListStorageObjectModel> findAll(@Context HttpHeaders headers) {
 
-
         List<StorageObject> storageObjects;
 
         try {
@@ -47,39 +46,10 @@ public class StorageObjectController {
                 .toList();
     }
 
-//    @GET
-//    @Path("/{ids}")
-//    public List<ListStorageObjectModel> findByIds(@PathParam("ids") String ids, @Context HttpHeaders headers) {
-//        List<Integer> idList = Arrays.stream(ids.split(","))
-//                .map(Integer::parseInt)
-//                .toList();
-//
-//
-//        try {
-//            String token = extractJwt(headers);
-//            List<StorageObject> storageObjects = listStorageObjectUseCase.findByIds(idList, token);
-//            return storageObjects.stream()
-//                    .map(ListStorageObjectModel::fromDomainModel)
-//                    .toList();
-//
-//        } catch (Exception e) {
-//            if (e instanceof AuthenticationFailedException) {
-//                throw clientErrorException(
-//                        Response.Status.UNAUTHORIZED, e.getMessage());
-//            } else {
-//                throw serverErrorException(
-//                        Response.Status.INTERNAL_SERVER_ERROR, "Error while fetching storage objects");
-//            }
-//        }
-//
-//
-//    }
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
     public Response create(CreateStorageObjectModel createStorageObjectModel, @Context HttpHeaders headers) {
-
 
         try {
             String token = extractJwt(headers);
@@ -90,8 +60,7 @@ public class StorageObjectController {
                     createStorageObjectModel.reorderUrl(),
                     createStorageObjectModel.quantity(),
                     createStorageObjectModel.weekday(),
-                    token
-            );
+                    token);
             return Response.status(Response.Status.CREATED)
                     .entity(ListStorageObjectModel.fromDomainModel(created))
                     .build();
@@ -109,15 +78,14 @@ public class StorageObjectController {
             }
         }
 
-
     }
 
-
-    @PUT
+    @PATCH
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response update(@PathParam("id") Integer id, CreateStorageObjectModel createStorageObjectModel, @Context HttpHeaders headers) {
+    public Response update(@PathParam("id") Integer id, CreateStorageObjectModel createStorageObjectModel,
+            @Context HttpHeaders headers) {
 
         try {
             String token = extractJwt(headers);
@@ -129,8 +97,7 @@ public class StorageObjectController {
                     createStorageObjectModel.reorderUrl(),
                     createStorageObjectModel.quantity(),
                     createStorageObjectModel.weekday(),
-                    token
-            );
+                    token);
             return Response.status(Response.Status.OK)
                     .entity(ListStorageObjectModel.fromDomainModel(updated))
                     .build();

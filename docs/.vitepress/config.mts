@@ -1,4 +1,4 @@
-import { DefaultTheme, defineConfig } from 'vitepress'
+import { DefaultTheme, defineConfig } from "vitepress";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -51,9 +51,8 @@ export default defineConfig({
       "/services/": { base: "/services/", items: sidebarServices() },
       "/usage/": { base: "/usage/", items: sidebarUsage() },
     },
-      
   },
-})
+});
 
 function sidebarServices(): DefaultTheme.SidebarItem[] {
   return [
@@ -63,7 +62,7 @@ function sidebarServices(): DefaultTheme.SidebarItem[] {
       items: [
         { text: "Philosophie", link: "philosophy" },
         { text: "Aufbau", link: "structure" },
-        { text: "Limitationen", link: "limitations"},
+        { text: "Limitationen", link: "limitations" },
         { text: "Sicherheit", link: "security" },
       ],
     },
@@ -72,11 +71,11 @@ function sidebarServices(): DefaultTheme.SidebarItem[] {
       collapsed: false,
       items: [
         { text: "Objekt Verwaltung", link: "object-management" },
-        { text: "Zyklus-Prüfung", link: "cycle-check" },
+        { text: "Intervall Monitoring", link: "interval-monitor" },
         { text: "Nutzerverwaltung", link: "user-management" },
         { text: "Authentifizierung", link: "authentication" },
         { text: "Preis- und URL-Überwachung", link: "price-url" },
-        { text: "Bestellungsverwaltung", link: "order-management"},
+        { text: "Bestellungsverwaltung", link: "order-management" },
       ],
     },
   ];

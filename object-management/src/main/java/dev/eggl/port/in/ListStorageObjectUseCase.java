@@ -11,10 +11,10 @@ public interface ListStorageObjectUseCase {
     Map<Integer, List<Integer>> findAllDayUsers(Integer weekday, List<Integer> userIds);
 
     StorageObject create(String name, String description, Integer categoryId, String reorderUrl, Integer quantity,
-                         Integer weekDay, String token);
+            Integer weekDay, String token);
 
     StorageObject update(Integer id, String name, String description, Integer categoryId, String reorderUrl,
-                         Integer quantity, Integer weekday, String token);
+            Integer quantity, Integer weekDay, String token);
 
     StorageObject delete(Integer id, String token);
 

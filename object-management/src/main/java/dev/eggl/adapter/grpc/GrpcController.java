@@ -36,11 +36,6 @@ public class GrpcController implements ObjectService {
     }
 
     @Override
-    public Uni<StorageObjectsProto.StorageObjectsReply> getStorageObjectsByUserId(StorageObjectsProto.UserIdRequest request) {
-        return null;
-    }
-
-    @Override
     public Uni<StorageObjectsProto.DayUsersReply> findAllDayUsers(StorageObjectsProto.DayUsersRequest request) {
         return Uni.createFrom().item(request)
                 .onItem().transformToUni(req ->

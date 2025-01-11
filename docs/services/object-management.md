@@ -11,13 +11,21 @@ Er bietet die Möglichkeit je Nutzer Objekte zu erstellen, bearbeiten und lösch
 
 Der Objekt Management Service ist ein Service zur Verwaltung von Objekten.
 
-## API
+## REST API
 
 | Method | Path                            | Description                                                          |
-| ------ | ------------------------------- | -------------------------------------------------------------------- |
+| ------ | ------------------------------- | -------------------------------------------------------------------- | --- |
 | GET    | [/category](#getcategory)       | Alle verfügbaren Kategorien abrufen                                  |
-| GET    | [/object](#getobject)           | Alle Objekte für einen authentifizierten Nutzer abrufen              |
-| GET    | [/object/{ids}](#getobjectids)    | Alle Objekte für eine gegebene Liste von IDs abrufen                 |
+| GET    | [/object](#getobject)           | Alle Objekte für einen authentifizierten Nutzer abrufen              |     |
 | POST   | [/object](#postobject)          | Ein neues Objekt für einen authentifizierten Nutzer erstellen        |
-| PUT    | [/object/{id}](#putobjectid)    | Ein bestehendes Objekt für einen authentifizierten Nutzer bearbeiten |
+| PATCH  | [/object/{id}](#putobjectid)    | Ein bestehendes Objekt für einen authentifizierten Nutzer bearbeiten |
 | DELETE | [/object/{id}](#deleteobjectid) | Ein bestehendes Objekt für einen authentifizierten Nutzer löschen    |
+
+## gRPC
+
+### ObjectService
+
+| Method                 | Request Type            | Response Type       | Description                                   |
+| ---------------------- | ----------------------- | ------------------- | --------------------------------------------- |
+| GetStorageObjectsByIds | StorageObjectIdsRequest | StorageObjectsReply | Abrufen von Speicherobjekten anhand ihrer IDs |
+| FindAllDayUsers        | DayUsersRequest         | DayUsersReply       | Finden aller Tagesnutzer                      |
