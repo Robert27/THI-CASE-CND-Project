@@ -56,6 +56,8 @@ jobs:
           context: interval-monitor/
           file: interval-monitor/src/main/docker/Dockerfile.jvm
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
+          platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
