@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package objectmanagement;
+
+option java_multiple_files = true;
+option java_package = "objectmanagement";
+option java_outer_classname = "ObjectManagementProto";
+
+service ObjectManagementService {
+  rpc GetStorageObjectsByIds (StorageObjectIdsRequest) returns (StorageObjectsReply);
+}
+
+message StorageObjectIdsRequest {
+  //repeated string itemIds = 1;
+  repeated int32 ids = 1;
+}
+
+message StorageObjectsReply {
+  repeated StorageObject storageObjects = 1;
+}
+
+message StorageObject {
+  int32 id = 1;             //itemId
+  string name = 2;
+  string description = 3;
+  int32 categoryId = 4;
+  string reorderUrl = 5;    //url
+  int32 quantity = 6;
+  int32 weekday = 7; // kann ignoriert werden?
+}

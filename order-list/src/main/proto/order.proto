@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package orderlist;
+
+option java_multiple_files = true;
+option java_package = "orderlistservice.order";
+option java_outer_classname = "OrderListProto";
+
+service OrderListService {
+  rpc GenerateOrderList (GenerateOrderListRequest) returns (GenerateOrderListReply);
+}
+
+message GenerateOrderListRequest {
+  int32 userId = 1;
+  repeated int32 objectIds = 2;
+  string date = 3; // z. B. "2025-01-09"
+}
+
+message GenerateOrderListReply {
+  bool success = 1;
+}

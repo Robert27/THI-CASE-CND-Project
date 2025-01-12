@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package pricecheck;
+
+option java_multiple_files = true;
+option java_package = "orderlistservice.pricecheck";
+option java_outer_classname = "PriceCheckProto";
+
+service PriceCheckService {
+  rpc CheckPrices (PriceCheckRequest) returns (PriceCheckReply);
+}
+
+message PriceCheckRequest {
+  repeated int32 itemIds = 1;
+}
+
+message PriceCheckReply {
+  repeated PriceResult results = 1;
+}
+
+message PriceResult {
+  int32 itemId = 1;
+  string status = 2;  // e.g. "OK" / "FAILED"
+  string message = 3; // optional error text
+  int32 logId = 4;
+  double price = 5;
+  int32 availability = 6;
+}

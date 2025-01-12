@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package urlvalidation;
+
+// Definition des URL-Validierungsservices
+service UrlValidationService {
+  rpc ValidateUrl (ValidateUrlRequest) returns (ValidateUrlResponse);
+}
+
+// Request-Nachricht
+message ValidateUrlRequest {
+  string url = 1; // Die URL, die validiert werden soll
+}
+
+// Response-Nachricht
+message ValidateUrlResponse {
+  bool valid = 1;       // true, wenn syntaktisch gültig
+  bool reachable = 2;   // true, wenn erreichbar
+  string message = 3;   // Fehler- oder Erfolgsmeldung
+}
