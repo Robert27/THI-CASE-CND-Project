@@ -11,14 +11,36 @@ Er bietet die Möglichkeit den aktuellen Preis sowie die Verfügbarkeit eines Ob
 
 ## Architektur Beschreibung
 
-Viele Adapter. Ports. Wundervolle Dinge. 
-Aufruf des Url Validierungs Service. Wow! 
+Der Preischeck-Service ist ein gRPC-basierter Microservice, der es ermöglicht, Preise und Verfügbarkeiten für eine Liste von Artikeln zu überprüfen. Der Service empfängt Anfragen mit einer Liste von Artikel-IDs und gibt entsprechende Ergebnisse zurück, einschließlich Preis, Verfügbarkeit und Status.
+Der Service erwartet eine gRPC-Anfrage (PriceCheckRequest) mit einer Liste von Artikel-IDs (itemIds).
+Kontaktiert Object Management Service um URLs zu erhalten 
+Kontaktiert URL Validation Service um zu prüfen ob URLs valide sind
+REST Aufruf der URL, entnimmt Preis, Verfügbarkeit
+Der Service gibt eine Antwort (PriceCheckReply) mit einer Liste von Ergebnissen (PriceResult) zurück. Jedes Ergebnis enthält Details zu einem Artikel.
 
-## API
 
-| Method | Path | Description |
-| --- | --- | --- |
-| POST | [item/check-price] | Save Price and ... of Object |
-| GET | [/something] | check url of Object?  |
-| POST | [/item/bulk-check] | check-price for JSON List of Item Ids |
+Adapter:
+Inbound
+gRPC: checkPrices 
+(REST: checkPriceByUrl, checkPriceById, getLogById)
+
+Outbound
+gRPC: ObjectManagement, UrlValidation
+jpa: savePriceLog
+REST: checkPrice
+
+Ports:
+ObjectManagementPort
+PriceCheckPort
+PriceLogRepository
+URLValidationPort
+
+Domain:
+ItemPriceService
+Model:
+PriceLog
+BulkCheckResult
+
+
+
 
