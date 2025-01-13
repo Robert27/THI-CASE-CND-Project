@@ -1,7 +1,7 @@
 package dev.eggl;
 
-import dev.eggl.grpc.OderListClientService;
 import dev.eggl.grpc.ObjectClientService;
+import dev.eggl.grpc.OderListClientService;
 import dev.eggl.grpc.UserClientService;
 import dev.eggl.persistance.IntervalStatusRepository;
 import io.quarkus.scheduler.Scheduled;
@@ -26,9 +26,10 @@ public class IntervalCheckService {
     @Inject
     OderListClientService orderClientService;
 
-    @Scheduled(every = "10s")
+    @Scheduled(every = "15s")
     void checkMissingEntries() {
-        Integer weekday = LocalDate.now().getDayOfWeek().getValue();
+        System.out.println("Checking for missing entries...");
+        int weekday = LocalDate.now().getDayOfWeek().getValue();
         // 1) Load user list
         userClientService.getUserIds()
                 .subscribe().with(userIdsResponse -> {
@@ -46,15 +47,14 @@ public class IntervalCheckService {
                         System.out.println("Fetching objects for batch: " + batch);
                         objectClientService.findAllDayUsers(weekday, batch)
                                 .subscribe().with(dayUsersResponse -> {
-                                    System.out.println("Received day users: " + dayUsersResponse);
                                     dayUsersResponse.userObjectIds.forEach(userObjectIds -> {
-                                        System.out.println("User ID: " + userObjectIds.userId);
-                                        System.out.println("Object IDs: " + userObjectIds.objectIds);
+                                        System.out.println("User ID: " + userObjectIds.userId + " - Object IDs: "
+                                                + userObjectIds.objectIds);
 
                                         // 4) Submit missing order for each user
-              orderClientService
-    .submitMissingOrder(userObjectIds.userId, userObjectIds.objectIds,
-        LocalDate.now().toString())
+                                        orderClientService
+                                                .submitMissingOrder(userObjectIds.userId, userObjectIds.objectIds,
+                                                        LocalDate.now().toString())
                                                 .subscribe().with(success -> {
                                                     if (success) {
                                                         System.out.println(

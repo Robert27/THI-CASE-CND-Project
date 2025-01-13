@@ -1,8 +1,10 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "dev.eggl.orderlist";
-option java_outer_classname = "OrderListProto";
+option java_package = "dev.eggl.order";
+option java_outer_classname = "OrderProto";
+
+package orderlist;
 
 service OrderListService {
   rpc GenerateOrderList (GenerateOrderListRequest) returns (GenerateOrderListReply);

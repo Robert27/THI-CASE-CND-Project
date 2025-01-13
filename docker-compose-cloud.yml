@@ -25,10 +25,9 @@ services:
       DB_NAME: database
       DB_USERNAME: postgres
       DB_PASSWORD: SecReT-PasSwOrD
-    expose:
-      - 9091
     ports:
       - "8080:8080"
+      - "9091:9091"
     depends_on:
       database:
         condition: service_healthy
@@ -56,8 +55,8 @@ services:
       JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JEqgNqMzO+9QnknqkEK27kaJ8iGvnGFyVFtzwUQuIdlZPjDr5U6SABgljdVGdZnpvKaK3ZWtzQjnXVLgpI80l+2Lg+bVFX3mqQOlCwca3QLrfzmEUiK4tTrIGgtQnYBJVnXUWZKl2qYxDlMNwKG+d/FDZTnnierjiy3aZCLZtnVnQFH0SRolMJLECGeOufh8yep+8ClHHO57jvTLRk4T0EKakwqIRa5nQFO/WBczfZWsVNXUH7epxax6n1yklquchXtgT1JOjj/2w3IbmMz5KN0muPJfU9cfct18QUtvHzYor5CyOGeOxxzinhanlZAyfOOSU1bMXG7Uev7hENtQQIDAQAB-----END PUBLIC KEY-----"
       GRPC_URL_HOST: url-validator
       GRPC_URL_PORT: 9092
-    expose:
-      - 9090
+    ports:
+      - "9090:9090"
     depends_on:
       database:
         condition: service_healthy

@@ -16,53 +16,32 @@ public class ObjectClientService {
     ObjectService objects;
 
     public Uni<DayUsersResponse> findAllDayUsers(int weekDay, List<Integer> userIds) {
-        // Log der Anfrageparameter
-        System.out.println("Starting gRPC call to findAllDayUsers");
-        System.out.println("WeekDay: " + weekDay);
-        System.out.println("UserIds: " + userIds);
-
-        // Anfrage erstellen
+        System.out.println("Starting gRPC call to findAllDayUsers for weekday " + weekDay + " and user IDs " + userIds);
         StorageObjectsProto.DayUsersRequest request = StorageObjectsProto.DayUsersRequest.newBuilder()
                 .setWeekDay(weekDay) // Wochentag setzen
                 .addAllUserIds(userIds) // Benutzer-IDs hinzufügen
                 .build();
 
-        System.out.println("Built gRPC request: " + request);
-
-        // Anfrage an den gRPC-Server senden und Antwort transformieren
         return objects.findAllDayUsers(request)
                 .onItem().invoke(reply -> {
-                    // Log der erhaltenen Antwort
-                    System.out.println("Received gRPC reply: " + reply);
+
                 })
                 .onItem().transform(reply -> {
-                    // Log vor der Transformation
-                    System.out.println("Transforming gRPC reply to custom DTO");
 
                     // Umwandlung der Antwort in benutzerdefinierte JSON-Struktur
                     List<UserObjectIds> userObjectIdsList = reply.getUserObjectIdsList().stream()
-                            .map(protoUserObjectIds -> {
-                                System.out.println("Processing userId: " + protoUserObjectIds.getUserId());
-                                System.out.println("ObjectIds: " + protoUserObjectIds.getObjectIdsList());
-                                return new UserObjectIds(
-                                        protoUserObjectIds.getUserId(),
-                                        protoUserObjectIds.getObjectIdsList()
-                                );
-                            })
+                            .map(protoUserObjectIds -> new UserObjectIds(
+                                    protoUserObjectIds.getUserId(),
+                                    protoUserObjectIds.getObjectIdsList()
+                            ))
                             .collect(Collectors.toList());
 
-                    DayUsersResponse response = new DayUsersResponse(userObjectIdsList);
-                    // Log der endgültigen JSON-Struktur
-                    System.out.println("Final transformed response: " + response);
-                    return response;
+                    return new DayUsersResponse(userObjectIdsList);
                 })
                 .onFailure().invoke(throwable -> {
-                    // Fehlerbehandlung und Logging
                     System.err.println("Error occurred during gRPC call: " + throwable.getMessage());
-                    throwable.printStackTrace();
                 });
     }
-    // DTO für die JSON-Antwort
     public static class DayUsersResponse {
         public List<UserObjectIds> userObjectIds;
 

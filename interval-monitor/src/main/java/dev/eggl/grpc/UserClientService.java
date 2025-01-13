@@ -15,31 +15,21 @@ public class UserClientService {
     GrpcUserService grpcUserService;
 
     public Uni<UserIdsResponse> getUserIds() {
-        // Create the request
         UserIdsRequest request = UserIdsRequest.newBuilder().build();
-
-        // Log the request
-        System.out.println("Starting gRPC call to getUserIds");
 
         // Send the request to the gRPC server and transform the response
         return grpcUserService.getUserIds(request)
                 .onItem().invoke(reply -> {
-                    // Log the received reply
-                    System.out.println("Received gRPC reply: " + reply);
+
                 })
                 .onItem().transform(reply -> {
                     // Transform the response into a custom DTO
                     List<Integer> userIds = reply.getUserIdsList();
-                    UserIdsResponse response = new UserIdsResponse(userIds);
-
-                    // Log the final transformed response
-                    System.out.println("Final transformed response: " + response);
-                    return response;
+                    return new UserIdsResponse(userIds);
                 })
                 .onFailure().invoke(throwable -> {
                     // Error handling and logging
                     System.err.println("Error occurred during gRPC call: " + throwable.getMessage());
-                    throwable.printStackTrace();
                 });
     }
 

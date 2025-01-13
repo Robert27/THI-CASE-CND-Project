@@ -1,8 +1,8 @@
 package dev.eggl.grpc;
 
-import dev.eggl.orderlist.OrderListService;
-import dev.eggl.orderlist.GenerateOrderListRequest;
-import dev.eggl.orderlist.GenerateOrderListReply;
+import dev.eggl.order.OrderListService;
+import dev.eggl.order.GenerateOrderListRequest;
+import dev.eggl.order.GenerateOrderListReply;
 import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -12,7 +12,7 @@ import java.util.List;
 @ApplicationScoped
 public class OderListClientService {
 
-    @GrpcClient("orderlist")
+    @GrpcClient("order")
     OrderListService orderService;
 
     /**
@@ -29,8 +29,6 @@ public class OderListClientService {
                 .setDate(date)
                 .build();
 
-        // Make the gRPC call
-        // Return success status
         return orderService.generateOrderList(request)
                 .onItem().invoke(response -> {
                     // Log response
