@@ -5,7 +5,7 @@ on:
     branches: ["main"]
     paths:
       - "url-validator/**"
-      - ".github/workflows/url-validator.yml"
+      - ".github/workflows/build-url-validator.yml"
 
 env:
   VERSION_TAG_PREFIX: "url-validator-"
@@ -33,7 +33,7 @@ jobs:
           distribution: "temurin"
           cache: maven
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}

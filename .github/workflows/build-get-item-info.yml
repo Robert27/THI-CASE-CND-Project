@@ -5,7 +5,7 @@ on:
     branches: ['main']
     paths:
       - 'get-item-info/**'
-      - '.github/workflows/get-item-info.yml'
+      - '.github/workflows/build-get-item-info.yml'
 
 env:
   VERSION_TAG_PREFIX: 'get-item-info-'
@@ -33,7 +33,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}

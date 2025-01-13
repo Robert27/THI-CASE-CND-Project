@@ -2,13 +2,13 @@ name: Build Order List
 
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
     paths:
-      - 'order-list/**'
-      - '.github/workflows/order-list.yml'
+      - "order-list/**"
+      - ".github/workflows/build-order-list.yml"
 
 env:
-  VERSION_TAG_PREFIX: 'order-list-'
+  VERSION_TAG_PREFIX: "order-list-"
   IMAGE_NAME: ${{ github.repository }}/order-list
   REGISTRY: ghcr.io
 
@@ -29,11 +29,11 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          java-version: "21"
+          distribution: "temurin"
           cache: maven
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -45,7 +45,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
