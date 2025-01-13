@@ -8,7 +8,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class UrlValidationController implements UrlValidationPort {
-    @GrpcClient("urlValidation")
+    @GrpcClient("urlvalidation")
     UrlValidationService grpcUserService;
 
 

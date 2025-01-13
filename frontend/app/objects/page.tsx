@@ -18,6 +18,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Alert,
+  Spinner,
 } from "@nextui-org/react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -48,7 +49,11 @@ export default function PricingPage() {
     },
   });
 
-  const { data: items = [], error: fetchError } = useQuery<StorageObject[]>({
+  const {
+    data: items = [],
+    error: fetchError,
+    isLoading,
+  } = useQuery<StorageObject[]>({
     queryKey: ["objects"],
     queryFn: async () => {
       if (!session?.user) throw new Error("No token found");
@@ -195,8 +200,15 @@ export default function PricingPage() {
         throw new Error(errorMsg);
       }
     },
-    // ...existing code...
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["objects"] });
+      setIsEditModalOpen(false); // Close the edit modal on success
+    },
+    onError: (error) => {
+      setAlertMessage(error.message);
+    },
   });
+
   const handleAlertClose = () => {
     setAlertMessage(null);
   };
@@ -226,68 +238,74 @@ export default function PricingPage() {
         />
       )}
 
-      <div className="mt-8 flow-root">
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle">
-            <Table aria-label="Objects Table" selectionMode="none">
-              <TableHeader>
-                <TableColumn>Name</TableColumn>
-                <TableColumn>Category</TableColumn>
-                <TableColumn>Quantity</TableColumn>
-                <TableColumn>Weekday</TableColumn>
-                <TableColumn>Actions</TableColumn>
-              </TableHeader>
-              <TableBody items={items}>
-                {(item) => (
-                  <TableRow key={item.id} onClick={() => handleEdit(item)}>
-                    <TableCell>{item.name}</TableCell>
-                    <TableCell>
-                      <Chip color="primary">
-                        {categories.find((c) => c.id === item.categoryId)
-                          ?.name || "Unknown"}
-                      </Chip>
-                    </TableCell>
-                    <TableCell>{item.quantity}</TableCell>
-                    <TableCell>{item.weekday}</TableCell>
-                    <TableCell>
-                      <Dropdown className="bg-background border-1 border-default-200">
-                        <DropdownTrigger>
-                          <Button
-                            isIconOnly
-                            radius="full"
-                            size="sm"
-                            variant="light"
-                          >
-                            <LuEllipsisVertical size={18} />
-                          </Button>
-                        </DropdownTrigger>
-                        <DropdownMenu>
-                          <DropdownItem
-                            key="edit"
-                            endContent={<LuSquarePen size={16} />}
-                            onPress={() => handleEdit(item)}
-                          >
-                            Edit
-                          </DropdownItem>
-                          <DropdownItem
-                            key="delete"
-                            className="text-danger"
-                            color="danger"
-                            endContent={<LuTrash2 color="danger" size={16} />}
-                            onPress={() => handleDelete(item.id)}
-                          >
-                            Delete
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </Dropdown>
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+      {isLoading ? (
+        <div className="flex justify-center items-center h-64">
+          <Spinner size="lg" />
+        </div>
+      ) : (
+        <div className="mt-8 flow-root">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle">
+              <Table aria-label="Objects Table" selectionMode="none">
+                <TableHeader>
+                  <TableColumn>Name</TableColumn>
+                  <TableColumn>Category</TableColumn>
+                  <TableColumn>Quantity</TableColumn>
+                  <TableColumn>Weekday</TableColumn>
+                  <TableColumn>Actions</TableColumn>
+                </TableHeader>
+                <TableBody items={items}>
+                  {(item) => (
+                    <TableRow key={item.id} onClick={() => handleEdit(item)}>
+                      <TableCell>{item.name}</TableCell>
+                      <TableCell>
+                        <Chip color="primary">
+                          {categories.find((c) => c.id === item.categoryId)
+                            ?.name || "Unknown"}
+                        </Chip>
+                      </TableCell>
+                      <TableCell>{item.quantity}</TableCell>
+                      <TableCell>{item.weekday}</TableCell>
+                      <TableCell>
+                        <Dropdown className="bg-background border-1 border-default-200">
+                          <DropdownTrigger>
+                            <Button
+                              isIconOnly
+                              radius="full"
+                              size="sm"
+                              variant="light"
+                            >
+                              <LuEllipsisVertical size={18} />
+                            </Button>
+                          </DropdownTrigger>
+                          <DropdownMenu>
+                            <DropdownItem
+                              key="edit"
+                              endContent={<LuSquarePen size={16} />}
+                              onPress={() => handleEdit(item)}
+                            >
+                              Edit
+                            </DropdownItem>
+                            <DropdownItem
+                              key="delete"
+                              className="text-danger"
+                              color="danger"
+                              endContent={<LuTrash2 color="danger" size={16} />}
+                              onPress={() => handleDelete(item.id)}
+                            >
+                              Delete
+                            </DropdownItem>
+                          </DropdownMenu>
+                        </Dropdown>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <CreateObjectModal
         key={String(isModalOpen)}

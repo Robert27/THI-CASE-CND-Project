@@ -19,9 +19,6 @@ const authOptions = {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(credentials),
         });
-
-        console.log("Response:", res); // Debugging
-
         const user = await res.json();
 
         if (res.ok && user) {
@@ -34,8 +31,6 @@ const authOptions = {
   ],
   callbacks: {
     async jwt({ token, user }: { token: any; user?: any }) {
-      console.log("JWT callback invoked with token and user:", token, user); // Debugging
-
       if (user && user.token) {
         token.accessToken = user.token;
 
@@ -54,8 +49,6 @@ const authOptions = {
     },
 
     async session({ session, token }: { session: any; token: any }) {
-      console.log("Session callback invoked with token:", token); // Debugging
-
       if (token) {
         session.accessToken = token.accessToken || null;
 
@@ -65,8 +58,6 @@ const authOptions = {
           sub: token.sub || null,
         };
       }
-
-      console.log("Session object:", session); // Debugging
 
       return session;
     },
