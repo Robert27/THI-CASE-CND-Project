@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import jwt, { JwtPayload } from "jsonwebtoken"; // Install this package
 
 const AUTH_URL =
-  process.env.NEXT_PUBLIC_AUTH_URL || "http://localhost:4000/auth/login";
+  process.env.NEXT_PUBLIC_AUTH_URL || "http://localhost:4000/api/auth/login";
 const authOptions = {
   providers: [
     CredentialsProvider({

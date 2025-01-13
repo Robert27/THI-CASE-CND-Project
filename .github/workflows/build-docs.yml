@@ -2,13 +2,13 @@ name: Build Docs
 
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
     paths:
-      - 'docs/**'
-      - '.github/workflows/build-docs.yml'
+      - "docs/**"
+      - ".github/workflows/build-docs.yml"
 
 env:
-  VERSION_TAG_PREFIX: 'object-management-'
+  VERSION_TAG_PREFIX: "object-management-"
   IMAGE_NAME: ${{ github.repository }}/docs
   REGISTRY: ghcr.io
 
@@ -41,11 +41,15 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
+      - name: Convert IMAGE_NAME and TAGNAME to lowercase
+        run: |
+          echo "IMAGE_NAME_LOWER=${IMAGE_NAME,,}" >>${GITHUB_ENV}
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: docs/
           file: docs/Dockerfile
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
           labels: ${{ steps.meta.outputs.labels }}

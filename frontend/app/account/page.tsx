@@ -17,7 +17,7 @@ export default function AccountPage() {
       oldPassword: string;
       newPassword: string;
     }) => {
-      const res = await fetch(`http://localhost:4000/user/${userId}/changepw`, {
+      const res = await fetch(`http://localhost:4000/api/user/${userId}/changepw`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +44,7 @@ export default function AccountPage() {
   // Delete Account Mutation
   const deleteAccountMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch(`http://localhost:4000/user/${userId}`, {
+      const res = await fetch(`http://localhost:4000/api/user/${userId}`, {
         method: "DELETE",
       });
 

@@ -87,7 +87,7 @@ services:
     environment:
       JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JEqgNqMzO+9QnknqkEK27kaJ8iGvnGFyVFtzwUQuIdlZPjDr5U6SABgljdVGdZnpvKaK3ZWtzQjnXVLgpI80l+2Lg+bVFX3mqQOlCwca3QLrfzmEUiK4tTrIGgtQnYBJVnXUWZKl2qYxDlMNwKG+d/FDZTnnierjiy3aZCLZtnVnQFH0SRolMJLECGeOufh8yep+8ClHHO57jvTLRk4T0EKakwqIRa5nQFO/WBczfZWsVNXUH7epxax6n1yklquchXtgT1JOjj/2w3IbmMz5KN0muPJfU9cfct18QUtvHzYor5CyOGeOxxzinhanlZAyfOOSU1bMXG7Uev7hENtQQIDAQAB-----END PUBLIC KEY-----"
       NEXTAUTH_SECRET: 9n0Gnw+JJ64DsMSXdejaLVNNlLtVzNmhijQlYorTa3Q=
-      NEXTAUTH_URL: http://nginx:4000/auth/login
+      NEXTAUTH_URL: http://nginx:4000/api/auth/login
     ports:
       - "3000:3000"
     depends_on:
@@ -149,6 +149,11 @@ services:
       - "9094:9094"
     depends_on:
       - database
+
+  docs:
+    image: ghcr.io/robert27/thi-case-cnd-project/docs:latest
+    ports:
+      - "5100:80"
 
 volumes:
   db_data:
