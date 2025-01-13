@@ -22,25 +22,37 @@ public class PriceCheckGrpcService extends PriceCheckServiceGrpc.PriceCheckServi
 
     @Override
     public void checkPrices(PriceCheckRequest request, StreamObserver<PriceCheckReply> responseObserver) {
-        List<Integer> itemIds = request.getItemIdsList();
+        try {
+            System.out.println("Received request: " + request);
+            List<Integer> itemIds = request.getItemIdsList();
+            System.out.println("Item IDs: " + itemIds);
 
-        List<BulkCheckResult> results = itemPriceService.bulkCheckItems(itemIds);
+            List<BulkCheckResult> results = itemPriceService.bulkCheckItems(itemIds);
+            System.out.println("Results: " + results);
 
-        PriceCheckReply.Builder replyBuilder = PriceCheckReply.newBuilder();
-        for (BulkCheckResult result : results) {
-            replyBuilder.addResults(
-                    pricecheck.PriceResult.newBuilder()
-                            .setItemId(result.getItemId())
-                            .setStatus(result.getStatus())
-                            .setMessage(result.getMessage() != null ? result.getMessage() : "")
-                            .setLogId(result.getLogId())
-                            .setPrice(result.getPrice())
-                            .setAvailability(result.getAvailability())
-                            .build()
-            );
+            PriceCheckReply.Builder replyBuilder = PriceCheckReply.newBuilder();
+            for (BulkCheckResult result : results) {
+                replyBuilder.addResults(
+                        pricecheck.PriceResult.newBuilder()
+                                .setItemId(result.getItemId())
+                                .setStatus(result.getStatus())
+                                .setMessage(result.getMessage() != null ? result.getMessage() : "")
+                                .setLogId(result.getLogId())
+                                .setPrice(result.getPrice())
+                                .setAvailability(result.getAvailability())
+                                .build()
+                );
+            }
+
+            responseObserver.onNext(replyBuilder.build());
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            System.err.println("Error processing request: " + e.getMessage());
+            e.printStackTrace();
+            responseObserver.onError(io.grpc.Status.INTERNAL
+                    .withDescription("Internal server error: " + e.getMessage())
+                    .withCause(e)
+                    .asRuntimeException());
         }
-
-        responseObserver.onNext(replyBuilder.build());
-        responseObserver.onCompleted();
     }
 }
