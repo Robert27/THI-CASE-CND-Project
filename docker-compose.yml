@@ -30,7 +30,8 @@ services:
       DB_PASSWORD: SecReT-PasSwOrD
     ports:
       - "8080:8080"
-      - "9091:9091"
+    expose:
+      - 9091
     depends_on:
       database:
         condition: service_healthy
@@ -107,12 +108,12 @@ services:
       - authservice
       - object-management
       - interval-monitor
-      - frontend
+      # - frontend
 
   order-list:
     build:
       context: ./order-list
-      dockerfile:  src/main/docker/Dockerfile.jvm
+      dockerfile: src/main/docker/Dockerfile.jvm
     environment:
       DB_USERNAME: postgres
       DB_PASSWORD: SecReT-PasSwOrD
@@ -122,6 +123,7 @@ services:
       JWT_PUBLIC_KEY: -----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JEqgNqMzO+9QnknqkEK27kaJ8iGvnGFyVFtzwUQuIdlZPjDr5U6SABgljdVGdZnpvKaK3ZWtzQjnXVLgpI80l+2Lg+bVFX3mqQOlCwca3QLrfzmEUiK4tTrIGgtQnYBJVnXUWZKl2qYxDlMNwKG+d/FDZTnnierjiy3aZCLZtnVnQFH0SRolMJLECGeOufh8yep+8ClHHO57jvTLRk4T0EKakwqIRa5nQFO/WBczfZWsVNXUH7epxax6n1yklquchXtgT1JOjj/2w3IbmMz5KN0muPJfU9cfct18QUtvHzYor5CyOGeOxxzinhanlZAyfOOSU1bMXG7Uev7hENtQQIDAQAB-----END PUBLIC KEY-----
     ports:
       - "8084:8080"
+      - "9093:9093"
     depends_on:
       - database
 
@@ -131,6 +133,7 @@ services:
       dockerfile: src/main/docker/Dockerfile.jvm
     ports:
       - "8085:8080"
+      - "9092:9092"
 
   get-item-info:
     build:
