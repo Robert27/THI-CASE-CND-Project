@@ -9,7 +9,7 @@ on:
 
 env:
   VERSION_TAG_PREFIX: "object-management-"
-  IMAGE_NAME: ${{ github.repository }}/object-management
+  IMAGE_NAME: thi-case-cnd-project/object-management
   REGISTRY: ghcr.io
 
 jobs:
@@ -33,9 +33,12 @@ jobs:
           distribution: "temurin"
           cache: maven
 
-      - name: downcase REPO
-        run: |
-          echo "IMAGE_NAME_LOWER=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -62,7 +65,7 @@ jobs:
           file: object-management/src/main/docker/Dockerfile.jvm
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           platforms: linux/amd64,linux/arm64
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
