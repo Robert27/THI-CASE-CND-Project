@@ -2,13 +2,13 @@ name: Build Get Item Info
 
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
     paths:
-      - 'get-item-info/**'
-      - '.github/workflows/build-get-item-info.yml'
+      - "get-item-info/**"
+      - ".github/workflows/build-get-item-info.yml"
 
 env:
-  VERSION_TAG_PREFIX: 'get-item-info-'
+  VERSION_TAG_PREFIX: "get-item-info-"
   IMAGE_NAME: ${{ github.repository }}/get-item-info
   REGISTRY: ghcr.io
 
@@ -29,23 +29,19 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          java-version: "21"
+          distribution: "temurin"
           cache: maven
 
-      - uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-              ${{ runner.os }}-maven-
+      - name: mvn package
+        run: mvn -B -fae package
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
@@ -66,7 +62,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: get-item-info/
-          file: get-item-info/src/main/docker/Dockerfile.jvm
+          file: get-item-info/src/main/docker/Dockerfile.gh
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           platforms: linux/amd64,linux/arm64
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
