@@ -77,6 +77,12 @@ services:
       DB_HOST: database
       DB_NAME: database
       JWT_PUBLIC_KEY: -----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JEqgNqMzO+9QnknqkEK27kaJ8iGvnGFyVFtzwUQuIdlZPjDr5U6SABgljdVGdZnpvKaK3ZWtzQjnXVLgpI80l+2Lg+bVFX3mqQOlCwca3QLrfzmEUiK4tTrIGgtQnYBJVnXUWZKl2qYxDlMNwKG+d/FDZTnnierjiy3aZCLZtnVnQFH0SRolMJLECGeOufh8yep+8ClHHO57jvTLRk4T0EKakwqIRa5nQFO/WBczfZWsVNXUH7epxax6n1yklquchXtgT1JOjj/2w3IbmMz5KN0muPJfU9cfct18QUtvHzYor5CyOGeOxxzinhanlZAyfOOSU1bMXG7Uev7hENtQQIDAQAB-----END PUBLIC KEY-----
+      GRPC_OBJECTS_PORT: 9090
+      GRPC_OBJECTS_HOST: object-management
+      GRPC_USERS_PORT: 9091
+      GRPC_USERS_HOST: userservice
+      GRPC_ORDERLIST_PORT: 9093
+      GRPC_ORDERLIST_HOST: order-list
     ports:
       - "8083:8080"
     depends_on:

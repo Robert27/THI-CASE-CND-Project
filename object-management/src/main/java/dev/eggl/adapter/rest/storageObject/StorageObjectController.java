@@ -34,6 +34,7 @@ public class StorageObjectController {
             storageObjects = listStorageObjectUseCase.findAll(token);
 
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             if (e instanceof AuthenticationFailedException) {
                 throw clientErrorException(
                         Response.Status.UNAUTHORIZED, e.getMessage());
@@ -65,6 +66,7 @@ public class StorageObjectController {
                     .entity(ListStorageObjectModel.fromDomainModel(created))
                     .build();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             if (e instanceof AuthenticationFailedException) {
                 throw clientErrorException(
                         Response.Status.UNAUTHORIZED, e.getMessage());
@@ -103,6 +105,7 @@ public class StorageObjectController {
                     .entity(ListStorageObjectModel.fromDomainModel(updated))
                     .build();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             if (e instanceof AuthenticationFailedException) {
                 throw clientErrorException(
                         Response.Status.UNAUTHORIZED, e.getMessage());
@@ -129,6 +132,7 @@ public class StorageObjectController {
                     .entity(ListStorageObjectModel.fromDomainModel(deleted))
                     .build();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             if (e instanceof AuthenticationFailedException) {
                 throw clientErrorException(
                         Response.Status.UNAUTHORIZED, e.getMessage());

@@ -28,6 +28,7 @@ public class IntervalCheckService {
 
     @Scheduled(every = "10s")
     void checkMissingEntries() {
+        Integer weekday = LocalDate.now().getDayOfWeek().getValue();
         // 1) Load user list
         userClientService.getUserIds()
                 .subscribe().with(userIdsResponse -> {
@@ -43,7 +44,7 @@ public class IntervalCheckService {
                     for (int i = 0; i < missingUserIds.size(); i += 5) {
                         List<Integer> batch = missingUserIds.subList(i, Math.min(i + 5, missingUserIds.size()));
                         System.out.println("Fetching objects for batch: " + batch);
-                        objectClientService.findAllDayUsers(5, batch)
+                        objectClientService.findAllDayUsers(weekday, batch)
                                 .subscribe().with(dayUsersResponse -> {
                                     System.out.println("Received day users: " + dayUsersResponse);
                                     dayUsersResponse.userObjectIds.forEach(userObjectIds -> {
