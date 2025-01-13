@@ -7,21 +7,29 @@ import jakarta.persistence.*;
  * JPA-Entity für die Tabelle "orders"
  */
 @Entity
-@Table(name = "orders")
+@Table(name = "order_object")
 public class OrderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "user_id", nullable = false)
     private Integer userId;
+
+    @Column(name = "item_id", nullable = false)
     private Integer itemId;
+
+    @Column(name = "cycle_date", nullable = false)
     private String cycleDate;
 
+    @Column(name = "order_status", nullable = false)
     private String orderStatus;
 
+    @Column(name = "item_status", nullable = false)
     private boolean itemStatus;
 
+    @Column(name = "log_id", nullable = false)
     private Integer logId;
 
     // Getter/Setter

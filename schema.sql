@@ -47,10 +47,13 @@ create table if not exists order_object
     item_id      integer   not null
         constraint fk_item
             references objects,
+    user_id      integer   not null
+        constraint fk_user
+            references users,
     log_id       integer
         constraint fk_log
             references item_price_log,
-    cycle_time   timestamp not null,
+    cycle_date   varchar(20) not null,
     order_status varchar(20)
         constraint order_object_order_status_check
             check ((order_status)::text = ANY
