@@ -9,7 +9,7 @@ on:
 
 env:
   VERSION_TAG_PREFIX: "object-management-"
-  IMAGE_NAME: thi-case-cnd-project/object-management
+  IMAGE_NAME: ${{ github.repository }}/object-management
   REGISTRY: ghcr.io
 
 jobs:
@@ -25,6 +25,9 @@ jobs:
         working-directory: object-management/
 
     steps:
+      - name: Convert IMAGE_NAME and TAGNAME to lowercase
+        run: |
+          echo "IMAGE_NAME_LOWER=$(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
       - uses: actions/checkout@v4
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -65,7 +68,7 @@ jobs:
           file: object-management/src/main/docker/Dockerfile.jvm
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           platforms: linux/amd64,linux/arm64
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
