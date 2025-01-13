@@ -1,4 +1,4 @@
-package dev.eggl;
+package dev.eggl.grpc;
 
 import dev.eggl.objects.ObjectService;
 import dev.eggl.objects.StorageObjectsProto;

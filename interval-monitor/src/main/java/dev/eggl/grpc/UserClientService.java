@@ -1,4 +1,4 @@
-package dev.eggl;
+package dev.eggl.grpc;
 
 import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;

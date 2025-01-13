@@ -1,10 +1,13 @@
 package dev.eggl;
 
+import dev.eggl.grpc.OderListClientService;
+import dev.eggl.grpc.ObjectClientService;
+import dev.eggl.grpc.UserClientService;
 import dev.eggl.persistance.IntervalStatusRepository;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import java.time.Instant;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,7 +24,7 @@ public class IntervalCheckService {
     UserClientService userClientService;
 
     @Inject
-    IntervalClientService orderClientService;
+    OderListClientService orderClientService;
 
     @Scheduled(every = "10s")
     void checkMissingEntries() {
@@ -48,9 +51,9 @@ public class IntervalCheckService {
                                         System.out.println("Object IDs: " + userObjectIds.objectIds);
 
                                         // 4) Submit missing order for each user
-                                        orderClientService
-                                                .submitMissingOrder(userObjectIds.userId, userObjectIds.objectIds,
-                                                        Instant.now())
+              orderClientService
+    .submitMissingOrder(userObjectIds.userId, userObjectIds.objectIds,
+        LocalDate.now().toString())
                                                 .subscribe().with(success -> {
                                                     if (success) {
                                                         System.out.println(
