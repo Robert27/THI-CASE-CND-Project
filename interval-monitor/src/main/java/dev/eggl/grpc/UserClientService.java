@@ -28,9 +28,6 @@ public class UserClientService {
                     System.out.println("Received gRPC reply: " + reply);
                 })
                 .onItem().transform(reply -> {
-                    // Log before transformation
-                    System.out.println("Transforming gRPC reply to custom DTO");
-
                     // Transform the response into a custom DTO
                     List<Integer> userIds = reply.getUserIdsList();
                     UserIdsResponse response = new UserIdsResponse(userIds);
