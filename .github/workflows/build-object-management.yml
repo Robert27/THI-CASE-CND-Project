@@ -62,6 +62,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: object-management/
+          # Uses special Dockerfile for GitHub Actions to optimize build time and cache
           file: object-management/src/main/docker/Dockerfile.gh
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           platforms: linux/amd64,linux/arm64

@@ -33,12 +33,8 @@ jobs:
           distribution: "temurin"
           cache: maven
 
-      - uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+      - name: mvn package
+        run: mvn -B -fae package
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -65,7 +61,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: interval-monitor/
-          file: interval-monitor/src/main/docker/Dockerfile.jvm
+          # Uses special Dockerfile for GitHub Actions to optimize build time and cache
+          file: interval-monitor/src/main/docker/Dockerfile.gh
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           platforms: linux/amd64,linux/arm64
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
