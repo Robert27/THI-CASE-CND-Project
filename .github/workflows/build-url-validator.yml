@@ -62,7 +62,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: url-validator/
-          file: url-validator/src/main/docker/Dockerfile.jvm
+          file: url-validator/src/main/docker/Dockerfile.gh
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           platforms: linux/amd64,linux/arm64
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
