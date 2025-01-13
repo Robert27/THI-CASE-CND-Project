@@ -7,10 +7,7 @@ COPY pom.xml ./
 COPY src ./src
 
 # Run Maven package to build the application
-RUN mvn package
-
-# Run Maven test to test the application
-RUN mvn test
+RUN mvn package -batch-mode
 
 # Use the Quarkus runtime image for running the application
 FROM registry.access.redhat.com/ubi8/openjdk-21:1.20
