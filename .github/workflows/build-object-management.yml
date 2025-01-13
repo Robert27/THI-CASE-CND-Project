@@ -57,10 +57,11 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
+      
       - name: Convert IMAGE_NAME and TAGNAME to lowercase
         run: |
           echo "IMAGE_NAME_LOWER=${IMAGE_NAME,,}" >>${GITHUB_ENV}
+
 
       - name: Build and push multi-arch image
         uses: docker/build-push-action@v6
