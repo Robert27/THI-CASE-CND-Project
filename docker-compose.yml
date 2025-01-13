@@ -112,7 +112,7 @@ services:
   order-list:
     build:
       context: ./order-list
-      dockerfile:  src/main/docker/Dockerfile
+      dockerfile:  src/main/docker/Dockerfile.jvm
     environment:
       DB_USERNAME: postgres
       DB_PASSWORD: SecReT-PasSwOrD
@@ -128,14 +128,14 @@ services:
   url-validator:
     build:
       context: ./url-validator
-      dockerfile: /src/main/docker/Dockerfile
+      dockerfile: src/main/docker/Dockerfile.jvm
     ports:
       - "8085:8080"
 
   get-item-info:
     build:
       context: ./get-item-info
-      dockerfile: src/main/docker/Dockerfile
+      dockerfile: src/main/docker/Dockerfile.jvm
     environment:
       DB_USERNAME: postgres
       DB_PASSWORD: SecReT-PasSwOrD
