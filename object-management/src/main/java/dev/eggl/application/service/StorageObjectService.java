@@ -54,10 +54,9 @@ public class StorageObjectService implements ListStorageObjectUseCase {
             throw new IllegalArgumentException("Reorder URL must be provided");
         }
 
-        // TODO: validate URL
-        // if (!urlValidationPort.validateUrl(reorderUrl)) {
-        // throw new IllegalArgumentException("Reorder URL is invalid or unreachable");
-        // }
+        if (!urlValidationPort.validateUrl(reorderUrl)) {
+            throw new IllegalArgumentException("Reorder URL is invalid or unreachable");
+        }
         if (!categoryRepository.existsById(categoryId)) {
             throw new IllegalArgumentException("Category ID does not exist");
         }
@@ -111,6 +110,9 @@ public class StorageObjectService implements ListStorageObjectUseCase {
             existingObject.setCategoryId(categoryId);
         }
         if (reorderUrl != null) {
+            if (!urlValidationPort.validateUrl(reorderUrl)) {
+                throw new IllegalArgumentException("Reorder URL is invalid or unreachable");
+            }
             existingObject.setReorderUrl(reorderUrl);
         }
         if (quantity != null) {

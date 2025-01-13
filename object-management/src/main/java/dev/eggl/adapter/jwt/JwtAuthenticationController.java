@@ -23,6 +23,10 @@ public class JwtAuthenticationController implements AuthenticationUseCase {
             String userId = jwt.getClaim("sub");
             String username = jwt.getClaim("username");
 
+            if (userId == null || username == null) {
+                throw new AuthenticationFailedException("Missing subject or username");
+            }
+            
             // Smallrye JWT will automatically validate the token based on the public key and the expiration time
             return new AuthenticatedUser(Integer.parseInt(userId), username);
 

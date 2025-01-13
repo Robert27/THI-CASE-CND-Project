@@ -26,14 +26,10 @@ public final class ControllerCommons {
 
     public static String extractJwt(HttpHeaders headers) {
         String prefix = "Bearer ";
-        System.out.println("Extracting JWT");
-
         String authHeader = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith(prefix)) {
-            System.out.println("Missing or invalid authorization header");
             throw new AuthenticationFailedException("Missing or invalid authorization header");
         }
-        System.out.println("JWT extracted" + authHeader.substring(prefix.length()));
         return authHeader.substring(prefix.length());
     }
 }

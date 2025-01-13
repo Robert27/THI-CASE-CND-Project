@@ -16,8 +16,7 @@ public class InternalStorageObjectService implements InternalStorageObjectUseCas
 
     @Override
     public List<StorageObject> findByIds(List<Integer> ids) {
-        List<StorageObject> rest = storageObjectRepository.findByIds(ids);
-        return rest;
+        return storageObjectRepository.findByIds(ids);
     }
 
     @Override

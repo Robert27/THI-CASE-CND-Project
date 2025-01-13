@@ -49,6 +49,17 @@ export default function CreateObjectModal({
   const [modalQuantity, setModalQuantity] = useState(1); // 1 unit
   const [modalReorderUrl, setModalReorderUrl] = useState("");
 
+  React.useEffect(() => {
+    if (isOpen) {
+      setModalName("");
+      setModalDescription("");
+      setModalCategoryId(null);
+      setModalWeekday(null);
+      setModalQuantity(1);
+      setModalReorderUrl("");
+    }
+  }, [isOpen]);
+
   const canCreate =
     modalName.trim() !== "" &&
     modalCategoryId !== null &&

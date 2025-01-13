@@ -73,6 +73,7 @@ public class StorageObjectController {
                         Response.Status.BAD_REQUEST, e.getMessage());
 
             } else {
+                System.out.println(e.getMessage());
                 throw serverErrorException(
                         Response.Status.INTERNAL_SERVER_ERROR, "Error while creating storage object");
             }
@@ -85,7 +86,7 @@ public class StorageObjectController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
     public Response update(@PathParam("id") Integer id, CreateStorageObjectModel createStorageObjectModel,
-            @Context HttpHeaders headers) {
+                           @Context HttpHeaders headers) {
 
         try {
             String token = extractJwt(headers);

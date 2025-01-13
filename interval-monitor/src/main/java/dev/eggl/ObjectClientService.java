@@ -62,7 +62,6 @@ public class ObjectClientService {
                     throwable.printStackTrace();
                 });
     }
-
     // DTO für die JSON-Antwort
     public static class DayUsersResponse {
         public List<UserObjectIds> userObjectIds;

@@ -3,6 +3,7 @@ package dev.eggl.adapter.persistence.jpa.storageObject;
 import dev.eggl.domain.model.StorageObject;
 import dev.eggl.port.out.StorageObjectRepository;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ public class JpaStorageObjectRepository implements StorageObjectRepository {
         this.panacheRepository = new JpaStorageObjectPanacheRepository();
     }
 
+    @Transactional
     @Override
     public StorageObject save(StorageObject storageObject) {
         StorageObjectJpaEntity storageObjectJpaEntity = StorageObjectMapper.toJpaEntity(storageObject);
@@ -48,7 +50,6 @@ public class JpaStorageObjectRepository implements StorageObjectRepository {
         List<StorageObjectJpaEntity> results = panacheRepository.find(
                 "weekday = ?1 and userId in ?2", weekDay, userIds).list();
 
-        System.out.println("Results: " + results);
         return results.stream().collect(
                 java.util.stream.Collectors.groupingBy(StorageObjectJpaEntity::getUserId,
                         java.util.stream.Collectors.mapping(StorageObjectJpaEntity::getId, java.util.stream.Collectors.toList())));
