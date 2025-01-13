@@ -12,6 +12,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}/object-management
   REGISTRY: ghcr.io
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
