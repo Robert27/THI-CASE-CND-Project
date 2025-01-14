@@ -43,9 +43,7 @@ services:
       - userservice
 
   object-management:
-    build:
-      context: ./object-management
-      dockerfile: src/main/docker/Dockerfile.jvm
+    image: ghcr.io/robert27/thi-case-cnd-project/object-management:latest
     environment:
       DB_USERNAME: postgres
       DB_PASSWORD: SecReT-PasSwOrD
@@ -81,13 +79,11 @@ services:
         condition: service_healthy
 
   frontend:
-    build:
-      context: ./frontend/
-      dockerfile: Dockerfile
+    image: ghcr.io/robert27/thi-case-cnd-project/frontend:latest
     environment:
       JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JEqgNqMzO+9QnknqkEK27kaJ8iGvnGFyVFtzwUQuIdlZPjDr5U6SABgljdVGdZnpvKaK3ZWtzQjnXVLgpI80l+2Lg+bVFX3mqQOlCwca3QLrfzmEUiK4tTrIGgtQnYBJVnXUWZKl2qYxDlMNwKG+d/FDZTnnierjiy3aZCLZtnVnQFH0SRolMJLECGeOufh8yep+8ClHHO57jvTLRk4T0EKakwqIRa5nQFO/WBczfZWsVNXUH7epxax6n1yklquchXtgT1JOjj/2w3IbmMz5KN0muPJfU9cfct18QUtvHzYor5CyOGeOxxzinhanlZAyfOOSU1bMXG7Uev7hENtQQIDAQAB-----END PUBLIC KEY-----"
       NEXTAUTH_SECRET: 9n0Gnw+JJ64DsMSXdejaLVNNlLtVzNmhijQlYorTa3Q=
-      NEXTAUTH_URL: http://nginx:4000/api/auth/login
+      NEXT_PUBLIC_AUTH_URL: http://nginx:4000/api/auth/login
     ports:
       - "3000:3000"
     depends_on:
@@ -154,6 +150,8 @@ services:
     image: ghcr.io/robert27/thi-case-cnd-project/docs:latest
     ports:
       - "5100:80"
+    environment:
+      - BASE_PATH: /docs
 
 volumes:
   db_data:

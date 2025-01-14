@@ -21,6 +21,7 @@ const authOptions = {
         });
         const user = await res.json();
 
+        console.log("User:", user); // Debugging
         if (res.ok && user) {
           return user; // This object should include the token
         } else {
