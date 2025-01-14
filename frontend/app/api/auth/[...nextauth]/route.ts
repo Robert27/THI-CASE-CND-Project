@@ -2,8 +2,6 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import jwt, { JwtPayload } from "jsonwebtoken"; // Install this package
 
-const AUTH_URL =
-  process.env.NEXT_PUBLIC_AUTH_URL || "http://localhost:4000/api/auth/login";
 const authOptions = {
   providers: [
     CredentialsProvider({
@@ -14,7 +12,7 @@ const authOptions = {
       },
       async authorize(credentials) {
         console.log("Credentials:", credentials); // Debugging
-        const res = await fetch(AUTH_URL, {
+        const res = await fetch("http://localhost:4000/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(credentials),
