@@ -20,6 +20,7 @@ FROM base AS prerelease
 COPY --from=install /temp/dev/node_modules node_modules
 COPY . .
 # build the app
+ENV BASE_URL ${BASE_URL:-/docs/}
 RUN bunx vitepress build
 
 # use nginx as the final image

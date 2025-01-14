@@ -1,13 +1,11 @@
 import { DefaultTheme, defineConfig } from "vitepress";
 
-const BASE_PATH = process.env.BASE_PATH || undefined;
 // https://vitepress.dev/reference/site-config
-console.log("BASE_PATH", BASE_PATH);
 export default defineConfig({
   title: "SmartOrder Wiki",
   description: "Ein THI CSE CND Projekt",
   cleanUrls: true,
-  base: BASE_PATH,
+  base: process.env.BASE_URL,
   lang: "de-DE",
   themeConfig: {
     nav: [

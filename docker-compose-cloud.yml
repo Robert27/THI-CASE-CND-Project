@@ -147,11 +147,12 @@ services:
       - database
 
   docs:
-    image: ghcr.io/robert27/thi-case-cnd-project/docs:latest
+    build: 
+      context: ./docs
     ports:
       - "5100:80"
     environment:
-      BASE_PATH: /docs/
+      BASE_URL: '/docs/'
 
 volumes:
   db_data:
