@@ -3,12 +3,14 @@ package adapters.outbound.grpc;
 import application.port.ObjectManagementPort;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import objectmanagement.ObjectManagementServiceGrpc;
-import objectmanagement.StorageObjectIdsRequest;
-import objectmanagement.StorageObjectsReply;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import objects.ObjectServiceGrpc;
+import objects.StorageObjectIdsRequest;
+import objects.StorageObjectsReply;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,35 +18,50 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public class ObjectManagementGrpcClient implements ObjectManagementPort {
 
-    private final ObjectManagementServiceGrpc.ObjectManagementServiceBlockingStub stub;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ObjectManagementGrpcClient.class);
 
-    // Injektion der Konfigurationswerte
+    private ObjectServiceGrpc.ObjectServiceBlockingStub stub;
+
     @ConfigProperty(name = "objectmanagement.host")
     String host;
 
     @ConfigProperty(name = "objectmanagement.port")
     int port;
 
-    public ObjectManagementGrpcClient() {
-        // Erstelle den gRPC-Channel mit dynamischen Host/Port
-        ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
-                .usePlaintext() // Für lokale Tests ohne TLS
-                .build();
-        this.stub = ObjectManagementServiceGrpc.newBlockingStub(channel);
+    @PostConstruct
+    void init() {
+        LOGGER.info("Initialisiere gRPC-Client für ObjectService (Host: {}, Port: {})...", host, port);
+        try {
+            ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
+                    .usePlaintext()
+                    .build();
+            this.stub = ObjectServiceGrpc.newBlockingStub(channel);
+            LOGGER.info("gRPC-Client erfolgreich initialisiert.");
+        } catch (Exception e) {
+            LOGGER.error("Fehler beim Initialisieren des gRPC-Channels: {}", e.getMessage(), e);
+            throw new IllegalStateException("gRPC-Client konnte nicht initialisiert werden.", e);
+        }
     }
 
     @Override
     public Map<Integer, String> getReorderUrlsByIds(List<Integer> itemIds) {
-        StorageObjectIdsRequest request = StorageObjectIdsRequest.newBuilder()
-                .addAllIds(itemIds)
-                .build();
+        try {
+            LOGGER.debug("Sende gRPC-Anfrage mit Item-IDs: {}", itemIds);
 
-        StorageObjectsReply reply = stub.getStorageObjectsByIds(request);
+            var request = StorageObjectIdsRequest.newBuilder()
+                    .addAllIds(itemIds)
+                    .build();
 
-        return reply.getStorageObjectsList().stream()
-                .collect(Collectors.toMap(
-                        object -> object.getId(),
-                        object -> object.getReorderUrl()
-                ));
+            var reply = stub.getStorageObjectsByIds(request);
+
+            return reply.getStorageObjectsList().stream()
+                    .collect(Collectors.toMap(
+                            object -> object.getId(),
+                            object -> object.getReorderUrl()
+                    ));
+        } catch (Exception e) {
+            LOGGER.error("Fehler beim Abrufen der Reorder-URLs über gRPC: {}", e.getMessage(), e);
+            throw new RuntimeException("Fehler beim Abrufen der Reorder-URLs.", e);
+        }
     }
 }

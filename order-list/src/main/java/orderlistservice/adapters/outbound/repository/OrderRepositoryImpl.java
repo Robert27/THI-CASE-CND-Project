@@ -22,15 +22,21 @@ public class OrderRepositoryImpl implements OrderRepositoryPort {
 
     @Override
     public Optional<OrderObject> findByItemIdAndUserAndCycleDate(Integer itemId, Integer userId, String cycleDate) {
-        OrderEntity entity = panacheRepo.find("item_id = ?1 AND user_id = ?2 AND cycle_date = ?3",
-                itemId, userId, cycleDate).firstResult();
+        // ACHTUNG: Hier die Java-Feldnamen verwenden (itemId, userId, cycleDate) statt item_id, user_id, cycle_date
+        OrderEntity entity = panacheRepo.find(
+                "itemId = ?1 AND userId = ?2 AND cycleDate = ?3",
+                itemId, userId, cycleDate
+        ).firstResult();
         return Optional.ofNullable(OrderMapper.toDomain(entity));
     }
 
     @Override
     public Optional<OrderObject> findByItemIdAndStatusOpenAndUserId(Integer itemId, Integer userId) {
-        OrderEntity entity = panacheRepo.find("item_id = ?1 AND user_id = ?2 AND order_status = ?3",
-                itemId, userId, "OPEN").firstResult();
+        // Auch hier Java-Feldnamen (itemId, userId, orderStatus)
+        OrderEntity entity = panacheRepo.find(
+                "itemId = ?1 AND userId = ?2 AND orderStatus = ?3",
+                itemId, userId, "OPEN"
+        ).firstResult();
         return Optional.ofNullable(OrderMapper.toDomain(entity));
     }
 
@@ -39,14 +45,15 @@ public class OrderRepositoryImpl implements OrderRepositoryPort {
     public void save(OrderObject order) {
         OrderEntity entity = OrderMapper.toEntity(order);
         panacheRepo.persist(entity);
-        order.setId(entity.getId()); // ID zurückgeben
+        // Nach dem Persistieren die generierte ID zurückgeben
+        order.setId(entity.getId());
     }
 
     @Override
     @Transactional
     public void update(OrderObject order) {
         if (order.getId() == null) {
-            // Falls noch keine ID => save
+            // Falls noch keine ID => Speichern
             save(order);
             return;
         }
@@ -58,8 +65,13 @@ public class OrderRepositoryImpl implements OrderRepositoryPort {
 
     @Override
     public List<OrderObject> findAllByStatusOpenAndUserId(Integer userId) {
-        List<OrderEntity> entities = panacheRepo.find("user_id = ?1 AND order_status = ?2",
-                userId, "OPEN").list();
-        return entities.stream().map(OrderMapper::toDomain).collect(Collectors.toList());
+        // Und auch hier "userId" und "orderStatus"
+        List<OrderEntity> entities = panacheRepo.find(
+                "userId = ?1 AND orderStatus = ?2",
+                userId, "OPEN"
+        ).list();
+        return entities.stream()
+                .map(OrderMapper::toDomain)
+                .collect(Collectors.toList());
     }
 }

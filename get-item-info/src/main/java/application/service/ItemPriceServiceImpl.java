@@ -51,7 +51,6 @@ public class ItemPriceServiceImpl implements ItemPriceService {
             result.setItemId(itemId);
 
             try {
-
                 String url = reorderUrlMap.get(itemId);
                 if (url == null) {
                     throw new IllegalArgumentException("Keine URL gefunden für Item-ID: " + itemId);
