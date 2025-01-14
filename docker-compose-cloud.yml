@@ -151,7 +151,7 @@ services:
     ports:
       - "5100:80"
     environment:
-      - BASE_PATH: /docs
+      BASE_PATH: /docs/
 
 volumes:
   db_data:

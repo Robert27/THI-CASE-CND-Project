@@ -11,7 +11,6 @@ public class UrlValidationController implements UrlValidationPort {
     @GrpcClient("urlvalidation")
     UrlValidationService grpcUserService;
 
-
     @Override
     public boolean validateUrl(String url) {
         UrlvalidationProto.ValidateUrlRequest request = UrlvalidationProto.ValidateUrlRequest.newBuilder()
@@ -19,7 +18,7 @@ public class UrlValidationController implements UrlValidationPort {
                 .build();
 
         return grpcUserService.validateUrl(request)
-                .onItem().transform(UrlvalidationProto.ValidateUrlResponse::getValid)
+                .onItem().transform(response -> response.getValid() && response.getReachable())
                 .await().indefinitely();
     }
 }

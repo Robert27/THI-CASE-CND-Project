@@ -33,7 +33,7 @@ export default function EditObjectModal({
 }) {
   console.log("editObject", editObject);
   const [localEditObject, setLocalEditObject] = useState<StorageObject | null>(
-    editObject,
+    editObject
   );
 
   useEffect(() => {
@@ -80,8 +80,11 @@ export default function EditObjectModal({
               required
               label="Description"
               value={localEditObject.description}
-              onValueChange={(value) =>
-                setLocalEditObject({ ...localEditObject, description: value })
+              onChange={(e) =>
+                setLocalEditObject({
+                  ...localEditObject,
+                  description: e.target.value,
+                })
               }
             />
             <Select

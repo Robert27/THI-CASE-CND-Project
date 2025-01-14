@@ -18,7 +18,7 @@ public class StorageObjectService implements ListStorageObjectUseCase {
     private final AuthenticationUseCase authenticationUseCase;
 
     public StorageObjectService(StorageObjectRepository storageObjectRepository, CategoryRepository categoryRepository,
-                                UrlValidationPort urlValidationPort, AuthenticationUseCase authenticationUseCase) {
+            UrlValidationPort urlValidationPort, AuthenticationUseCase authenticationUseCase) {
         this.storageObjectRepository = storageObjectRepository;
         this.categoryRepository = categoryRepository;
         this.urlValidationPort = urlValidationPort;
@@ -36,10 +36,9 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         return storageObjectRepository.findAll(user.getUserId());
     }
 
-
     @Override
     public StorageObject create(String name, String description, Integer categoryId, String reorderUrl,
-                                Integer quantity, Integer weekday, String token)
+            Integer quantity, Integer weekday, String token)
             throws IllegalArgumentException {
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Authorization token must be provided");
@@ -87,7 +86,7 @@ public class StorageObjectService implements ListStorageObjectUseCase {
 
     @Override
     public StorageObject update(Integer id, String name, String description, Integer categoryId, String reorderUrl,
-                                Integer quantity, Integer weekday, String token)
+            Integer quantity, Integer weekday, String token)
             throws IllegalArgumentException {
         AuthenticatedUser user;
         try {
@@ -103,14 +102,16 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         if (name != null) {
             existingObject.setName(name);
         }
-        if (name != null) {
+        if (description != null) {
             existingObject.setDescription(description);
         }
         if (categoryId != null) {
             existingObject.setCategoryId(categoryId);
         }
         if (reorderUrl != null) {
+            System.out.println("reorderUrl: " + reorderUrl);
             if (!urlValidationPort.validateUrl(reorderUrl)) {
+                System.out.println("url is invalid");
                 throw new IllegalArgumentException("Reorder URL is invalid or unreachable");
             }
             existingObject.setReorderUrl(reorderUrl);

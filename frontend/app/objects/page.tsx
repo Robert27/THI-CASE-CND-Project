@@ -180,6 +180,7 @@ export default function PricingPage() {
         return acc;
       }, {} as Partial<StorageObject>);
 
+      console.log("changes", changes);
       const res = await fetch(`http://localhost:4000/api/object/item/${id}`, {
         method: "PATCH",
         headers: {
