@@ -22,6 +22,7 @@ import {
 } from "@nextui-org/react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 import CreateObjectModal from "@/components/CreateObjectModal";
 import EditObjectModal from "@/components/EditObjectModal";
@@ -30,7 +31,7 @@ import { StorageObject, Category } from "@/types";
 export default function PricingPage() {
   const { data: session, status } = useSession();
 
-  console.log("session", session, status);
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editObject, setEditObject] = useState<StorageObject | null>(null);
@@ -52,6 +53,7 @@ export default function PricingPage() {
   const {
     data: items = [],
     error: fetchError,
+    isPending,
     isLoading,
   } = useQuery<StorageObject[]>({
     queryKey: ["objects"],
@@ -69,6 +71,7 @@ export default function PricingPage() {
 
       return res.json();
     },
+    enabled: status === "authenticated",
   });
 
   const createObjectMutation = useMutation<
@@ -213,6 +216,10 @@ export default function PricingPage() {
   const handleAlertClose = () => {
     setAlertMessage(null);
   };
+
+  if (status !== "authenticated") {
+    router.push("/login");
+  }
 
   return (
     <div className="w-full px-4 ">
