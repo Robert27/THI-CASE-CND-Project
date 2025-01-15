@@ -1,4 +1,4 @@
-package dev.eggl.adapter.in.rest;
+package dev.eggl.adapter.in.rest.storageObject;
 
 import dev.eggl.domain.model.StorageObject;
 import dev.eggl.port.in.StorageObjectUseCase;
@@ -12,7 +12,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
-import static dev.eggl.adapter.in.rest.ControllerCommons.*;
+import static dev.eggl.adapter.in.rest.common.ControllerCommons.*;
 
 @Path("/item")
 @Produces(MediaType.APPLICATION_JSON)

@@ -1,7 +1,11 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import jwt, { JwtPayload } from "jsonwebtoken"; // Install this package
+import jwt, { JwtPayload } from "jsonwebtoken";
 
+const AUTH_SERVICE_URL =
+  process.env.AUTH_SERVICE_URL || "http://localhost:4000/rest/auth/login";
+
+console.log("AUTH_SERVICE_URL:", AUTH_SERVICE_URL);
 const authOptions = {
   providers: [
     CredentialsProvider({
@@ -11,17 +15,17 @@ const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log("Credentials:", credentials); // Debugging
-        const res = await fetch("http://localhost:4000/rest/auth/login", {
+        console.log("Credentials:", credentials);
+        const res = await fetch(AUTH_SERVICE_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(credentials),
         });
         const user = await res.json();
 
-        console.log("User:", user); // Debugging
+        console.log("User:", user);
         if (res.ok && user && user.token) {
-          return user; // This object should include the token
+          return user;
         } else {
           throw new Error(user.reason || "Failed to authenticate");
         }
@@ -33,7 +37,6 @@ const authOptions = {
       if (user && user.token) {
         token.accessToken = user.token;
 
-        // Decode the token and add claims
         try {
           const decoded = jwt.decode(user.token) as JwtPayload;
 
@@ -51,7 +54,6 @@ const authOptions = {
       if (token) {
         session.accessToken = token.accessToken || null;
 
-        // Add user details
         session.user = {
           username: token.username || null,
           sub: token.sub || null,
@@ -65,7 +67,7 @@ const authOptions = {
     signIn: "/login",
     error: "/login",
   },
-  secret: "your-secret-key", // Replace with a secure secret
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 export const GET = NextAuth(authOptions);

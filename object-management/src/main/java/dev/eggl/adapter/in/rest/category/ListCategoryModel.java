@@ -1,4 +1,4 @@
-package dev.eggl.adapter.in.rest;
+package dev.eggl.adapter.in.rest.category;
 
 import dev.eggl.domain.model.Category;
 

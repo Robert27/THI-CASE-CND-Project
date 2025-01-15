@@ -16,9 +16,9 @@ public class GrpcUrlValidationController implements UrlValidationPort {
         UrlvalidationProto.ValidateUrlRequest request = UrlvalidationProto.ValidateUrlRequest.newBuilder()
                 .setUrl(url)
                 .build();
-
-        return grpcUserService.validateUrl(request)
+        boolean isValid = grpcUserService.validateUrl(request)
                 .onItem().transform(response -> response.getValid() && response.getReachable())
                 .await().indefinitely();
+        return isValid;
     }
 }

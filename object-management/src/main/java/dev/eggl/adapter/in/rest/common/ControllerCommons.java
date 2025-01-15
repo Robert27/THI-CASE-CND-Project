@@ -1,4 +1,4 @@
-package dev.eggl.adapter.in.rest;
+package dev.eggl.adapter.in.rest.common;
 
 import io.quarkus.security.AuthenticationFailedException;
 import jakarta.ws.rs.ClientErrorException;
