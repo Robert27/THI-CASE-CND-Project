@@ -2,8 +2,8 @@ package dev.eggl.application.service;
 
 import dev.eggl.domain.model.AuthenticatedUser;
 import dev.eggl.domain.model.StorageObject;
-import dev.eggl.port.in.AuthenticationUseCase;
-import dev.eggl.port.in.ListStorageObjectUseCase;
+import dev.eggl.port.in.StorageObjectUseCase;
+import dev.eggl.port.out.AuthenticationUseCase;
 import dev.eggl.port.out.CategoryRepository;
 import dev.eggl.port.out.StorageObjectRepository;
 import dev.eggl.port.out.UrlValidationPort;
@@ -11,14 +11,14 @@ import dev.eggl.port.out.UrlValidationPort;
 import java.util.Date;
 import java.util.List;
 
-public class StorageObjectService implements ListStorageObjectUseCase {
+public class StorageObjectService implements StorageObjectUseCase {
     private final StorageObjectRepository storageObjectRepository;
     private final CategoryRepository categoryRepository;
     private final UrlValidationPort urlValidationPort;
     private final AuthenticationUseCase authenticationUseCase;
 
     public StorageObjectService(StorageObjectRepository storageObjectRepository, CategoryRepository categoryRepository,
-            UrlValidationPort urlValidationPort, AuthenticationUseCase authenticationUseCase) {
+                                UrlValidationPort urlValidationPort, AuthenticationUseCase authenticationUseCase) {
         this.storageObjectRepository = storageObjectRepository;
         this.categoryRepository = categoryRepository;
         this.urlValidationPort = urlValidationPort;
@@ -38,7 +38,7 @@ public class StorageObjectService implements ListStorageObjectUseCase {
 
     @Override
     public StorageObject create(String name, String description, Integer categoryId, String reorderUrl,
-            Integer quantity, Integer weekday, String token)
+                                Integer quantity, Integer weekday, String token)
             throws IllegalArgumentException {
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Authorization token must be provided");
@@ -53,7 +53,7 @@ public class StorageObjectService implements ListStorageObjectUseCase {
             throw new IllegalArgumentException("Reorder URL must be provided");
         }
 
-        if (!urlValidationPort.validateUrl(reorderUrl)) {
+        if (urlValidationPort.validateUrl(reorderUrl)) {
             throw new IllegalArgumentException("Reorder URL is invalid or unreachable");
         }
         if (!categoryRepository.existsById(categoryId)) {
@@ -86,7 +86,7 @@ public class StorageObjectService implements ListStorageObjectUseCase {
 
     @Override
     public StorageObject update(Integer id, String name, String description, Integer categoryId, String reorderUrl,
-            Integer quantity, Integer weekday, String token)
+                                Integer quantity, Integer weekday, String token)
             throws IllegalArgumentException {
         AuthenticatedUser user;
         try {
@@ -110,7 +110,7 @@ public class StorageObjectService implements ListStorageObjectUseCase {
         }
         if (reorderUrl != null) {
             System.out.println("reorderUrl: " + reorderUrl);
-            if (!urlValidationPort.validateUrl(reorderUrl)) {
+            if (urlValidationPort.validateUrl(reorderUrl)) {
                 System.out.println("url is invalid");
                 throw new IllegalArgumentException("Reorder URL is invalid or unreachable");
             }

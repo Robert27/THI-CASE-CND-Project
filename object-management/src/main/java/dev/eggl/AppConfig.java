@@ -3,9 +3,9 @@ package dev.eggl;
 import dev.eggl.application.service.InternalStorageObjectService;
 import dev.eggl.application.service.ListCategoryService;
 import dev.eggl.application.service.StorageObjectService;
-import dev.eggl.port.in.AuthenticationUseCase;
 import dev.eggl.port.in.InternalStorageObjectUseCase;
-import dev.eggl.port.in.ListStorageObjectUseCase;
+import dev.eggl.port.in.StorageObjectUseCase;
+import dev.eggl.port.out.AuthenticationUseCase;
 import dev.eggl.port.out.CategoryRepository;
 import dev.eggl.port.out.StorageObjectRepository;
 import dev.eggl.port.out.UrlValidationPort;
@@ -45,7 +45,7 @@ public class AppConfig {
 
     @Produces
     @ApplicationScoped
-    ListStorageObjectUseCase listStorageObjectUseCase() {
+    StorageObjectUseCase listStorageObjectUseCase() {
         return new StorageObjectService(storageObjectPort.get(), categoriesUseCase.get(), urlValidationPort.get(), authenticationUseCase.get());
     }
 }

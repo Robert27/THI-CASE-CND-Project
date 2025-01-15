@@ -45,31 +45,7 @@ Der Objekt Management Service bietet als Server die folgenden Services an:
 
 ## Architketur Skizze
 
-### Domain
-
-- **Object**: Ein Objekt, das von einem Nutzer erstellt wurde.
-- **Category**: Eine Kategorie, die einem Objekt zugeordnet werden kann.
-
-### Ports
-
-#### Inbound
-
-- **Authentication**: Authentifizierung des Nutzers.
-- **CategoryList**: Abrufen der verfügbaren Kategorien.
-- **ObjectList**: Abrufen der Objekte eines Nutzers.
-
-#### Outbound
-
-- **ObjectRepository**: Speichern, Aktualisieren und Löschen von Objekten.
-- **CategoryRepository**: Abrufen der verfügbaren Kategorien.
-- **URLValidation**: Validierung von angegebenen URLs.
-
-### Adapter
-
-- **REST API**: Kommunikation mit dem Nutzer.
-- **gRPC**: Kommunikation mit anderen Services.
-- **Database**: Persistenz der Objekte.
-- **JWT**: Authentifizierung des Nutzers.
+<img src="../assets/object-hexa.svg" alt="Architektur Skizze" />
 
 ## Start ohne Docker
 

@@ -1,9 +1,0 @@
-package dev.eggl.adapter.persistence.jpa.category;
-
-import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
-import jakarta.enterprise.context.ApplicationScoped;
-
-@ApplicationScoped
-public class JpaCategoryPanacheRepository
-        implements PanacheRepositoryBase<CategoryJpaEntity, Integer> {}
-

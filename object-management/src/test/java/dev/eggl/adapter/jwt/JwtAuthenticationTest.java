@@ -1,5 +1,6 @@
 package dev.eggl.adapter.jwt;
 
+import dev.eggl.adapter.out.jwt.JwtAuthenticationController;
 import dev.eggl.domain.model.AuthenticatedUser;
 import io.quarkus.security.AuthenticationFailedException;
 import io.smallrye.jwt.auth.principal.DefaultJWTCallerPrincipal;
