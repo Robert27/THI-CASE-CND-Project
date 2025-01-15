@@ -8,7 +8,7 @@ services:
       POSTGRES_DB: database
     volumes:
       - db_data:/var/lib/postgresql/data
-      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+      - ./services/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
     ports:
       - "5432:5432"
     healthcheck:
@@ -79,8 +79,7 @@ services:
         condition: service_healthy
 
   frontend:
-    build:
-      context: ./frontend
+    image: ghcr.io/robert27/thi-case-cnd-project/frontend:latest
     environment:
       JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JEqgNqMzO+9QnknqkEK27kaJ8iGvnGFyVFtzwUQuIdlZPjDr5U6SABgljdVGdZnpvKaK3ZWtzQjnXVLgpI80l+2Lg+bVFX3mqQOlCwca3QLrfzmEUiK4tTrIGgtQnYBJVnXUWZKl2qYxDlMNwKG+d/FDZTnnierjiy3aZCLZtnVnQFH0SRolMJLECGeOufh8yep+8ClHHO57jvTLRk4T0EKakwqIRa5nQFO/WBczfZWsVNXUH7epxax6n1yklquchXtgT1JOjj/2w3IbmMz5KN0muPJfU9cfct18QUtvHzYor5CyOGeOxxzinhanlZAyfOOSU1bMXG7Uev7hENtQQIDAQAB-----END PUBLIC KEY-----"
       NEXTAUTH_SECRET: 9n0Gnw+JJ64DsMSXdejaLVNNlLtVzNmhijQlYorTa3Q=
@@ -149,8 +148,7 @@ services:
       - database
 
   docs:
-    build:
-      context: ./docs
+    image: ghcr.io/robert27/thi-case-cnd-project/docs:latest
     ports:
       - "5100:80"
     environment:
