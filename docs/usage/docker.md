@@ -8,7 +8,7 @@ NGINX leitet die Anfragen an die entsprechenden Services weiter, sodass alle Bac
 
 ### Lokales bauen und starten
 
-Dem Projekt liegt eine `docker-compose.yml` bei, die alle Services des Projekts baut und startet.
+Dem Projekt liegt eine `docker-compose-local.yml` bei, die alle Services des Projekts baut und startet.
 
 ```sh
 docker-compose up
@@ -20,7 +20,7 @@ Alternativ können die vorgebauten Container aus der GitHub Container Registry v
 
 ```sh
 docker login ghcr.io
-docker-compose -f docker-compose-cloud.yml up
+docker-compose up
 ```
 
 ::: tip Hinweis
