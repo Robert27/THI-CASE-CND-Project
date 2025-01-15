@@ -14,7 +14,7 @@ const Register: React.FC = () => {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch("http://localhost:4000/api/user/user", {
+      const res = await fetch("http://localhost:4000/rest/user/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,6 +31,7 @@ const Register: React.FC = () => {
     onSuccess: (data) => {
       // Handle success
       console.log("User registered successfully", data);
+      window.location.href = "/login";
     },
     onError: (error) => {
       // Handle error

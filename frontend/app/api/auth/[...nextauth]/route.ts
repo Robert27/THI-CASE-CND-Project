@@ -12,7 +12,7 @@ const authOptions = {
       },
       async authorize(credentials) {
         console.log("Credentials:", credentials); // Debugging
-        const res = await fetch("http://localhost:4000/api/auth/login", {
+        const res = await fetch("http://localhost:4000/rest/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(credentials),
@@ -20,10 +20,10 @@ const authOptions = {
         const user = await res.json();
 
         console.log("User:", user); // Debugging
-        if (res.ok && user) {
+        if (res.ok && user && user.token) {
           return user; // This object should include the token
         } else {
-          return null;
+          throw new Error(user.reason || "Failed to authenticate");
         }
       },
     }),
