@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Alert, Button, Input } from "@nextui-org/react";
 import { LuChevronRight } from "react-icons/lu";
 import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -29,8 +30,8 @@ const Register: React.FC = () => {
       }
     },
     onSuccess: (data) => {
-      // Handle success
       console.log("User registered successfully", data);
+      toast.success("Registration successful");
       window.location.href = "/login";
     },
     onError: (error) => {

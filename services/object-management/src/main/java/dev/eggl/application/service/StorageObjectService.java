@@ -95,6 +95,18 @@ public class StorageObjectService implements StorageObjectUseCase {
             throw new IllegalArgumentException("Storage object not found");
         }
 
+        boolean isNameChanged = name != null && !name.equals(existingObject.getName());
+        boolean isCategoryChanged = categoryId != null && !categoryId.equals(existingObject.getCategoryId());
+
+        if (isNameChanged || isCategoryChanged) {
+            if (storageObjectRepository.existsByNameAndCategory(
+                    isNameChanged ? name : existingObject.getName(),
+                    isCategoryChanged ? categoryId : existingObject.getCategoryId(),
+                    user.getUserId())) {
+                throw new IllegalArgumentException("Storage object with the same name and category already exists");
+            }
+        }
+
         if (name != null) {
             existingObject.setName(name);
         }
@@ -102,6 +114,9 @@ public class StorageObjectService implements StorageObjectUseCase {
             existingObject.setDescription(description);
         }
         if (categoryId != null) {
+            if (!categoryRepository.existsById(categoryId)) {
+                throw new IllegalArgumentException("Category ID does not exist");
+            }
             existingObject.setCategoryId(categoryId);
         }
         if (reorderUrl != null) {
@@ -110,9 +125,16 @@ public class StorageObjectService implements StorageObjectUseCase {
                 System.out.println("url is invalid");
                 throw new IllegalArgumentException("Reorder URL is invalid or unreachable");
             }
+            // if there is already a storage object with the same link, throw an exception
+            if (storageObjectRepository.existsByUrl(reorderUrl, user.getUserId())) {
+                throw new IllegalArgumentException("Storage object with the same reorder URL already exists");
+            }
             existingObject.setReorderUrl(reorderUrl);
         }
         if (quantity != null) {
+            if (quantity <= 0) {
+                throw new IllegalArgumentException("Quantity must be greater than 0");
+            }
             existingObject.setQuantity(quantity);
         }
         if (weekday != null) {

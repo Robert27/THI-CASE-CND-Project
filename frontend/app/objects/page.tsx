@@ -200,7 +200,7 @@ export default function PricingPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["objects"] });
-      setIsEditModalOpen(false); // Close the edit modal on success
+      setIsEditModalOpen(false);
     },
     onError: (error) => {
       setAlertMessage(error.message);
@@ -311,7 +311,10 @@ export default function PricingPage() {
         categories={categories}
         isOpen={isModalOpen}
         onAlertClose={handleAlertClose}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setAlertMessage(null);
+        }}
         onSubmit={handleSubmit}
       />
 
@@ -321,7 +324,10 @@ export default function PricingPage() {
         editObject={editObject}
         isOpen={isEditModalOpen}
         onAlertClose={handleAlertClose}
-        onClose={() => setIsEditModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setAlertMessage(null);
+        }}
         onSubmit={handleEditSubmit}
       />
     </div>

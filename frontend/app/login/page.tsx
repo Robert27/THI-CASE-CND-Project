@@ -6,6 +6,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Alert, Button, Input } from "@nextui-org/react";
 import { LuChevronRight } from "react-icons/lu";
+import { toast } from "react-toastify";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -18,11 +19,6 @@ const Login: React.FC = () => {
     setPending(true);
 
     try {
-      console.log("credentials", {
-        redirect: false,
-        username,
-        password,
-      });
       const res = await signIn("credentials", {
         redirect: false,
         username,
@@ -35,6 +31,7 @@ const Login: React.FC = () => {
         setPending(false);
       } else {
         setPending(false);
+        toast.success("Login successful");
         router.push("/");
       }
     } catch (error) {

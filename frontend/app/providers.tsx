@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
-
+import { Bounce, ToastContainer } from "react-toastify";
 export interface ProvidersProps {
   children: React.ReactNode;
   themeProps?: ThemeProviderProps;
@@ -30,6 +30,19 @@ export function Providers({ children, themeProps }: ProvidersProps) {
     <SessionProvider>
       <NextUIProvider navigate={router.push}>
         <NextThemesProvider {...themeProps}>
+          <ToastContainer
+            draggable
+            pauseOnFocusLoss
+            pauseOnHover
+            autoClose={3000}
+            closeOnClick={false}
+            hideProgressBar={false}
+            newestOnTop={false}
+            position="bottom-right"
+            rtl={false}
+            theme="dark"
+            transition={Bounce}
+          />
           <QueryClientProvider client={queryClient}>
             {children}
           </QueryClientProvider>
