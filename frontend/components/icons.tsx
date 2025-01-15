@@ -4,7 +4,7 @@ import { Image } from "@nextui-org/image";
 import { IconSvgProps } from "@/types";
 
 export const Logo: React.FC<IconSvgProps> = ({ size = 30 }) => (
-  <Image alt="NextUI Logo" height={size} src="/logo.png" />
+  <Image alt="SmartOrder Logo" height={size} src="/logo-app.png" />
 );
 
 export const DiscordIcon: React.FC<IconSvgProps> = ({

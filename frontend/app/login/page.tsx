@@ -8,6 +8,8 @@ import { Alert, Button, Input } from "@nextui-org/react";
 import { LuChevronRight } from "react-icons/lu";
 import { toast } from "react-toastify";
 
+import { Logo } from "@/components/icons";
+
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -44,6 +46,9 @@ const Login: React.FC = () => {
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="w-full max-w-md p-8">
+        <div className="flex justify-center mb-8">
+          <Logo size={160} />
+        </div>
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold">SmartOrder Login</h1>
           <p>Enter your official username below to login to your account</p>

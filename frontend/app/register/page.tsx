@@ -8,6 +8,8 @@ import { LuChevronRight } from "react-icons/lu";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
+import { Logo } from "@/components/icons";
+
 const Register: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -49,6 +51,9 @@ const Register: React.FC = () => {
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="w-full max-w-md p-8">
+        <div className="flex justify-center mb-8">
+          <Logo size={160} />
+        </div>
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold">SmartOrder Register</h1>
           <p>Enter your details below to create a new account</p>
@@ -69,7 +74,7 @@ const Register: React.FC = () => {
                 required
                 id="username"
                 name="username"
-                placeholder="user"
+                placeholder="Username"
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -80,6 +85,7 @@ const Register: React.FC = () => {
                 required
                 id="password"
                 name="password"
+                placeholder="Password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
