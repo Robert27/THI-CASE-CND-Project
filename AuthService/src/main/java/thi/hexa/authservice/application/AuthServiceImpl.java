@@ -17,7 +17,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String login(String username, String password) throws AuthException {
         if (!userClient.validatePassword(username, password)) {
-            throw new AuthException("failded to authenticate");
+            throw new AuthException("Authentication failed! Provided credentials are invalid.");
         }
         return JwtUtil.generateToken(userClient.getUser(username));
     }
