@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "order-list/**"
+      - "services/order-list/**"
       - ".github/workflows/build-order-list.yml"
 
 env:
@@ -22,7 +22,7 @@ jobs:
       packages: write
     defaults:
       run:
-        working-directory: order-list/
+        working-directory: services/order-list/
 
     steps:
       - uses: actions/checkout@v4
@@ -61,8 +61,8 @@ jobs:
       - name: Build and push multi-arch image
         uses: docker/build-push-action@v6
         with:
-          context: order-list/
-          file: order-list/src/main/docker/Dockerfile.gh
+          context: services/order-list/
+          file: services/order-list/src/main/docker/Dockerfile.gh
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           platforms: linux/amd64,linux/arm64
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest

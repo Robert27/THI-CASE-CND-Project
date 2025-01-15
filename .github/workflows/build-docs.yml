@@ -8,7 +8,7 @@ on:
       - ".github/workflows/build-docs.yml"
 
 env:
-  VERSION_TAG_PREFIX: "object-management-"
+  VERSION_TAG_PREFIX: "docs-"
   IMAGE_NAME: ${{ github.repository }}/docs
   REGISTRY: ghcr.io
 
@@ -22,7 +22,7 @@ jobs:
       packages: write
     defaults:
       run:
-        working-directory: object-management/
+        working-directory: docs/
 
     steps:
       - name: Checkout repository

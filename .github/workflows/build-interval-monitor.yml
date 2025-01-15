@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "interval-monitor/**"
+      - "services/interval-monitor/**"
       - ".github/workflows/build-interval-monitor.yml"
 
 env:
@@ -22,7 +22,7 @@ jobs:
       packages: write
     defaults:
       run:
-        working-directory: interval-monitor/
+        working-directory: services/interval-monitor/
 
     steps:
       - uses: actions/checkout@v4
@@ -60,9 +60,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: interval-monitor/
+          context: services/interval-monitor/
           # Uses special Dockerfile for GitHub Actions to optimize build time and cache
-          file: interval-monitor/src/main/docker/Dockerfile.gh
+          file: services/interval-monitor/src/main/docker/Dockerfile.gh
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           platforms: linux/amd64,linux/arm64
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest

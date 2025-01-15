@@ -9,7 +9,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
       # Mount schema.sql so it's run automatically on container creation
-      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+      - ./services/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
     ports:
       - "5432:5432"
     healthcheck:
@@ -20,7 +20,7 @@ services:
 
   userservice:
     build:
-      context: ./UserService/
+      context: ./services/UserService/
       dockerfile: Dockerfile
     environment:
       DB_HOST: database
@@ -38,7 +38,7 @@ services:
 
   authservice:
     build:
-      context: ./AuthService/
+      context: ./services/AuthService/
       dockerfile: Dockerfile
     environment:
       JWT_PRIVATE_KEY: -----BEGIN PRIVATE KEY-----MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDgkSqA2ozM771CeSeqQQrbuRonyIa+cYXJUW3PBRC4h2Vk+MOvlTpIAGCWN1UZ1mem8pordla3NCOddUuCkjzSX7YuD5tUVfeapA6ULBxrdAut/OYRSIri1OsgaC1CdgElWddRZkqXapjEOUw3Aob538UNlOeeJ6uOLLdpkItm2dWdAUfRJGiUwksQIZ465+HzJ6n7wKUcc7nuO9MtGThPQQpqTCohFrmdAU79YFzN9laxU1dQft6nFrHqfXKSWq5yFe2BPUk6OP/bDchuYzPko3Sa48l9T1x9y3XxBS28fNiivkLI4Z47HHOKeFqeVkDJ845JTVsxcbtR6/uEQ21BAgMBAAECggEAAL73gHpGLNyANfGeFdAyf4laLDCoornqaY4WMP5bNsNOxtEwVGuvLmCl8Xz/xBHn9T0c3jEXitmm/QjQAxm5dWXXZPuTSgPt4+5QlOIF1CUmCfvRlDqEwsnvRmou+eekPrueKslas3pDEj/LrR3nVRQog1BWNqD66AJMN6ynWErP9Ycr5UnX8oNU3mRZ4EekNSbPkjH+tSe7wbXnp1wER8cPeRN6R6GW6mcm/eTlJ2ovqCQ/Xg/ExbpKrh5p8IoqCMuTW8z5MDcrt0x7F4E8bbDIymrOaw7Z4Xq/ZEVyefNQo7y22Sp9G5ri4U2kKYCTAOHuakbJNb18nxKKnNv7gQKBgQDyJLs7kydBAauR7tHFCN6w/iocC0i3oZ72AiMbS1/Z02uzUQZKnfhdByJ9hyZLnSj9U/+TgGG0KvptAulCn01FTEHqs6vvvlrqhq3tf6sG+bfhlgOiUZ39czRK0C1iKmI9Yek5EK9GB/Crsqm0NTq1mjwBVlxw2aKPSlA+X+TfkQKBgQDtavMd7aBzALXZFnhWg2PAqfHEuwDrihHmU0VT+DgWZ+mBvfYUTQ/XttWI2jI/3QdbGIe6+5S31f5kLAZrRVzvIknkuiCXO7W2O5DnD7r1YejGK5E02njhiJ3nuasNx0Qg5Sn1C+EeWfvR9+KQXplcjYPuElZL6hlNAPMCo346sQKBgQDTTpiRoZXE1ddKT3WBk376R6KpvHMlxIW6uxy1ye4IYcZ/wjpSTU6aqApCLvmNTMWjZHUI3CTnHAZTsRGr0OaWjbiMP2TQn3YpaYRIWHwAZ1U/KDFdqgnMToeYrdic7M20MUhcQyIhY/Zzb0NG/piQN9sbc6jR1ipVDw29kONi8QKBgGAXQlDhpWgGaJN1mb0CLrSC0/yY53Vti3MaTtv+gcznv8WoOdnbmsbnFCPwlBfvAJQpKH5QZs/FB9JJU0vFZijPSvMNNjWfkBsynqI2Zqf8ObdDWOD4b6ZwoeBw8D+CYBukRMgOR83+A4Lm/kcKUq34BOate0n8dMMK2FBAFc3xAoGAFnI8QxlXWPpAvaN+jTNPYHDBGSb2xf2jpPUhX8EB1ETfredJlcafVKdgCu1OQnZUqnOGHh6qsGBuondcepuw3d8NegrRjKf9AgKnqqUXHZLKEpiuAnUJDDUope8xAtKHbBTu+jV8XDQyhDbfmmMC+vrYnO3FlPBnB/sXgtrP9m8=-----END PRIVATE KEY-----
@@ -50,7 +50,7 @@ services:
 
   object-management:
     build:
-      context: ./object-management
+      context: ./services/object-management
       dockerfile: src/main/docker/Dockerfile.jvm
     environment:
       DB_USERNAME: postgres
@@ -68,7 +68,7 @@ services:
 
   interval-monitor:
     build:
-      context: ./interval-monitor
+      context: ./services/interval-monitor
       dockerfile: src/main/docker/Dockerfile.jvm
     environment:
       DB_USERNAME: postgres
@@ -119,7 +119,7 @@ services:
 
   order-list:
     build:
-      context: ./order-list
+      context: ./services/order-list
       dockerfile: src/main/docker/Dockerfile.jvm
     environment:
       DB_USERNAME: postgres
@@ -140,7 +140,7 @@ services:
 
   url-validator:
     build:
-      context: ./url-validator
+      context: ./services/url-validator
       dockerfile: src/main/docker/Dockerfile.jvm
     ports:
       - "8085:8080"
@@ -149,7 +149,7 @@ services:
 
   get-item-info:
     build:
-      context: ./get-item-info
+      context: ./services/get-item-info
       dockerfile: src/main/docker/Dockerfile.jvm
     environment:
       DB_USERNAME: postgres

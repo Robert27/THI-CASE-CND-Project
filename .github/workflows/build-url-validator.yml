@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "url-validator/**"
+      - "services/url-validator/**"
       - ".github/workflows/build-url-validator.yml"
 
 env:
@@ -22,7 +22,7 @@ jobs:
       packages: write
     defaults:
       run:
-        working-directory: url-validator/
+        working-directory: services/url-validator/
 
     steps:
       - uses: actions/checkout@v4
@@ -61,8 +61,8 @@ jobs:
       - name: Build and push multi-arch image
         uses: docker/build-push-action@v6
         with:
-          context: url-validator/
-          file: url-validator/src/main/docker/Dockerfile.gh
+          context: services/url-validator/
+          file: services/url-validator/src/main/docker/Dockerfile.gh
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           platforms: linux/amd64,linux/arm64
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest

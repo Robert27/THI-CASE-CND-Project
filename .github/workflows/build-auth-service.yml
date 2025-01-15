@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "AuthService/**"
+      - "services/AuthService/**"
       - ".github/workflows/build-auth-service.yml"
 
 env:
@@ -22,7 +22,7 @@ jobs:
       packages: write
     defaults:
       run:
-        working-directory: AuthService/
+        working-directory: services/AuthService/
 
     steps:
       - uses: actions/checkout@v4
@@ -57,8 +57,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: AuthService/
-          file: AuthService/Dockerfile
+          context: services/AuthService/
+          file: services/AuthService/Dockerfile
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
           labels: ${{ steps.meta.outputs.labels }}

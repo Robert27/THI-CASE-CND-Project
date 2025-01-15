@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "get-item-info/**"
+      - "services/get-item-info/**"
       - ".github/workflows/build-get-item-info.yml"
 
 env:
@@ -22,7 +22,7 @@ jobs:
       packages: write
     defaults:
       run:
-        working-directory: get-item-info/
+        working-directory: services/get-item-info/
 
     steps:
       - uses: actions/checkout@v4
@@ -61,8 +61,8 @@ jobs:
       - name: Build and push multi-arch image
         uses: docker/build-push-action@v6
         with:
-          context: get-item-info/
-          file: get-item-info/src/main/docker/Dockerfile.gh
+          context: services/get-item-info/
+          file: services/get-item-info/src/main/docker/Dockerfile.gh
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           platforms: linux/amd64,linux/arm64
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest

@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "UserService/**"
+      - "services/UserService/**"
       - ".github/workflows/build-user-service.yml"
 
 env:
@@ -22,7 +22,7 @@ jobs:
       packages: write
     defaults:
       run:
-        working-directory: UserService/
+        working-directory: services/UserService/
 
     steps:
       - uses: actions/checkout@v4
@@ -57,8 +57,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: UserService/
-          file: UserService/Dockerfile
+          context: services/UserService/
+          file: services/UserService/Dockerfile
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
           labels: ${{ steps.meta.outputs.labels }}

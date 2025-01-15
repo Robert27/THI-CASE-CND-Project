@@ -4,11 +4,11 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "object-management/**"
+      - "services/object-management/**"
       - ".github/workflows/build-object-management.yml"
 
 env:
-  VERSION_TAG_PREFIX: "object-management-"
+  VERSION_TAG_PREFIX: "services/object-management-"
   IMAGE_NAME: ${{ github.repository }}/object-management
   REGISTRY: ghcr.io
 
@@ -22,7 +22,7 @@ jobs:
       packages: write
     defaults:
       run:
-        working-directory: object-management/
+        working-directory: services/object-management/
 
     steps:
       - uses: actions/checkout@v4
@@ -61,9 +61,9 @@ jobs:
       - name: Build and push multi-arch image
         uses: docker/build-push-action@v6
         with:
-          context: object-management/
+          context: services/object-management/
           # Uses special Dockerfile for GitHub Actions to optimize build time and cache
-          file: object-management/src/main/docker/Dockerfile.gh
+          file: services/object-management/src/main/docker/Dockerfile.gh
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           platforms: linux/amd64,linux/arm64
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
