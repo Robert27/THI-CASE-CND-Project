@@ -1,5 +1,6 @@
 package orderlistservice.adapters.inbound.rest;
 
+import io.quarkus.security.Authenticated;
 import orderlistservice.domain.OrderService;
 
 import orderlistservice.domain.model.OrderObject;
@@ -48,7 +49,7 @@ public class OrderController {
 //    }
 
     @GET
-    @RolesAllowed({"user"})
+    @Authenticated
     public Response getOpenOrders() {
         List<OrderObject> domainOrders = orderUseCase.getOpenOrders(Integer.parseInt(userId));
         List<GetOpenOrdersResponse> dtoList = OrderMapper.toDtoList(domainOrders);
@@ -57,7 +58,7 @@ public class OrderController {
 
     @POST
     @Path("/perform")
-    @RolesAllowed({"user"})
+    @Authenticated
     public Response performOrder(PerformOrderRequest request) {
         PerformOrderResult result = orderUseCase.performOrder(
                 Integer.parseInt(userId),
@@ -74,7 +75,7 @@ public class OrderController {
 
     @POST
     @Path("/abort/{itemId}")
-    @RolesAllowed({"user"})
+    @Authenticated
     public Response abortOrder(@PathParam("itemId") Integer itemId) {
         orderUseCase.abortOrder(Integer.parseInt(userId), itemId);
         return Response.ok().build();
