@@ -133,7 +133,7 @@ services:
       GRPC_OBJECTS_PORT: 9090
       GRPC_OBJECTS_HOST: object-management
     ports:
-      - "8084:8080"
+      - "8084:8082"
       - "9093:9093"
     depends_on:
       - database
@@ -142,8 +142,6 @@ services:
     build:
       context: ./services/url-validator
       dockerfile: src/main/docker/Dockerfile.jvm
-    ports:
-      - "8085:8080"
     expose:
       - 9092
 
