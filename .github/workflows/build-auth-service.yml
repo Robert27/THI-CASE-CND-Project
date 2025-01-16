@@ -33,6 +33,11 @@ jobs:
           distribution: "temurin"
           cache: gradle
 
+      - name: Build with Gradle
+        run: |
+          ./gradlew dependencies --no-daemon
+          ./gradlew build -x test --no-daemon
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
@@ -58,7 +63,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: services/AuthService/
-          file: services/AuthService/Dockerfile
+          file: services/AuthService/Dockerfile.gh
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
           labels: ${{ steps.meta.outputs.labels }}
