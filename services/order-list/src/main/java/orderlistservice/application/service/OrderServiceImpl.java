@@ -67,7 +67,6 @@ public class OrderServiceImpl implements OrderService {
                 newOrder.setItemStatus(true);
                 orderRepository.save(newOrder);
                 LOGGER.info("Neue Bestellung für Artikel-ID {} (User {}, Datum {}) erstellt.", itemId, userId, cycleDate);
-
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage());

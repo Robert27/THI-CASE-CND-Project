@@ -16,6 +16,7 @@ public final class OrderMapper {
         }
         OrderEntity entity = new OrderEntity();
         entity.setId(domain.getId());
+        entity.setUserId(domain.getUserId());
         entity.setItemId(domain.getItemId());
         entity.setCycleDate(domain.getCycleDate());
         entity.setOrderStatus(domain.getOrderStatus().name());
@@ -33,6 +34,7 @@ public final class OrderMapper {
         }
         OrderObject domain = new OrderObject();
         domain.setId(entity.getId());
+        domain.setUserId(entity.getUserId());
         domain.setItemId(entity.getItemId());
         domain.setCycleDate(entity.getCycleDate());
         domain.setOrderStatusFromString(entity.getOrderStatus());
