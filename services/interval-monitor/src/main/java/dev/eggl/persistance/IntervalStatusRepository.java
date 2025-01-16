@@ -3,6 +3,7 @@ package dev.eggl.persistance;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -39,7 +40,7 @@ public class IntervalStatusRepository implements PanacheRepositoryBase<IntervalS
         return missingUserIds;
     }
 
-    // store a confirmed user id with the current timestamp in the database
+    @Transactional
     public void storeConfirmedUserId(int userId) {
         IntervalStatus intervalStatus = new IntervalStatus();
         intervalStatus.setUserId(userId);
