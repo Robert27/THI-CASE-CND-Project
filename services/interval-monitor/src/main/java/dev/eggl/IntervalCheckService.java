@@ -29,7 +29,7 @@ public class IntervalCheckService {
     @Scheduled(every = "15s")
     void checkMissingEntries() {
         System.out.println("Checking for missing entries...");
-        int weekday = LocalDate.now().getDayOfWeek().getValue();
+        int weekday = (LocalDate.now().getDayOfWeek().getValue() - 1) % 7;
         // 1) Load user list
         userClientService.getUserIds()
                 .subscribe().with(userIdsResponse -> {

@@ -211,6 +211,8 @@ export default function PricingPage() {
     setAlertMessage(null);
   };
 
+  const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
   return (
     <div className="w-full px-4 ">
       <div className="sm:flex sm:items-center">
@@ -263,7 +265,7 @@ export default function PricingPage() {
                         </Chip>
                       </TableCell>
                       <TableCell>{item.quantity}</TableCell>
-                      <TableCell>{item.weekday}</TableCell>
+                      <TableCell>{weekdays[item.weekday]}</TableCell>
                       <TableCell>
                         <Dropdown className="bg-background border-1 border-default-200">
                           <DropdownTrigger>
