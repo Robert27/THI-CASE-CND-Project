@@ -10,22 +10,21 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import io.smallrye.common.annotation.Blocking;
 
 import java.time.LocalDateTime;
 
 /**
- * Beispiel: Ruft einen Mock-Server ab, der ein JSON mit id, price und available zurückgibt.
+ * Ruft einen Mock-Server ab, der ein JSON mit id, price und available zurückgibt.
  */
 @ApplicationScoped
+@Blocking
 public class PriceCheckAdapter implements PriceCheckPort {
 
 
     @Override
     public PriceLog checkPrice(Integer itemId, String url) {
-
-        // Standard-JAX-RS-Client erzeugen
         try (Client client = ClientBuilder.newClient()) {
-            // "url"  aufrufen:
             WebTarget target = client.target(url);
 
             // GET-Request absetzen und JSON als Antwort erwarten
@@ -35,27 +34,26 @@ public class PriceCheckAdapter implements PriceCheckPort {
 
             // HTTP-Status checken
             if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-
                 // JSON in PriceResponse parsen
                 PriceResponse priceResponse = response.readEntity(PriceResponse.class);
 
-                // Aus den Feldern von PriceResponse einen PriceLog bauen
-                // und den aktuellen Zeitstempel setzen
+                // Aus priceResponse einen PriceLog bauen (itemId übernehmen)
                 return new PriceLog(
-                        priceResponse.getId(),
+                        itemId,                           // <-- itemId direkt setzen
                         priceResponse.getPrice(),
                         priceResponse.getAvailable(),
                         LocalDateTime.now()
                 );
             } else {
-                // Fallback, falls der Mock nicht 200 liefert
-                System.err.println("Unerwarteter HTTP-Status: " + response.getStatus());
-                return new PriceLog(itemId, 0.0, 0, LocalDateTime.now());
+                // Unerwarteter HTTP-Status -> Fehler werfen
+                throw new IllegalStateException("Unerwarteter HTTP-Status: " + response.getStatus());
             }
+
         } catch (Exception e) {
-            // Bei Fehlern: Loggen und Fallback-Werte zurückgeben
-            System.err.println("Fehler beim Aufruf: " + e.getMessage());
-            return new PriceLog(itemId, 0.0, 0, LocalDateTime.now());
+            e.printStackTrace();
+
+            // Bei Fehlern -> Exception werfen, damit kein leerer Log gespeichert wird
+            throw new RuntimeException("Fehler beim Aufruf: " + e.getMessage(), e);
         }
     }
 }

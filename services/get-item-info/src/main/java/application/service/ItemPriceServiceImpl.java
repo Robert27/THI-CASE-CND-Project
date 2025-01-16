@@ -58,35 +58,43 @@ public class ItemPriceServiceImpl implements ItemPriceService {
                 if (!urlValidationPort.validateUrl(url)) {
                     throw new IllegalStateException("Ungültige URL: " + url);
                 }
+
+                // 2) Preis abfragen (kann Exception werfen)
                 PriceLog priceLog = priceCheckPort.checkPrice(itemId, url);
-                priceLogRepository.savePriceLog(priceLog);
 
-                //riceLog priceLog = checkAndStorePrice(itemId, url);
+                // 3) Nur wenn kein Fehler kam, wird gespeichert
+                PriceLog stored = priceLogRepository.savePriceLog(priceLog);
 
+                // 4) Status + Felder setzen
                 result.setStatus("OK");
                 result.setMessage("Preis und Verfügbarkeit erfolgreich gespeichert");
-                result.setLogId(priceLog.getId());
+                result.setLogId(stored.getId());      // <-- DB-Generierte ID (oder null, wenn nicht generiert)
                 result.setPrice(priceLog.getPrice());
                 result.setAvailability(priceLog.getAvailability());
 
+                // Falls availability == 0, Status anpassen
                 if (priceLog.getAvailability() == 0) {
                     result.setStatus("UNAVAILABLE");
                     result.setMessage("Verfügbarkeit = 0");
                 }
 
             } catch (IllegalArgumentException e) {
+                // z.B. "Keine URL gefunden"
                 result.setStatus("NOT_FOUND");
                 result.setMessage(e.getMessage());
+
             } catch (IllegalStateException e) {
+                // z.B. "Ungültige URL" oder "Unerwarteter HTTP-Status"
                 result.setStatus("INVALID_URL");
                 result.setMessage(e.getMessage());
+
             } catch (Exception e) {
                 // Andere unvorhergesehene Fehler
                 result.setStatus("ERROR");
                 result.setMessage(e.getMessage());
             }
 
-            // 5) Das Ergebnis (erfolgreich oder Fehler) in unsere Gesamtliste packen
+            // 5) Das Ergebnis in unsere Gesamtliste packen – egal ob Fehler oder Erfolg
             results.add(result);
         }
 

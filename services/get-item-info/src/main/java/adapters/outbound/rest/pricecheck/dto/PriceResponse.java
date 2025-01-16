@@ -2,7 +2,6 @@ package adapters.outbound.rest.pricecheck.dto;
 
 public class PriceResponse {
 
-    private Integer id;
     private double price;
     private int available;
 
@@ -10,27 +9,18 @@ public class PriceResponse {
     public PriceResponse() {
     }
 
-    public PriceResponse(Integer id, double price, int available) {
-        this.id = id;
+    public PriceResponse(double price, int available) {
         this.price = price;
         this.available = available;
     }
 
     // Getter/Setter
-    public Integer getId() {
-        return id;
-    }
-
     public double getPrice() {
         return price;
     }
 
     public int getAvailable() {
         return available;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public void setPrice(double price) {
