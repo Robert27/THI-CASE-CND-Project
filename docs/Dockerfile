@@ -1,35 +1,23 @@
-# uses bun as the base image and multi-stage builds to optimize the build process
-FROM oven/bun:1 AS base
-WORKDIR /usr/src/app
+# Use Node.js as the base image for building the app
+FROM node:20-slim AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+WORKDIR /app
 
-# install dependencies into temp directory
-# this will cache them and speed up future builds
-FROM base AS install
-RUN mkdir -p /temp/dev
-COPY package.json bun.lockb /temp/dev/
-RUN cd /temp/dev && bun install --frozen-lockfile --ignore-scripts
-
-# install with --production (exclude devDependencies)
-RUN mkdir -p /temp/prod
-COPY package.json bun.lockb /temp/prod/
-RUN cd /temp/prod && bun install --frozen-lockfile --production --ignore-scripts
-
-# copy node_modules from temp directory
-# then copy all (non-ignored) project files into the image
-FROM base AS prerelease
-COPY --from=install /temp/dev/node_modules node_modules
+# Stage for building the application
+FROM base AS build
 COPY . .
-# build the app
-ENV BASE_URL ${BASE_URL:-/docs/}
-RUN bunx vitepress build
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm exec vitepress build
 
-# use nginx as the final image
+# Final stage: Use Nginx to serve the built application
 FROM nginx:alpine AS release
-# Copy your custom nginx.conf (if you have one) into place
+# Copy your custom nginx configuration, if applicable
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy the built files from the prerelease stage
-COPY --from=prerelease /usr/src/app/.vitepress/dist /usr/share/nginx/html
+# Copy built files from the build stage
+COPY --from=build /app/.vitepress/dist /usr/share/nginx/html
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

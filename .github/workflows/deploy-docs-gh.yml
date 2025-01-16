@@ -1,11 +1,11 @@
 name: Deploy Docs site to Pages
 
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - "docs/**"
-      - ".github/workflows/deploy-docs-gh.yml"
+  # push:
+  #   branches: ["main"]
+  #   paths:
+  #     - "docs/**"
+  #     - ".github/workflows/deploy-docs-gh.yml"
 
   workflow_dispatch:
 

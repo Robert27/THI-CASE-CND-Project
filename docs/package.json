@@ -4,11 +4,12 @@
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview"
   },
-  "dependencies": {
-    "express": "^4.21.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     "vitepress": "^1.5.0",
     "@types/node": "latest"
+  },
+  "resolutions": {
+    "rollup": "npm:@rollup/wasm-node"
   }
 }

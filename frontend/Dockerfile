@@ -1,3 +1,7 @@
+# This Dockerfile is used to build the image for the GitHub Actions workflow.
+# The pnpminstall and package commands are run in the actions workflow, so the image only needs to copy the built application files.
+# This speeds up the image build process because the dependencies are already installed and cached.
+# For a normal multi-stage build, please visit the Dockerfile file.
 FROM node:18-alpine AS base
 
 FROM base AS deps

@@ -1,0 +1,4 @@
+*
+!.vitepress/dist/
+!nginx.conf
+!public/
