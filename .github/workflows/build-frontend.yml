@@ -28,6 +28,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: |
+          if [ -f yarn.lock ]; then yarn install --frozen-lockfile; \
+          elif [ -f package-lock.json ]; then npm ci; \
+          elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm install --frozen-lockfile; \
+          else echo "Lockfile not found." && exit 1; \
+          fi
+
+      - name: Build the application
+        run: |
+          if [ -f yarn.lock ]; then yarn build; \
+          elif [ -f package-lock.json ]; then npm run build; \
+          elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+          else echo "Lockfile not found." && exit 1; \
+          fi
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
@@ -53,8 +74,8 @@ jobs:
       - name: Build and push multi-arch image
         uses: docker/build-push-action@v6
         with:
-          context: frontend/
-          file: frontend/Dockerfile
+          context: .
+          file: frontend/Dockerfile.gh
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           platforms: linux/amd64,linux/arm64
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
