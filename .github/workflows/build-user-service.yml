@@ -26,12 +26,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK 21
+
+      - name: Set up JDK 23
         uses: actions/setup-java@v4
         with:
-          java-version: "21"
+          java-version: "23"
           distribution: "temurin"
           cache: gradle
+
+      - name: Build with Gradle
+        run: |
+          ./gradlew dependencies --no-daemon
+          ./gradlew build -x test --no-daemon
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -58,7 +64,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: services/UserService/
-          file: services/UserService/Dockerfile
+          file: services/UserService/Dockerfile.gh
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot') }}
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
           labels: ${{ steps.meta.outputs.labels }}
