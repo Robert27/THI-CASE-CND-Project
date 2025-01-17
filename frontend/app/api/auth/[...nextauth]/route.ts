@@ -16,11 +16,18 @@ const authOptions = {
       },
       async authorize(credentials) {
         console.log("Credentials:", credentials);
-        const res = await fetch(AUTH_SERVICE_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(credentials),
-        });
+        let res;
+
+        try {
+          res = await fetch(AUTH_SERVICE_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(credentials),
+          });
+        } catch (err) {
+          console.error("Failed to authenticate:", err);
+          throw new Error("Failed to authenticate");
+        }
         const user = await res.json();
 
         console.log("User:", user);

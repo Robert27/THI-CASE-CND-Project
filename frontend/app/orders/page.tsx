@@ -50,7 +50,7 @@ export default function OrderPage() {
   } = useQuery<Order[]>({
     queryKey: ["orders"],
     queryFn: async () => {
-      const res = await fetch("http://localhost:4000/rest/order/orders", {
+      const res = await fetch("/rest/order/orders", {
         headers: {
           Authorization: `Bearer ${session?.accessToken}`,
         },
@@ -71,21 +71,18 @@ export default function OrderPage() {
       itemId: number;
       quantity: number;
     }) => {
-      const res = await fetch(
-        "http://localhost:4000/rest/order/orders/perform",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.accessToken}`,
-          },
-          body: JSON.stringify({
-            itemId,
-            quantity,
-            authToken: session?.accessToken,
-          }),
-        }
-      );
+      const res = await fetch("/rest/order/orders/perform", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+        body: JSON.stringify({
+          itemId,
+          quantity,
+          authToken: session?.accessToken,
+        }),
+      });
 
       if (!res.ok) throw new Error("Failed to perform order");
 
@@ -102,15 +99,12 @@ export default function OrderPage() {
 
   const abortOrderMutation = useMutation({
     mutationFn: async (itemId: number) => {
-      const res = await fetch(
-        `http://localhost:4000/rest/order/orders/abort/${itemId}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${session?.accessToken}`,
-          },
-        }
-      );
+      const res = await fetch(`/rest/order/orders/abort/${itemId}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+      });
 
       if (!res.ok) throw new Error("Failed to abort order");
 

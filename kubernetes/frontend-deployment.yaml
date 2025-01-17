@@ -22,7 +22,7 @@ spec:
             - name: NEXTAUTH_SECRET
               value: 9n0Gnw+JJ64DsMSXdejaLVNNlLtVzNmhijQlYorTa3Q=
             - name: AUTH_SERVICE_URL
-              value: authservice:8081/login
+              value: http://authservice:8081/login
           image: ghcr.io/robert27/thi-case-cnd-project/frontend:latest
           name: frontend
           imagePullPolicy: Always

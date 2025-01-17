@@ -24,17 +24,14 @@ export default function AccountPage() {
       newPassword: string;
     }) => {
       console.log("Payload:", payload);
-      const res = await fetch(
-        `http://localhost:4000/rest/user/user/${userId}/changepw`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.accessToken}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const res = await fetch(`/rest/user/user/${userId}/changepw`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
       if (!res.ok) {
         const errorData = await res.json();
@@ -63,12 +60,9 @@ export default function AccountPage() {
   // Delete Account Mutation
   const deleteAccountMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch(
-        `http://localhost:4000/rest/user/user/${userId}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const res = await fetch(`/rest/user/user/${userId}`, {
+        method: "DELETE",
+      });
 
       if (!res.ok) {
         const errorData = await res.json();
