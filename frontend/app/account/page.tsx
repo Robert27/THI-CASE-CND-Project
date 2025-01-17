@@ -49,7 +49,10 @@ export default function AccountPage() {
     },
     onSuccess: () => {
       setIsError(false);
-      setMessage("Password updated successfully!");
+      setMessage("Password updated successfully! Please log in again.");
+      signOut({ redirect: false });
+      localStorage.removeItem("next-auth.session-token");
+      router.push("/login");
     },
     onError: (err: any) => {
       setMessage(err.message);
