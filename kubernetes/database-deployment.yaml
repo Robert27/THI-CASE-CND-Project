@@ -50,16 +50,16 @@ spec:
               protocol: TCP
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
-              name: db-data
+              name: database-data
             - mountPath: /docker-entrypoint-initdb.d/schema.sql
               name: database-cm1
               readOnly: true
               subPath: schema.sql
       restartPolicy: Always
       volumes:
-        - name: db-data
+        - name: database-data
           persistentVolumeClaim:
-            claimName: db-data
+            claimName: database-data
         - configMap:
             items:
               - key: schema.sql

@@ -35,6 +35,14 @@ spec:
                 port:
                   number: 8080
 
+          - path: /rest/order/(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: order-list
+                port:
+                  number: 8082
+
           - path: /rest/auth/(.*)
             pathType: Prefix
             backend:
