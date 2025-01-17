@@ -107,5 +107,5 @@ metadata:
   annotations:
     use-subpath: "true"
   labels:
-    io.kompose.service: database
+    app: database
   name: database-cm1

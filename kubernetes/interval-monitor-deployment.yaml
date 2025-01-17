@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    io.kompose.service: interval-monitor
   name: interval-monitor
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: interval-monitor
+      app: interval-monitor
   template:
     metadata:
       labels:
-        io.kompose.network/thi-case-cnd-projekt-default: "true"
-        io.kompose.service: interval-monitor
+        app: interval-monitor
     spec:
       containers:
-        - env:
+        - name: interval-monitor
+          image: ghcr.io/robert27/thi-case-cnd-project/interval-monitor:latest
+          imagePullPolicy: Always
+          env:
             - name: DB_HOST
               value: database
             - name: DB_NAME
@@ -43,9 +43,3 @@ spec:
               value: '-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JEqgNqMzO+9QnknqkEK27kaJ8iGvnGFyVFtzwUQuIdlZPjDr5U6SABgljdVGdZnpvKaK3ZWtzQjnXVLgpI80l+2Lg+bVFX3mqQOlCwca3QLrfzmEUiK4tTrIGgtQnYBJVnXUWZKl2qYxDlMNwKG+d/FDZTnnierjiy3aZCLZtnVnQFH0SRolMJLECGeOufh8yep+8ClHHO57jvTLRk4T0EKakwqIRa5nQFO/WBczfZWsVNXUH7epxax6n1yklquchXtgT1JOjj/2w3IbmMz5KN0muPJfU9cfct18QUtvHzYor5CyOGeOxxzinhanlZAyfOOSU1bMXG7Uev7hENtQQIDAQAB-----END PUBLIC KEY-----'
             - name: MOCK_ENABLED
               value: "true"
-          image: ghcr.io/robert27/thi-case-cnd-project/interval-monitor:latest
-          name: interval-monitor
-          ports:
-            - containerPort: 8081
-              protocol: TCP
-      restartPolicy: Always

@@ -1,16 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    io.kompose.service: object-management
   name: object-management
 spec:
   ports:
-    - name: "8080"
-      port: 8080
-      targetPort: 8080
-    - name: "9090"
-      port: 9090
-      targetPort: 9090
+    - port: 8080
+      name: object-http
+    - port: 9090
+      name: object-grpc
   selector:
-    io.kompose.service: object-management
+    app: object-management

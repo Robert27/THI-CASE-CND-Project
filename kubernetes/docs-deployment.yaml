@@ -1,24 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    io.kompose.service: docs
   name: docs
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: docs
+      app: docs
   template:
     metadata:
       labels:
-        io.kompose.network/thi-case-cnd-projekt-default: "true"
-        io.kompose.service: docs
+        app: docs
     spec:
       containers:
-        - image: ghcr.io/robert27/thi-case-cnd-project/docs:latest
-          name: docs
-          ports:
-            - containerPort: 80
-              protocol: TCP
-      restartPolicy: Always
+        - name: docs
+          image: ghcr.io/robert27/thi-case-cnd-project/docs:latest
+          imagePullPolicy: Always
