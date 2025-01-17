@@ -1,20 +1,18 @@
-package orderlistservice.adapters.outbound.rest.orderexecution.dto;
+package orderlistservice.adapters.inbound.rest.dto;
 
-/**
- * DTO für die Antwort nach dem Ausführen einer Bestellung.
- */
-public class OrderResponse {
+
+public class PerformOrderResponse {
+
     private int statusCode;
     private String message;
 
-    public OrderResponse() {}
+    public PerformOrderResponse() {
+    }
 
-    public OrderResponse(int statusCode, String message) {
+    public PerformOrderResponse(int statusCode, String message) {
         this.statusCode = statusCode;
         this.message = message;
     }
-
-    // Getter und Setter
 
     public int getStatusCode() {
         return statusCode;

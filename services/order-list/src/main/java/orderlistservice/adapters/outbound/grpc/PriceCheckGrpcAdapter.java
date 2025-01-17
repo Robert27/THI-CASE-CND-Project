@@ -36,7 +36,7 @@ public class PriceCheckGrpcAdapter implements PriceMonitoringPort {
         LOGGER.info("Initialisiere gRPC-Adapter für PriceCheckService (Host: {}, Port: {})...", host, port);
         try {
             ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
-                    .usePlaintext() // Nur für lokale Tests ohne TLS
+                    .usePlaintext()
                     .build();
             this.stub = PriceCheckServiceGrpc.newBlockingStub(channel);
             LOGGER.info("gRPC-Adapter erfolgreich initialisiert.");
@@ -66,7 +66,7 @@ public class PriceCheckGrpcAdapter implements PriceMonitoringPort {
                             protoPriceResult.getStatus(),
                             protoPriceResult.getMessage(),
                             protoPriceResult.getLogId(),
-                            BigDecimal.valueOf(protoPriceResult.getPrice()), // Konvertiere double zu BigDecimal
+                            BigDecimal.valueOf(protoPriceResult.getPrice()),
                             protoPriceResult.getAvailability()
                     ))
                     .collect(Collectors.toList());

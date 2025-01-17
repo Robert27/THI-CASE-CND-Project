@@ -33,7 +33,7 @@ class OrderServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         orderService = new OrderServiceImpl();
-        // Per Reflection oder Konstruktor die Mocks injizieren, je nach Setup:
+        // Per Reflection oder direktem Setter die Mocks "injizieren"
         ((OrderServiceImpl) orderService).orderRepository = orderRepository;
         ((OrderServiceImpl) orderService).priceMonitoring = priceMonitoring;
         ((OrderServiceImpl) orderService).objectManagement = objectManagement;
@@ -47,11 +47,11 @@ class OrderServiceImplTest {
         List<Integer> itemIds = Arrays.asList(1001, 1002);
         String cycleDate = "2025-01-01";
 
-        // Mock: findByItemIdAndUserAndCycleDate -> return empty to simulate no existing order
+        // simulate no existing order for the same itemId, userId, cycleDate
         when(orderRepository.findByItemIdAndUserAndCycleDate(anyInt(), eq(userId), eq(cycleDate)))
                 .thenReturn(Optional.empty());
 
-        // Mock: findByItemIdAndStatusOpenAndUserId -> return empty to simulate no open order
+        // simulate no open order for those itemIds
         when(orderRepository.findByItemIdAndStatusOpenAndUserId(anyInt(), eq(userId)))
                 .thenReturn(Optional.empty());
 
@@ -60,7 +60,7 @@ class OrderServiceImplTest {
 
         // Then
         assertEquals(200, resultCode);
-        // verify that new orders were saved
+        // verify that new orders were saved for each itemId
         verify(orderRepository, times(2)).save(any(OrderObject.class));
     }
 
@@ -71,21 +71,23 @@ class OrderServiceImplTest {
         List<Integer> itemIds = Collections.singletonList(1001);
         String cycleDate = "2025-01-01";
 
-        // Wenn es bereits eine offene Bestellung gibt, soll kein neues Objekt angelegt werden
+        // Vorhandene offene Bestellung
         OrderObject existingOrder = new OrderObject();
         existingOrder.setOrderStatus(OrderStatus.OPEN);
 
+        // Kein Duplikat an demselben Tag
         when(orderRepository.findByItemIdAndUserAndCycleDate(anyInt(), eq(userId), eq(cycleDate)))
-                .thenReturn(Optional.empty()); // Kein Duplikat für dieses Datum
+                .thenReturn(Optional.empty());
+
+        // Es gibt aber bereits eine offene Bestellung
         when(orderRepository.findByItemIdAndStatusOpenAndUserId(anyInt(), eq(userId)))
-                .thenReturn(Optional.of(existingOrder)); // Offene Bestellung vorhanden
+                .thenReturn(Optional.of(existingOrder));
 
         // When
         int status = orderService.generateOrderList(userId, itemIds, cycleDate);
 
         // Then
-        // Hier könnte man davon ausgehen, dass einfach keine neue Bestellung gespeichert wird,
-        // da eine offene bereits existiert.
+        // Es wird keine neue Bestellung gespeichert
         assertEquals(200, status);
         verify(orderRepository, never()).save(any(OrderObject.class));
     }
@@ -94,7 +96,8 @@ class OrderServiceImplTest {
     void testGetOpenOrders_noItems() {
         // Given
         Integer userId = 42;
-        when(orderRepository.findAllByStatusOpenAndUserId(userId)).thenReturn(Collections.emptyList());
+        when(orderRepository.findAllByStatusOpenAndUserId(userId))
+                .thenReturn(Collections.emptyList());
 
         // When
         List<OrderObject> result = orderService.getOpenOrders(userId);
@@ -112,9 +115,11 @@ class OrderServiceImplTest {
         OrderObject order1 = new OrderObject();
         order1.setItemId(1001);
         order1.setOrderStatus(OrderStatus.OPEN);
+
         OrderObject order2 = new OrderObject();
         order2.setItemId(1002);
         order2.setOrderStatus(OrderStatus.OPEN);
+
         List<OrderObject> openOrders = Arrays.asList(order1, order2);
 
         when(orderRepository.findAllByStatusOpenAndUserId(userId)).thenReturn(openOrders);
@@ -151,26 +156,28 @@ class OrderServiceImplTest {
         existingOrder.setItemId(itemId);
         existingOrder.setOrderStatus(OrderStatus.OPEN);
 
-        // Mock repository
+        // Mock: vorhandene offene Order
         when(orderRepository.findByItemIdAndStatusOpenAndUserId(itemId, userId))
                 .thenReturn(Optional.of(existingOrder));
 
-        // Mock objectManagement
+        // Mock: objectManagement gibt valides ItemDetails zurück
         ItemDetails itemDetails = new ItemDetails(itemId, "Test Item", "Desc", "http://validUrl", 10);
-        when(objectManagement.getItemDetails(anyList())).thenReturn(Collections.singletonList(itemDetails));
+        when(objectManagement.getItemDetails(anyList()))
+                .thenReturn(Collections.singletonList(itemDetails));
 
-        // Mock orderExecution
-        // Wir tun so, als ob der externe Service 200 zurückgibt
-        jakarta.ws.rs.core.Response externalResponse = mock(jakarta.ws.rs.core.Response.class);
-        when(externalResponse.getStatus()).thenReturn(200);
-        when(orderExecution.executeOrder(eq("http://validUrl"), eq(quantity))).thenReturn(externalResponse);
+        // Mock: orderExecution => true (Erfolg)
+        when(orderExecution.executeOrder("http://validUrl", quantity)).thenReturn(true);
 
         // When
-        PerformOrderResult result = orderService.performOrder(userId, itemId, quantity, "mockToken");
+        // NEUE Signatur (ohne authToken)
+        PerformOrderResult result = orderService.performOrder(userId, itemId, quantity);
 
         // Then
+        // Prüfen: Domain-Result => 200
         assertEquals(200, result.getStatusCode());
         assertEquals("Order successfully executed", result.getMessage());
+
+        // Bestellung sollte auf DONE gesetzt werden
         assertEquals(OrderStatus.DONE, existingOrder.getOrderStatus());
         verify(orderRepository).update(existingOrder);
     }
@@ -189,17 +196,16 @@ class OrderServiceImplTest {
         when(orderRepository.findByItemIdAndStatusOpenAndUserId(itemId, userId))
                 .thenReturn(Optional.of(existingOrder));
 
-        // Mock objectManagement
+        // Mock: objectManagement
         ItemDetails itemDetails = new ItemDetails(itemId, "Test Item", "Desc", "http://validUrl", 10);
-        when(objectManagement.getItemDetails(anyList())).thenReturn(Collections.singletonList(itemDetails));
+        when(objectManagement.getItemDetails(anyList()))
+                .thenReturn(Collections.singletonList(itemDetails));
 
-        // Mock orderExecution (geben wir 500 zurück)
-        jakarta.ws.rs.core.Response externalResponse = mock(jakarta.ws.rs.core.Response.class);
-        when(externalResponse.getStatus()).thenReturn(500);
-        when(orderExecution.executeOrder(eq("http://validUrl"), eq(quantity))).thenReturn(externalResponse);
+        // Mock: orderExecution => false (Fehler)
+        when(orderExecution.executeOrder("http://validUrl", quantity)).thenReturn(false);
 
         // When
-        PerformOrderResult result = orderService.performOrder(userId, itemId, quantity, "mockToken");
+        PerformOrderResult result = orderService.performOrder(userId, itemId, quantity);
 
         // Then
         assertEquals(500, result.getStatusCode());

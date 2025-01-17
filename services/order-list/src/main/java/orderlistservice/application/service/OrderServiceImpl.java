@@ -150,15 +150,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public PerformOrderResult performOrder(Integer userId, Integer itemId, int quantity, String authToken) {
-        // 1) OrderObject suchen
+    public PerformOrderResult performOrder(Integer userId, Integer itemId, int quantity) {
+
         Optional<OrderObject> orderOpt = orderRepository.findByItemIdAndStatusOpenAndUserId(itemId, userId);
         if (orderOpt.isEmpty()) {
             return new PerformOrderResult(404, "No open order found for itemId " + itemId);
         }
         OrderObject order = orderOpt.get();
 
-        // 2) Hole Item-Details (z.B. URL) aus Domain-Port
         List<ItemDetails> itemDetailsList = objectManagement.getItemDetails(Collections.singletonList(itemId));
         ItemDetails itemDetails = itemDetailsList.stream()
                 .filter(d -> d.getItemId().equals(itemId))
@@ -169,33 +168,23 @@ public class OrderServiceImpl implements OrderService {
             return new PerformOrderResult(400, "Invalid item URL for itemId " + itemId);
         }
 
-        // Externen Bestellservice aufrufen
-        try {
-            // Baue Request-Objekt (Outbound-Adapter), übergib quantity/auth
-            var externalResponse = orderExecution.executeOrder(itemDetails.getUrl(), quantity);
+        boolean success = orderExecution.executeOrder(itemDetails.getUrl(), quantity);
 
-            if (externalResponse.getStatus() >= 200 && externalResponse.getStatus() < 300) {
-                order.setOrderStatus(OrderStatus.DONE);
-                orderRepository.update(order);
-                return new PerformOrderResult(externalResponse.getStatus(), "Order successfully executed");
-            } else {
-                order.setOrderStatus(OrderStatus.FAILED);
-                orderRepository.update(order);
-                return new PerformOrderResult(externalResponse.getStatus(), "Order execution failed");
-            }
-
-        } catch (Exception e) {
-            LOGGER.error("Fehler bei der Ausführung der Bestellung für Artikel-ID {}: ", itemId, e);
+        if (success) {
+            order.setOrderStatus(OrderStatus.DONE);
+            orderRepository.update(order);
+            return new PerformOrderResult(200, "Order successfully executed");
+        } else {
             order.setOrderStatus(OrderStatus.FAILED);
             orderRepository.update(order);
-            return new PerformOrderResult(500, "Order execution failed due to an exception");
+            return new PerformOrderResult(500, "Order execution failed");
         }
     }
 
 
     @Override
     @Transactional
-    public void abortOrder(Integer userId, Integer itemId) {
+    public boolean abortOrder(Integer userId, Integer itemId) {
         // Nur Orders des eingeloggten Users
         Optional<OrderObject> orderOpt = orderRepository.findByItemIdAndStatusOpenAndUserId(itemId, userId);
         if (orderOpt.isPresent()) {
@@ -203,9 +192,11 @@ public class OrderServiceImpl implements OrderService {
             order.setOrderStatus(OrderStatus.ABORTED);
             orderRepository.update(order);
             LOGGER.info("Bestellung (itemId={}, userId={}) abgebrochen.", itemId, userId);
+            return true;
         } else {
             LOGGER.warn("Keine offene Bestellung gefunden (itemId={}, userId={}).", itemId, userId);
         }
+        return false;
     }
 
 }

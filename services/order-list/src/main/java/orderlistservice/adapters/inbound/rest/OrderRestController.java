@@ -7,17 +7,13 @@ import orderlistservice.domain.model.OrderObject;
 import orderlistservice.domain.model.PerformOrderResult;
 import orderlistservice.adapters.inbound.rest.dto.GetOpenOrdersResponse;
 import orderlistservice.adapters.inbound.rest.dto.PerformOrderRequest;
+import orderlistservice.adapters.inbound.rest.dto.*;
 
-
-import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.SecurityContext;
 
 import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.jwt.Claims;
@@ -28,10 +24,10 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @RequestScoped
-public class OrderController {
+public class OrderRestController {
 
     @Inject
-    OrderService orderUseCase;
+    OrderService orderService;
 
     @Inject
     JsonWebToken jwt;
@@ -51,7 +47,7 @@ public class OrderController {
     @GET
     @Authenticated
     public Response getOpenOrders() {
-        List<OrderObject> domainOrders = orderUseCase.getOpenOrders(Integer.parseInt(userId));
+        List<OrderObject> domainOrders = orderService.getOpenOrders(Integer.parseInt(userId));
         List<GetOpenOrdersResponse> dtoList = OrderMapper.toDtoList(domainOrders);
         return Response.ok(dtoList).build();
     }
@@ -60,24 +56,31 @@ public class OrderController {
     @Path("/perform")
     @Authenticated
     public Response performOrder(PerformOrderRequest request) {
-        PerformOrderResult result = orderUseCase.performOrder(
-                Integer.parseInt(userId),
-                request.getItemId(),
-                request.getQuantity(),
-                request.getAuthToken()
+        int uid = Integer.parseInt(userId);
+
+        // Rufe Domain-Service auf
+        PerformOrderResult domainResult = orderService.performOrder(uid, request.getItemId(), request.getQuantity());
+
+        PerformOrderResponse responseDto = new PerformOrderResponse(
+                domainResult.getStatusCode(),
+                domainResult.getMessage()
         );
-        // Response
-        return Response.status(result.getStatusCode())
-                .entity(result.getMessage())
+
+        return Response.status(domainResult.getStatusCode())
+                .entity(responseDto)
                 .build();
     }
-
 
     @POST
     @Path("/abort/{itemId}")
     @Authenticated
     public Response abortOrder(@PathParam("itemId") Integer itemId) {
-        orderUseCase.abortOrder(Integer.parseInt(userId), itemId);
-        return Response.ok().build();
+        int uid = Integer.parseInt(userId);
+
+        boolean isAborted = orderService.abortOrder(uid, itemId);
+        Integer newStatus = isAborted ? 200 : 500;
+        String message = isAborted ? "Order successfully aborted." : "Error aborting order.";
+        AbortOrderResponse responseDto = new AbortOrderResponse(newStatus, message);
+        return Response.ok(responseDto).build();
     }
 }

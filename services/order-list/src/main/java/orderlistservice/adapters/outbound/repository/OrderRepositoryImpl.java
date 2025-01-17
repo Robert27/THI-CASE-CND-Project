@@ -22,7 +22,6 @@ public class OrderRepositoryImpl implements OrderRepositoryPort {
 
     @Override
     public Optional<OrderObject> findByItemIdAndUserAndCycleDate(Integer itemId, Integer userId, String cycleDate) {
-        // ACHTUNG: Hier die Java-Feldnamen verwenden (itemId, userId, cycleDate) statt item_id, user_id, cycle_date
         OrderEntity entity = panacheRepo.find(
                 "itemId = ?1 AND userId = ?2 AND cycleDate = ?3",
                 itemId, userId, cycleDate
@@ -32,7 +31,6 @@ public class OrderRepositoryImpl implements OrderRepositoryPort {
 
     @Override
     public Optional<OrderObject> findByItemIdAndStatusOpenAndUserId(Integer itemId, Integer userId) {
-        // Auch hier Java-Feldnamen (itemId, userId, orderStatus)
         OrderEntity entity = panacheRepo.find(
                 "itemId = ?1 AND userId = ?2 AND orderStatus = ?3",
                 itemId, userId, "OPEN"
@@ -45,7 +43,6 @@ public class OrderRepositoryImpl implements OrderRepositoryPort {
     public void save(OrderObject order) {
         OrderEntity entity = OrderMapper.toEntity(order);
         panacheRepo.persist(entity);
-        // Nach dem Persistieren die generierte ID zurückgeben
         order.setId(entity.getId());
     }
 
@@ -53,19 +50,16 @@ public class OrderRepositoryImpl implements OrderRepositoryPort {
     @Transactional
     public void update(OrderObject order) {
         if (order.getId() == null) {
-            // Falls noch keine ID => Speichern
             save(order);
             return;
         }
         OrderEntity entity = OrderMapper.toEntity(order);
-        // merge
         OrderEntity managed = panacheRepo.getEntityManager().merge(entity);
         order.setId(managed.getId());
     }
 
     @Override
     public List<OrderObject> findAllByStatusOpenAndUserId(Integer userId) {
-        // Und auch hier "userId" und "orderStatus"
         List<OrderEntity> entities = panacheRepo.find(
                 "userId = ?1 AND orderStatus = ?2",
                 userId, "OPEN"

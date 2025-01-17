@@ -8,22 +8,22 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 import jakarta.ws.rs.core.Response;
 import java.net.URL;
-
 @ApplicationScoped
 public class OrderExecutionClientImpl implements OrderExecutionPort {
 
     @Override
-    public Response executeOrder(String orderUrl, Integer quantity) {
-        OrderExecutionRequest request = new OrderExecutionRequest();
+    public boolean executeOrder(String orderUrl, Integer quantity) {
         try {
             OrderExecutionService service = RestClientBuilder.newBuilder()
                     .baseUrl(new URL(orderUrl))
                     .build(OrderExecutionService.class);
 
-            return service.postOrder(request);
+            OrderExecutionRequest request = new OrderExecutionRequest(quantity);
+            OrderExecutionResponse externalResponse = service.postOrder(request);
+            return externalResponse.isSuccess();
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to execute order at " + orderUrl, e);
+            return false;
         }
     }
 }

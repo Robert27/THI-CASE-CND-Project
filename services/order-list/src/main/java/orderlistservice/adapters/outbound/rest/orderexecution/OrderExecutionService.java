@@ -17,5 +17,5 @@ public interface OrderExecutionService {
     @Path("/order")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response postOrder(OrderExecutionRequest request);
+    OrderExecutionResponse postOrder(OrderExecutionRequest request);
 }
