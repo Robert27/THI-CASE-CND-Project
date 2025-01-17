@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm.fullname" . }}-interval-monitor
+  labels:
+  {{- include "helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.intervalMonitor.replicas }}
+  selector:
+    matchLabels:
+      app: interval-monitor
+    {{- include "helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: interval-monitor
+      {{- include "helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: DB_HOST
+          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.dbHost }}
+        - name: DB_NAME
+          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.dbName }}
+        - name: DB_PASSWORD
+          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.dbPassword }}
+        - name: DB_PORT
+          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.dbPort }}
+        - name: DB_USERNAME
+          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.dbUsername }}
+        - name: GRPC_OBJECTS_HOST
+          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.grpcObjectsHost }}
+        - name: GRPC_OBJECTS_PORT
+          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.grpcObjectsPort }}
+        - name: GRPC_ORDERLIST_HOST
+          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.grpcOrderlistHost
+            }}
+        - name: GRPC_ORDERLIST_PORT
+          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.grpcOrderlistPort
+            }}
+        - name: GRPC_USERS_HOST
+          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.grpcUsersHost }}
+        - name: GRPC_USERS_PORT
+          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.grpcUsersPort }}
+        - name: JWT_PUBLIC_KEY
+          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.jwtPublicKey }}
+        - name: MOCK_ENABLED
+          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.mockEnabled }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.intervalMonitor.intervalMonitor.image.repository }}:{{ .Values.intervalMonitor.intervalMonitor.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.intervalMonitor.intervalMonitor.imagePullPolicy }}
+        name: interval-monitor
+        resources: {}

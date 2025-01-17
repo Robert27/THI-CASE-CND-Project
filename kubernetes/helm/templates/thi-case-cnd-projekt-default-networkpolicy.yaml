@@ -1,0 +1,13 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "helm.fullname" . }}-allow-internal
+  labels:
+  {{- include "helm.labels" . | nindent 4 }}
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: default
+  podSelector: {}

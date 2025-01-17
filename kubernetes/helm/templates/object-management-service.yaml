@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "helm.fullname" . }}-object-management
+  labels:
+  {{- include "helm.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.objectManagement.type }}
+  selector:
+    app: object-management
+    {{- include "helm.selectorLabels" . | nindent 4 }}
+  ports:
+  {{- .Values.objectManagement.ports | toYaml | nindent 2 }}

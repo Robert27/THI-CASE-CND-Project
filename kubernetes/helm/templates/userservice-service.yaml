@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "helm.fullname" . }}-userservice
+  labels:
+  {{- include "helm.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.userservice.type }}
+  selector:
+    app: userservice
+    {{- include "helm.selectorLabels" . | nindent 4 }}
+  ports:
+  {{- .Values.userservice.ports | toYaml | nindent 2 }}

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm.fullname" . }}-docs
+  labels:
+  {{- include "helm.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: docs
+    {{- include "helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: docs
+      {{- include "helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.docs.docs.image.repository }}:{{ .Values.docs.docs.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.docs.docs.imagePullPolicy }}
+        name: docs
+        resources: {}

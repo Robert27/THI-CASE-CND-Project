@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm.fullname" . }}-get-item-info
+  labels:
+  {{- include "helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.getItemInfo.replicas }}
+  selector:
+    matchLabels:
+      app: get-item-info
+    {{- include "helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: get-item-info
+      {{- include "helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: DB_HOST
+          value: {{ quote .Values.getItemInfo.getItemInfo.env.dbHost }}
+        - name: DB_NAME
+          value: {{ quote .Values.getItemInfo.getItemInfo.env.dbName }}
+        - name: DB_PASSWORD
+          value: {{ quote .Values.getItemInfo.getItemInfo.env.dbPassword }}
+        - name: DB_PORT
+          value: {{ quote .Values.getItemInfo.getItemInfo.env.dbPort }}
+        - name: DB_USERNAME
+          value: {{ quote .Values.getItemInfo.getItemInfo.env.dbUsername }}
+        - name: GRPC_OBJECTS_HOST
+          value: {{ quote .Values.getItemInfo.getItemInfo.env.grpcObjectsHost }}
+        - name: GRPC_OBJECTS_PORT
+          value: {{ quote .Values.getItemInfo.getItemInfo.env.grpcObjectsPort }}
+        - name: GRPC_URL_HOST
+          value: {{ quote .Values.getItemInfo.getItemInfo.env.grpcUrlHost }}
+        - name: GRPC_URL_PORT
+          value: {{ quote .Values.getItemInfo.getItemInfo.env.grpcUrlPort }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.getItemInfo.getItemInfo.image.repository }}:{{ .Values.getItemInfo.getItemInfo.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.getItemInfo.getItemInfo.imagePullPolicy }}
+        name: get-item-info
+        resources: {}

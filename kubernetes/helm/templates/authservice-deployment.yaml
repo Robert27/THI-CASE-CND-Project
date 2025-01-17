@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm.fullname" . }}-authservice
+  labels:
+  {{- include "helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.authservice.replicas }}
+  selector:
+    matchLabels:
+      app: authservice
+    {{- include "helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: authservice
+      {{- include "helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: JWT_PRIVATE_KEY
+          value: {{ quote .Values.authservice.authservice.env.jwtPrivateKey }}
+        - name: USERSERVICE_URL
+          value: {{ quote .Values.authservice.authservice.env.userserviceUrl }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.authservice.authservice.image.repository }}:{{ .Values.authservice.authservice.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.authservice.authservice.imagePullPolicy }}
+        name: authservice
+        resources: {}

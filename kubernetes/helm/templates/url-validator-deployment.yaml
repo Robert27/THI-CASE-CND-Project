@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm.fullname" . }}-url-validator
+  labels:
+  {{- include "helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.urlValidator.replicas }}
+  selector:
+    matchLabels:
+      app: url-validator
+    {{- include "helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: url-validator
+      {{- include "helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.urlValidator.urlValidator.image.repository }}:{{ .Values.urlValidator.urlValidator.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.urlValidator.urlValidator.imagePullPolicy }}
+        name: url-validator
+        resources: {}

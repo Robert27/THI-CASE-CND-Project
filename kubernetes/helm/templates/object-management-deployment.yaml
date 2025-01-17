@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm.fullname" . }}-object-management
+  labels:
+  {{- include "helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.objectManagement.replicas }}
+  selector:
+    matchLabels:
+      app: object-management
+    {{- include "helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: object-management
+      {{- include "helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: DB_HOST
+          value: {{ quote .Values.objectManagement.objectManagement.env.dbHost }}
+        - name: DB_NAME
+          value: {{ quote .Values.objectManagement.objectManagement.env.dbName }}
+        - name: DB_PASSWORD
+          value: {{ quote .Values.objectManagement.objectManagement.env.dbPassword }}
+        - name: DB_PORT
+          value: {{ quote .Values.objectManagement.objectManagement.env.dbPort }}
+        - name: DB_USERNAME
+          value: {{ quote .Values.objectManagement.objectManagement.env.dbUsername }}
+        - name: GRPC_URL_HOST
+          value: {{ quote .Values.objectManagement.objectManagement.env.grpcUrlHost }}
+        - name: GRPC_URL_PORT
+          value: {{ quote .Values.objectManagement.objectManagement.env.grpcUrlPort }}
+        - name: JWT_PUBLIC_KEY
+          value: {{ quote .Values.objectManagement.objectManagement.env.jwtPublicKey }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.objectManagement.objectManagement.image.repository }}:{{ .Values.objectManagement.objectManagement.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.objectManagement.objectManagement.imagePullPolicy }}
+        name: object-management
+        resources: {}

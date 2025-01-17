@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "helm.fullname" . }}-interval-monitor
+  labels:
+  {{- include "helm.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.intervalMonitor.type }}
+  selector:
+    app: interval-monitor
+    {{- include "helm.selectorLabels" . | nindent 4 }}
+  ports:
+  {{- .Values.intervalMonitor.ports | toYaml | nindent 2 }}

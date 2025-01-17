@@ -1,0 +1,31 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "helm.fullname" . }}-routes
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: PathPrefix(`/docs`)
+      kind: Rule
+      services:
+        - name: {{ include "helm.fullname" . }}-docs
+          port: 80
+          
+    - match: PathPrefix(`/rest/user/`)
+      kind: Rule
+      services:
+        - name: {{ include "helm.fullname" . }}-userservice
+          port: 8080
+          
+    - match: PathPrefix(`/rest/object/`)
+      kind: Rule
+      services:
+        - name: {{ include "helm.fullname" . }}-object-management
+          port: 8080
+          
+    - match: PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: {{ include "helm.fullname" . }}-frontend
+          port: 3000

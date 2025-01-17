@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm.fullname" . }}-database
+  labels:
+  {{- include "helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.database.replicas }}
+  selector:
+    matchLabels:
+      app: database
+    {{- include "helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: database
+      {{- include "helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_DB
+          value: {{ quote .Values.database.database.env.postgresDb }}
+        - name: POSTGRES_PASSWORD
+          value: {{ quote .Values.database.database.env.postgresPassword }}
+        - name: POSTGRES_USER
+          value: {{ quote .Values.database.database.env.postgresUser }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.database.database.image.repository }}:{{ .Values.database.database.image.tag
+          | default .Chart.AppVersion }}
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - postgres
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        name: database
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: database-data
+        - mountPath: /docker-entrypoint-initdb.d/schema.sql
+          name: database-cm1
+          subPath: schema.sql
+      volumes:
+      - name: database-data
+        persistentVolumeClaim:
+          claimName: {{ include "helm.fullname" . }}-database-data
+      - configMap:
+          items:
+          - key: schema.sql
+            path: schema.sql
+          name: {{ include "helm.fullname" . }}-database-cm1
+        name: database-cm1

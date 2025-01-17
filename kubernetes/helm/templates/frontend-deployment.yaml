@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm.fullname" . }}-frontend
+  labels:
+  {{- include "helm.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+    {{- include "helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: frontend
+      {{- include "helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: JWT_PUBLIC_KEY
+          value: {{ quote .Values.frontend.frontend.env.jwtPublicKey }}
+        - name: NEXTAUTH_SECRET
+          value: {{ quote .Values.frontend.frontend.env.nextauthSecret }}
+        - name: AUTH_SERVICE_URL
+          value: {{ quote .Values.frontend.frontend.env.authServiceUrl }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.frontend.frontend.image.repository }}:{{ .Values.frontend.frontend.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.frontend.frontend.imagePullPolicy }}
+        name: frontend
+        resources: {}

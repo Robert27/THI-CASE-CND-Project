@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "helm.fullname" . }}-frontend
+  labels:
+  {{- include "helm.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.frontend.type }}
+  selector:
+    app: frontend
+    {{- include "helm.selectorLabels" . | nindent 4 }}
+  ports:
+  {{- .Values.frontend.ports | toYaml | nindent 2 }}

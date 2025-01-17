@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm.fullname" . }}-userservice
+  labels:
+  {{- include "helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.userservice.replicas }}
+  selector:
+    matchLabels:
+      app: userservice
+    {{- include "helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: userservice
+      {{- include "helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: DB_HOST
+          value: {{ quote .Values.userservice.userservice.env.dbHost }}
+        - name: DB_NAME
+          value: {{ quote .Values.userservice.userservice.env.dbName }}
+        - name: DB_PASSWORD
+          value: {{ quote .Values.userservice.userservice.env.dbPassword }}
+        - name: DB_PORT
+          value: {{ quote .Values.userservice.userservice.env.dbPort }}
+        - name: DB_USERNAME
+          value: {{ quote .Values.userservice.userservice.env.dbUsername }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.userservice.userservice.image.repository }}:{{ .Values.userservice.userservice.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.userservice.userservice.imagePullPolicy }}
+        name: userservice
+        resources: {}
+      restartPolicy: Always
