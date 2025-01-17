@@ -18,7 +18,7 @@ spec:
       containers:
         - env:
             - name: AUTH_SERVICE_URL
-              value: http://localhost/rest/auth/login
+              value: /rest/auth/login
             - name: JWT_PUBLIC_KEY
               value: "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JEqgNqMzO+9QnknqkEK27kaJ8iGvnGFyVFtzwUQuIdlZPjDr5U6SABgljdVGdZnpvKaK3ZWtzQjnXVLgpI80l+2Lg+bVFX3mqQOlCwca3QLrfzmEUiK4tTrIGgtQnYBJVnXUWZKl2qYxDlMNwKG+d/FDZTnnierjiy3aZCLZtnVnQFH0SRolMJLECGeOufh8yep+8ClHHO57jvTLRk4T0EKakwqIRa5nQFO/WBczfZWsVNXUH7epxax6n1yklquchXtgT1JOjj/2w3IbmMz5KN0muPJfU9cfct18QUtvHzYor5CyOGeOxxzinhanlZAyfOOSU1bMXG7Uev7hENtQQIDAQAB-----END PUBLIC KEY-----"
             - name: NEXTAUTH_SECRET
@@ -27,6 +27,7 @@ spec:
               value: http://localhost
           image: ghcr.io/robert27/thi-case-cnd-project/frontend:latest
           name: frontend
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
               protocol: TCP
