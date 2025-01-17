@@ -17,6 +17,7 @@ import {
   Chip,
   Tooltip,
 } from "@nextui-org/react";
+import Fuse from "fuse.js";
 
 import ErrorDisplay from "@/components/ErrorDisplay";
 import PageHeader from "@/components/PageHeader";
@@ -37,6 +38,7 @@ export default function ObjectsPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editObject, setEditObject] = useState<StorageObject | null>(null);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const queryClient = useQueryClient();
 
@@ -71,6 +73,36 @@ export default function ObjectsPage() {
     },
     enabled: status === "authenticated",
   });
+
+  const weekdays = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
+  const fuse = new Fuse(
+    items.map((item) => ({
+      ...item,
+      weekdayName: weekdays[item.weekday],
+      categoryName:
+        categories.find((c) => c.id === item.categoryId)?.name || "Unknown",
+    })),
+    {
+      keys: ["name", "weekdayName", "categoryName"],
+      threshold: 0.4,
+      includeMatches: true,
+    }
+  );
+
+  const filteredItems = searchQuery.trim()
+    ? fuse
+        .search(searchQuery)
+        .map((result) => items.find((item) => item.id === result.item.id)!)
+    : items;
 
   const createObjectMutation = useMutation<
     void,
@@ -211,21 +243,11 @@ export default function ObjectsPage() {
     setAlertMessage(null);
   };
 
-  const weekdays = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
-
   if (isLoading) return <LoadingSpinner />;
   if (fetchError) return <ErrorDisplay error={fetchError as Error} />;
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="p-6 space-y-6">
           {/* Header Section */}
@@ -246,8 +268,15 @@ export default function ObjectsPage() {
             </Alert>
           )}
 
-          {/* Button above table */}
-          <div className="flex justify-end mb-4">
+          {/* Search and New Button Section */}
+          <div className="flex justify-between items-center mb-4">
+            <input
+              className="w-64 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
+              placeholder="Search objects..."
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
             <Button
               color="primary"
               size="lg"
@@ -257,7 +286,7 @@ export default function ObjectsPage() {
             </Button>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="">
             <Table
               aria-label="Objects table"
               className="w-full"
@@ -270,7 +299,7 @@ export default function ObjectsPage() {
                 <TableColumn>Weekday</TableColumn>
                 <TableColumn>Actions</TableColumn>
               </TableHeader>
-              <TableBody items={items}>
+              <TableBody items={filteredItems}>
                 {(item) => (
                   <TableRow key={item.id} onClick={() => handleEdit(item)}>
                     <TableCell>{item.name}</TableCell>
@@ -286,21 +315,23 @@ export default function ObjectsPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <Tooltip
-                          content="Edit this item"
-                          size="md"
-                          onClick={() => handleEdit(item)}
-                        >
-                          <Button isIconOnly color="primary" size="sm">
+                        <Tooltip content="Edit this item" size="md">
+                          <Button
+                            isIconOnly
+                            color="primary"
+                            size="sm"
+                            onPress={() => handleEdit(item)}
+                          >
                             <LuPen />
                           </Button>
                         </Tooltip>
-                        <Tooltip
-                          content="Delete this item"
-                          size="md"
-                          onClick={() => handleDelete(item.id)}
-                        >
-                          <Button isIconOnly color="default" size="sm">
+                        <Tooltip content="Delete this item" size="md">
+                          <Button
+                            isIconOnly
+                            color="default"
+                            size="sm"
+                            onPress={() => handleDelete(item.id)}
+                          >
                             <LuTrash2 />
                           </Button>
                         </Tooltip>

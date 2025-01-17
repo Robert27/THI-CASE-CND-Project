@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import {
   LuCircleCheck,
-  LuPen,
   LuShoppingCart,
   LuTriangleAlert,
   LuX,
@@ -23,6 +22,7 @@ import {
   Card,
   CardBody,
 } from "@nextui-org/react";
+import { toast } from "react-toastify";
 
 import ErrorDisplay from "@/components/ErrorDisplay";
 import PageHeader from "@/components/PageHeader";
@@ -92,7 +92,11 @@ export default function OrderPage() {
       return res.json();
     },
     onSuccess: () => {
+      toast.success("Order performed successfully");
       queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
@@ -113,7 +117,11 @@ export default function OrderPage() {
       return res.json();
     },
     onSuccess: () => {
+      toast.success("Order aborted successfully");
       queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
@@ -155,6 +163,12 @@ export default function OrderPage() {
     return dateA.getTime() - dateB.getTime();
   });
 
+  const formatPrice = (price: number | null) => {
+    if (price === null) return "N/A";
+
+    return price.toFixed(2).replace(".", ",") + " €";
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-4 space-y-6">
       <PageHeader
@@ -178,7 +192,7 @@ export default function OrderPage() {
         <div className="space-y-6">
           {sortedDates.map((date) => (
             <div key={date} className="space-y-2">
-              <h3 className="text-lg font-semibold">Cycle Date: {date}</h3>
+              <h3 className="text-lg font-semibold">Orders for {date}</h3>
               <Table
                 aria-label="Orders table"
                 className="w-full"
@@ -186,19 +200,24 @@ export default function OrderPage() {
               >
                 <TableHeader>
                   <TableColumn>Item Name</TableColumn>
-                  <TableColumn>Description</TableColumn>
                   <TableColumn>Order Quantity</TableColumn>
+                  <TableColumn>Price</TableColumn>
                   <TableColumn>Status</TableColumn>
                   <TableColumn>Actions</TableColumn>
                 </TableHeader>
                 <TableBody items={groupedOrders[date]}>
                   {(item) => (
                     <TableRow key={item.itemId}>
-                      <TableCell>{item.itemName}</TableCell>
-                      <TableCell>{item.description}</TableCell>
+                      <TableCell>
+                        <Tooltip content={item.description}>
+                          {item.itemName}
+                        </Tooltip>
+                      </TableCell>
+
                       <TableCell>
                         {item.orderQuantity + " / " + item.availabilityQuantity}
                       </TableCell>
+                      <TableCell>{formatPrice(item.price)}</TableCell>
                       <TableCell>
                         <Tooltip content={item.statusMessage}>
                           {item.statusMessage.includes("Fehler") ? (
@@ -216,43 +235,28 @@ export default function OrderPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <Tooltip
-                            content="Buy this item"
-                            size="md"
-                            onClick={() =>
-                              handleBuy(item.itemId, item.orderQuantity)
-                            }
-                          >
+                          <Tooltip content="Buy this item" size="md">
                             <Button
                               isIconOnly
                               color="primary"
                               isLoading={performOrderMutation.isPending}
                               size="sm"
+                              onPress={() =>
+                                handleBuy(item.itemId, item.orderQuantity)
+                              }
                             >
                               <LuShoppingCart />
                             </Button>
                           </Tooltip>
-                          <Tooltip
-                            content="Cancel this item"
-                            size="md"
-                            onClick={() => handleCancel(item.itemId)}
-                          >
+                          <Tooltip content="Cancel this item" size="md">
                             <Button
                               isIconOnly
                               color="default"
                               isLoading={abortOrderMutation.isPending}
                               size="sm"
+                              onPress={() => handleCancel(item.itemId)}
                             >
                               <LuX />
-                            </Button>
-                          </Tooltip>
-                          <Tooltip
-                            content="Cancel and edit this item"
-                            size="md"
-                            onClick={() => handleCancel(item.itemId)}
-                          >
-                            <Button isIconOnly color="default" size="sm">
-                              <LuPen />
                             </Button>
                           </Tooltip>
                         </div>
