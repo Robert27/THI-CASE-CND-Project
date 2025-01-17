@@ -2,9 +2,10 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-const AUTH_SERVICE_URL = "/rest/auth/login";
+const AUTH_SERVICE_URL =
+  process.env.AUTH_SERVICE_URL || "http://localhost:4000/rest/auth/login";
 
-console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
+console.log("AUTH_SERVICE_URL:", AUTH_SERVICE_URL);
 const authOptions = {
   providers: [
     CredentialsProvider({
@@ -15,22 +16,18 @@ const authOptions = {
       },
       async authorize(credentials) {
         console.log("Credentials:", credentials);
-        const baseUrl = process.env.NEXTAUTH_URL || "http://localhost";
-
-        console.log("Base URL:", baseUrl);
-        const res = await fetch(`${baseUrl}${AUTH_SERVICE_URL}`, {
+        const res = await fetch(AUTH_SERVICE_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(credentials),
         });
-
-        console.log("Response:", res);
         const user = await res.json();
 
         console.log("User:", user);
         if (res.ok && user && user.token) {
           return user;
         } else {
+          console.error("Failed to authenticate:", user);
           throw new Error(user.reason || "Failed to authenticate");
         }
       },
