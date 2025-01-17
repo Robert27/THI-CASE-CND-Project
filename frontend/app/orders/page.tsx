@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import {
@@ -41,6 +41,8 @@ export default function OrderPage() {
     },
   });
 
+  const queryClient = useQueryClient();
+
   const {
     data: orders,
     error,
@@ -61,12 +63,66 @@ export default function OrderPage() {
     enabled: status === "authenticated",
   });
 
-  const handleBuy = (itemId: number) => {
-    console.log("Buy item:", itemId);
+  const performOrderMutation = useMutation({
+    mutationFn: async ({
+      itemId,
+      quantity,
+    }: {
+      itemId: number;
+      quantity: number;
+    }) => {
+      const res = await fetch(
+        "http://localhost:4000/rest/order/orders/perform",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+          body: JSON.stringify({
+            itemId,
+            quantity,
+            authToken: session?.accessToken,
+          }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to perform order");
+
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+  });
+
+  const abortOrderMutation = useMutation({
+    mutationFn: async (itemId: number) => {
+      const res = await fetch(
+        `http://localhost:4000/rest/order/orders/abort/${itemId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to abort order");
+
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+  });
+
+  const handleBuy = (itemId: number, quantity: number) => {
+    performOrderMutation.mutate({ itemId, quantity });
   };
 
   const handleCancel = (itemId: number) => {
-    console.log("Cancel item:", itemId);
+    abortOrderMutation.mutate(itemId);
   };
 
   const groupOrdersByDate = (orders: Order[]): GroupedOrders => {
@@ -163,9 +219,16 @@ export default function OrderPage() {
                           <Tooltip
                             content="Buy this item"
                             size="md"
-                            onClick={() => handleBuy(item.itemId)}
+                            onClick={() =>
+                              handleBuy(item.itemId, item.orderQuantity)
+                            }
                           >
-                            <Button isIconOnly color="primary" size="sm">
+                            <Button
+                              isIconOnly
+                              color="primary"
+                              isLoading={performOrderMutation.isPending}
+                              size="sm"
+                            >
                               <LuShoppingCart />
                             </Button>
                           </Tooltip>
@@ -174,7 +237,12 @@ export default function OrderPage() {
                             size="md"
                             onClick={() => handleCancel(item.itemId)}
                           >
-                            <Button isIconOnly color="default" size="sm">
+                            <Button
+                              isIconOnly
+                              color="default"
+                              isLoading={abortOrderMutation.isPending}
+                              size="sm"
+                            >
                               <LuX />
                             </Button>
                           </Tooltip>
