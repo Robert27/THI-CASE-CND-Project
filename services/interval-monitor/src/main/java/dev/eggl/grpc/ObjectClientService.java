@@ -16,10 +16,9 @@ public class ObjectClientService {
     ObjectService objects;
 
     public Uni<DayUsersResponse> findAllDayUsers(int weekDay, List<Integer> userIds) {
-        System.out.println("Starting gRPC call to findAllDayUsers for weekday " + weekDay + " and user IDs " + userIds);
         StorageObjectsProto.DayUsersRequest request = StorageObjectsProto.DayUsersRequest.newBuilder()
-                .setWeekDay(weekDay) // Wochentag setzen
-                .addAllUserIds(userIds) // Benutzer-IDs hinzufügen
+                .setWeekDay(weekDay)
+                .addAllUserIds(userIds)
                 .build();
 
         return objects.findAllDayUsers(request)
@@ -28,12 +27,10 @@ public class ObjectClientService {
                 })
                 .onItem().transform(reply -> {
 
-                    // Umwandlung der Antwort in benutzerdefinierte JSON-Struktur
                     List<UserObjectIds> userObjectIdsList = reply.getUserObjectIdsList().stream()
                             .map(protoUserObjectIds -> new UserObjectIds(
                                     protoUserObjectIds.getUserId(),
-                                    protoUserObjectIds.getObjectIdsList()
-                            ))
+                                    protoUserObjectIds.getObjectIdsList()))
                             .collect(Collectors.toList());
 
                     return new DayUsersResponse(userObjectIdsList);
@@ -42,6 +39,7 @@ public class ObjectClientService {
                     System.err.println("Error occurred during gRPC call: " + throwable.getMessage());
                 });
     }
+
     public static class DayUsersResponse {
         public List<UserObjectIds> userObjectIds;
 

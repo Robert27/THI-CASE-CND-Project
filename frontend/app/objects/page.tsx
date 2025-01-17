@@ -1,32 +1,38 @@
 "use client";
 
-import { LuEllipsisVertical, LuSquarePen, LuTrash2 } from "react-icons/lu";
 import React, { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { LuPen, LuTrash2 } from "react-icons/lu";
 import {
   Button,
-  Chip,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
   Alert,
-  Spinner,
   Table,
   TableBody,
   TableCell,
   TableColumn,
   TableHeader,
   TableRow,
+  Chip,
+  Tooltip,
 } from "@nextui-org/react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 
+import ErrorDisplay from "@/components/ErrorDisplay";
+import PageHeader from "@/components/PageHeader";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import CreateObjectModal from "@/components/CreateObjectModal";
 import EditObjectModal from "@/components/EditObjectModal";
 import { StorageObject, Category } from "@/types";
 
-export default function PricingPage() {
-  const { data: session, status } = useSession();
+export default function ObjectsPage() {
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin");
+    },
+  });
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editObject, setEditObject] = useState<StorageObject | null>(null);
@@ -39,7 +45,7 @@ export default function PricingPage() {
     queryFn: async () => {
       const res = await fetch("http://localhost:4000/rest/object/category");
 
-      console.log("res", res);
+      if (!res.ok) throw new Error("Failed to fetch categories");
 
       return res.json();
     },
@@ -59,9 +65,7 @@ export default function PricingPage() {
         },
       });
 
-      if (!res.ok) {
-        throw new Error("Failed to fetch objects");
-      }
+      if (!res.ok) throw new Error("Failed to fetch objects");
 
       return res.json();
     },
@@ -104,10 +108,6 @@ export default function PricingPage() {
       setAlertMessage(error.message);
     },
   });
-
-  const handleCreateNew = () => {
-    setIsModalOpen(true);
-  };
 
   const handleSubmit = (newObjectData: Omit<StorageObject, "id">) => {
     createObjectMutation.mutate(newObjectData);
@@ -211,101 +211,108 @@ export default function PricingPage() {
     setAlertMessage(null);
   };
 
-  const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const weekdays = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
+  if (isLoading) return <LoadingSpinner />;
+  if (fetchError) return <ErrorDisplay error={fetchError as Error} />;
 
   return (
-    <div className="w-full px-4 ">
-      <div className="sm:flex sm:items-center">
-        <div className="sm:flex-auto text-left">
-          <h1 className="text-3xl font-semibold text-primary">Your Objects</h1>
-          <p className="mt-2 text-m text-default-500">
-            Manage your objects and their categories
-          </p>
-        </div>
-        <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-          <Button color="primary" onPress={handleCreateNew}>
-            + New Object
-          </Button>
-        </div>
-      </div>
+    <div className="min-h-screen ">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="p-6 space-y-6">
+          {/* Header Section */}
+          <div className="mb-8">
+            <PageHeader
+              description="Manage your objects and their categories"
+              title="Your Objects"
+            />
+          </div>
 
-      {fetchError && (
-        <Alert
-          color="danger"
-          description={fetchError.message}
-          title="Error"
-          onClose={handleAlertClose}
-        />
-      )}
+          {alertMessage && (
+            <Alert
+              className="rounded-lg"
+              color="danger"
+              onClose={() => setAlertMessage(null)}
+            >
+              {alertMessage}
+            </Alert>
+          )}
 
-      {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <Spinner size="lg" />
-        </div>
-      ) : (
-        <div className="mt-8 flow-root">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle">
-              <Table aria-label="Objects Table" selectionMode="none">
-                <TableHeader>
-                  <TableColumn>Name</TableColumn>
-                  <TableColumn>Category</TableColumn>
-                  <TableColumn>Quantity</TableColumn>
-                  <TableColumn>Weekday</TableColumn>
-                  <TableColumn>Actions</TableColumn>
-                </TableHeader>
-                <TableBody items={items}>
-                  {(item) => (
-                    <TableRow key={item.id} onClick={() => handleEdit(item)}>
-                      <TableCell>{item.name}</TableCell>
-                      <TableCell>
-                        <Chip color="primary">
-                          {categories.find((c) => c.id === item.categoryId)
-                            ?.name || "Unknown"}
-                        </Chip>
-                      </TableCell>
-                      <TableCell>{item.quantity}</TableCell>
-                      <TableCell>{weekdays[item.weekday]}</TableCell>
-                      <TableCell>
-                        <Dropdown className="bg-background border-1 border-default-200">
-                          <DropdownTrigger>
-                            <Button
-                              isIconOnly
-                              radius="full"
-                              size="sm"
-                              variant="light"
-                            >
-                              <LuEllipsisVertical size={18} />
-                            </Button>
-                          </DropdownTrigger>
-                          <DropdownMenu>
-                            <DropdownItem
-                              key="edit"
-                              endContent={<LuSquarePen size={16} />}
-                              onPress={() => handleEdit(item)}
-                            >
-                              Edit
-                            </DropdownItem>
-                            <DropdownItem
-                              key="delete"
-                              className="text-danger"
-                              color="danger"
-                              endContent={<LuTrash2 color="danger" size={16} />}
-                              onPress={() => handleDelete(item.id)}
-                            >
-                              Delete
-                            </DropdownItem>
-                          </DropdownMenu>
-                        </Dropdown>
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+          {/* Button above table */}
+          <div className="flex justify-end mb-4">
+            <Button
+              color="primary"
+              size="lg"
+              onPress={() => setIsModalOpen(true)}
+            >
+              + New Object
+            </Button>
+          </div>
+
+          <div className="overflow-x-auto">
+            <Table
+              aria-label="Objects table"
+              className="w-full"
+              selectionMode="none"
+            >
+              <TableHeader>
+                <TableColumn>Name</TableColumn>
+                <TableColumn>Category</TableColumn>
+                <TableColumn>Quantity</TableColumn>
+                <TableColumn>Weekday</TableColumn>
+                <TableColumn>Actions</TableColumn>
+              </TableHeader>
+              <TableBody items={items}>
+                {(item) => (
+                  <TableRow key={item.id} onClick={() => handleEdit(item)}>
+                    <TableCell>{item.name}</TableCell>
+                    <TableCell>
+                      {categories.find((c) => c.id === item.categoryId)?.name ||
+                        "Unknown"}
+                    </TableCell>
+                    <TableCell>{item.quantity}</TableCell>
+                    <TableCell>
+                      <Chip color="primary" size="sm">
+                        {weekdays[item.weekday]}
+                      </Chip>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Tooltip
+                          content="Edit this item"
+                          size="md"
+                          onClick={() => handleEdit(item)}
+                        >
+                          <Button isIconOnly color="primary" size="sm">
+                            <LuPen />
+                          </Button>
+                        </Tooltip>
+                        <Tooltip
+                          content="Delete this item"
+                          size="md"
+                          onClick={() => handleDelete(item.id)}
+                        >
+                          <Button isIconOnly color="default" size="sm">
+                            <LuTrash2 />
+                          </Button>
+                        </Tooltip>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
           </div>
         </div>
-      )}
+      </div>
 
       <CreateObjectModal
         key={String(isModalOpen)}
@@ -327,7 +334,7 @@ export default function PricingPage() {
         isOpen={isEditModalOpen}
         onAlertClose={handleAlertClose}
         onClose={() => {
-          setIsModalOpen(false);
+          setIsEditModalOpen(false);
           setAlertMessage(null);
         }}
         onSubmit={handleEditSubmit}

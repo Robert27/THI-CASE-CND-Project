@@ -74,9 +74,9 @@ create table if not exists interval_status
 (
     id         serial
         primary key,
-    user_id  integer   not null
-        constraint fk_user
-            references users on delete cascade,
+    object_id integer   not null
+        constraint fk_object
+            references objects on delete cascade,
     created_at timestamp not null
 );
 

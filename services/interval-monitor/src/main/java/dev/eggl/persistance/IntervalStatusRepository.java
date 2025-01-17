@@ -15,36 +15,32 @@ import java.util.List;
 @ApplicationScoped
 public class IntervalStatusRepository implements PanacheRepositoryBase<IntervalStatus, Integer> {
 
-    public List<Integer> findMissingEntriesForUsersAndDay(List<Integer> userIds, LocalDate date) {
-        // Convert the given LocalDate to a start/end Instant for the day
+    public List<Integer> findMissingObjectsForUserAndDay(Integer userId, List<Integer> objectIds, LocalDate date) {
         Instant startOfDay = date.atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant endOfDay = date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant();
 
-        // Find all userIds that DO have an entry for the given LocalDate
         TypedQuery<Integer> query = getEntityManager().createQuery(
-                "SELECT DISTINCT i.userId FROM IntervalStatus i " +
-                        "WHERE i.userId IN :userIds " +
+                "SELECT DISTINCT i.objectId FROM IntervalStatus i " +
+                        "WHERE i.objectId IN :objectIds " +
                         "  AND i.createdAt >= :startOfDay " +
                         "  AND i.createdAt < :endOfDay",
                 Integer.class);
-        query.setParameter("userIds", userIds);
+        query.setParameter("objectIds", objectIds);
         query.setParameter("startOfDay", Date.from(startOfDay));
         query.setParameter("endOfDay", Date.from(endOfDay));
 
-        List<Integer> existingUserIds = query.getResultList();
+        List<Integer> existingObjectIds = query.getResultList();
+        List<Integer> missingObjectIds = new ArrayList<>(objectIds);
+        missingObjectIds.removeAll(existingObjectIds);
 
-        // Create a new list for missing user IDs
-        List<Integer> missingUserIds = new ArrayList<>(userIds);
-        missingUserIds.removeAll(existingUserIds);
-
-        return missingUserIds;
+        return missingObjectIds;
     }
 
     @Transactional
-    public void storeConfirmedUserId(int userId) {
+    public void storeConfirmedObjectId(int objectId, Date date) {
         IntervalStatus intervalStatus = new IntervalStatus();
-        intervalStatus.setUserId(userId);
-        intervalStatus.setCreatedAt(new Date());
+        intervalStatus.setObjectId(objectId);
+        intervalStatus.setCreatedAt(date);
         persist(intervalStatus);
     }
 }

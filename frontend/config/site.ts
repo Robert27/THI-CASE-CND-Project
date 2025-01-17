@@ -25,6 +25,6 @@ export const siteConfig = {
   ],
   links: {
     github: "https://github.com/Robert27/THI-CASE-CND-Project",
-    docs: "https://case.eggl.dev",
+    docs: "http://localhost:4000/docs",
   },
 };

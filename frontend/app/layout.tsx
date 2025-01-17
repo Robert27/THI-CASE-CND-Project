@@ -42,12 +42,14 @@ export default function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex flex-col h-screen">
+          <div className="relative">
             <Navbar />
-            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
-              {children}
-            </main>
+            <main>{children}</main>
             <footer className="w-full flex items-center justify-center py-3">
+              <span className="text-sm text-center text-default-500">
+                © {new Date().getFullYear()} {siteConfig.name} - A student
+                project at THI
+              </span>
               <Link
                 isExternal
                 className="flex items-center gap-1 text-current"

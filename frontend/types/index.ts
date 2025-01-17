@@ -27,3 +27,15 @@ export type EditObjectModalProps = {
   categories: Category[];
   editObject: StorageObject | null;
 };
+
+export interface Order {
+  itemId: number;
+  itemName: string;
+  url: string;
+  description: string;
+  price: number | null;
+  orderQuantity: number;
+  availabilityQuantity: number;
+  cycleDate: string;
+  statusMessage: string;
+}

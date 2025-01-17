@@ -84,7 +84,7 @@ services:
       GRPC_ORDERLIST_PORT: 9093
       GRPC_ORDERLIST_HOST: order-list
     ports:
-      - "8083:8080"
+      - "8083:8081"
     depends_on:
       database:
         condition: service_healthy

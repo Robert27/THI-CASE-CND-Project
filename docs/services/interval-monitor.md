@@ -13,23 +13,39 @@ Der **Intervall-Monitoring-Service** ist ein Dienst zur Überwachung des Bestell
 
 ### Funktionsweise
 
-Der Service kommuniziert mit dem **Nutzerverwaltungsservice**, um eine Liste aller Nutzer zu erhalten. Diese Liste wird anschließend mit der Log-Datenbanktabelle abgeglichen. Dadurch werden nur die Nutzer berücksichtigt, die am aktuellen Tag noch keine Bestellung getätigt haben.
+Der Service arbeitet in folgenden Schritten:
 
-Die nachfolgenden Schritte erfolgen in **Batch-Operationen**, um die Belastung der verbundenen Services zu minimieren:
+1. Abruf aller Nutzer-IDs vom **Nutzerverwaltungsservice**.
+2. Verarbeitung der Nutzer in 5er-Batches zur Lastverteilung.
+3. Für jeden Batch: Abruf der zugehörigen Objekt-IDs vom **Objekt-Management-Service**. Dabei wird direkt der aktuelle Tag übergeben, um nur die Objekte zu erhalten, die an diesem Tag fällig sind.
+4. Prüfung jedes Nutzers auf fehlende Objekte durch Abgleich mit der Log-Tabelle.
+5. Bei fehlenden Objekten: Benachrichtigung des Bestellservices und Aktualisierung der Log-Tabelle
 
-1. Für die verbleibenden Nutzer wird über den **Objekt-Management-Service** geprüft, ob eine Bestellung fällig ist.
-2. Die Liste der fälligen Bestellungen wird pro Nutzer an den **Bestellservice** übergeben.
-3. Bei Eingang einer Bestellbestätigung wird der jeweilige Nutzer in der Log-Datenbanktabelle als „für den heutigen Tag bestellt“ markiert.
+### Die Rolle der Log-Tabelle
 
-### Warum wird die Nutzerliste abgefragt?
+Die Log-Tabelle erfüllt mehrere wichtige Funktionen:
 
-Es stellt sich die Frage, warum nicht direkt alle heutigen Bestellungen abgefragt und anschließend durch die Logs gefiltert werden.  
-Der Grund liegt in der Kombination aus **vorherigem Filtern** und **Batch-Operationen**, wodurch:
+1. **Idempotenz**: Auch wenn der Bestellservice doppelte Bestellungen ablehnt, stellt die Log-Tabelle eine zusätzliche Sicherheitsschicht dar
+2. **Performance**: Schnelle lokale Prüfung ohne Netzwerkanfragen an den Bestellservice
+3. **Audit-Trail**: Historische Nachverfolgung aller übergebenen Bestellungen
+4. **Fehleranalyse**: Ermöglicht die Identifikation von Problemen im Bestellprozess
 
-- die Belastung der verbundenen Services reduziert wird, und
-- eine stärkere Entkopplung zwischen den Services erreicht wird.
+Diese Architektur gewährleistet Zuverlässigkeit und Effizienz bei der Verarbeitung der Bestellungen.
 
-Diese Architektur stellt sicher, dass der Prozess effizient und skalierbar bleibt.
+### REST API für Mock-Modus
+
+Der Service bietet Endpunkte für einen Mock-Modus, der für Demonstrations- und Testzwecke verwendet werden kann.
+Im Mock-Modus wird ein benutzerdefiniertes Datum für die Intervallprüfung verwendet und die Prüfung erfolgt alle 15 Sekunden statt alle 4 Stunden.
+
+#### Endpunkte
+
+| Method | Path          | Description                                           | Content-Type     |
+| ------ | ------------- | ----------------------------------------------------- | ---------------- |
+| GET    | /mock/enabled | Prüft, ob der Mock-Modus aktiviert ist                | application/json |
+| GET    | /mock         | Ruft das aktuell konfigurierte Mock-Datum ab          | application/json |
+| POST   | /mock/date    | Setzt ein neues Datum für den Mock-Modus (YYYY-MM-DD) | text/plain       |
+
+> **Hinweis**: Der Mock-Modus ist nur für Entwicklungs- und Testzwecke gedacht und sollte in Produktivumgebungen deaktiviert sein. Es findet keine Überprüfung der Authentifizierung statt.
 
 ## Start ohne Docker
 

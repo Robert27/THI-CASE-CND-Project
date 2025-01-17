@@ -1,8 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { Alert, Button, Input } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+
+import { AuthLayout } from "@/components/auth/AuthLayout";
 
 export default function AccountPage() {
   const { data: session } = useSession();
@@ -10,6 +14,8 @@ export default function AccountPage() {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
+  const router = useRouter();
 
   // Change Password Mutation
   const changePwMutation = useMutation({
@@ -19,11 +25,12 @@ export default function AccountPage() {
     }) => {
       console.log("Payload:", payload);
       const res = await fetch(
-        `http://localhost:4000/rest/user/${userId}/changepw`,
+        `http://localhost:4000/rest/user/user/${userId}/changepw`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.accessToken}`,
           },
           body: JSON.stringify(payload),
         }
@@ -34,23 +41,34 @@ export default function AccountPage() {
 
         throw new Error(errorData.message || "Password change failed");
       }
+      const data = await res.json();
 
-      return res.json();
+      console.log("Data:", data);
+      if (!data.success === true) {
+        throw new Error("Password change failed");
+      }
+
+      return data;
     },
     onSuccess: () => {
+      setIsError(false);
       setMessage("Password updated successfully!");
     },
     onError: (err: any) => {
       setMessage(err.message);
+      setIsError(true);
     },
   });
 
   // Delete Account Mutation
   const deleteAccountMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch(`http://localhost:4000/rest/user/${userId}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `http://localhost:4000/rest/user/user/${userId}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!res.ok) {
         const errorData = await res.json();
@@ -59,10 +77,15 @@ export default function AccountPage() {
       }
     },
     onSuccess: () => {
-      setMessage("Account deleted!");
+      signOut({ redirect: false });
+      localStorage.removeItem("next-auth.session-token");
+      router.push("/");
+
+      toast.success("Account deleted successfully");
     },
     onError: (err: any) => {
       setMessage(err.message);
+      setIsError(true);
     },
   });
 
@@ -80,39 +103,56 @@ export default function AccountPage() {
   };
 
   return (
-    <div className="p-8 flex flex-col items-center gap-4">
-      <h1 className="text-3xl font-semibold">User Account</h1>
-      {message && (
-        <Alert
-          color="primary"
-          description={message}
-          title="Notification"
-          onClose={() => setMessage("")}
-        />
-      )}
-      <form
-        className="flex flex-col gap-4 w-full max-w-md"
-        onSubmit={handleChangePassword}
-      >
-        <Input
-          required
-          label="Old Password"
-          type="password"
-          value={oldPassword}
-          onChange={(e) => setOldPassword(e.target.value)}
-        />
-        <Input
-          required
-          label="New Password"
-          type="password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-        />
-        <Button type="submit">Change Password</Button>
+    <AuthLayout
+      errorMessage={message}
+      isError={isError}
+      subtitle="Manage your account settings and password"
+      title="Account Settings"
+    >
+      <form className="space-y-8" onSubmit={handleChangePassword}>
+        <div className="space-y-4">
+          <Input
+            required
+            className="hover:scale-101 transition-transform"
+            classNames={{
+              input: "text-base",
+              inputWrapper: "py-2",
+            }}
+            label="Old Password"
+            type="password"
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+          />
+          <Input
+            required
+            className="hover:scale-101 transition-transform"
+            classNames={{
+              input: "text-base",
+              inputWrapper: "py-2",
+            }}
+            label="New Password"
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+        </div>
+        <div className="space-y-4">
+          <Button
+            className="w-full bg-gradient-to-r from-primary to-secondary text-white font-semibold 
+                     py-3 rounded-lg transition-transform hover:scale-102 active:scale-98"
+            type="submit"
+          >
+            Change Password
+          </Button>
+          <Button
+            className="w-full bg-danger text-white font-semibold py-3 rounded-lg 
+                     transition-transform hover:scale-102 active:scale-98"
+            onPress={handleDeleteAccount}
+          >
+            Delete Account
+          </Button>
+        </div>
       </form>
-      <Button color="danger" onPress={handleDeleteAccount}>
-        Delete Account
-      </Button>
-    </div>
+    </AuthLayout>
   );
 }

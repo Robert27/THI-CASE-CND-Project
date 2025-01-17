@@ -1,14 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Alert, Button, Input } from "@nextui-org/react";
-import { LuChevronRight } from "react-icons/lu";
 import { toast } from "react-toastify";
 
-import { Logo } from "@/components/icons";
+import { AuthLayout } from "@/components/auth/AuthLayout";
+import { AuthForm } from "@/components/auth/AuthForm";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -44,71 +42,25 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="w-full max-w-md p-8">
-        <div className="flex justify-center mb-8">
-          <Logo size={160} />
-        </div>
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold">SmartOrder Login</h1>
-          <p>Enter your official username below to login to your account</p>
-        </div>
-        <div aria-atomic="true" aria-live="polite" className="mt-4 pb-6">
-          {errorMessage && (
-            <Alert
-              color="danger"
-              description={errorMessage}
-              title="Login failed"
-            />
-          )}
-        </div>
-        <form onSubmit={formSubmitted}>
-          <div className="grid gap-4">
-            <div className="mb-4">
-              <Input
-                required
-                id="username"
-                name="username"
-                placeholder="user"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-            <div className="mb-4">
-              <Input
-                required
-                id="password"
-                name="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-          </div>
-          <LoginButton pending={pending} />
-        </form>
-        <div className="mt-4 text-center text-sm">
-          New user?{" "}
-          <Link className="underline" href="register">
-            Register here
-          </Link>
-        </div>
-      </div>
-    </div>
+    <AuthLayout
+      errorMessage={errorMessage}
+      subtitle="Enter your credentials to access your account"
+      title="SmartOrder Login"
+    >
+      <AuthForm
+        bottomLinkHref="/register"
+        bottomLinkText="Register here"
+        bottomText="New user?"
+        buttonText="Log in"
+        isPending={pending}
+        password={password}
+        setPassword={setPassword}
+        setUsername={setUsername}
+        username={username}
+        onSubmit={formSubmitted}
+      />
+    </AuthLayout>
   );
 };
-
-function LoginButton({ pending }: { pending: boolean }) {
-  return (
-    <Button
-      aria-disabled={pending}
-      className="w-1/2 mt-4 mx-auto flex justify-center"
-      type="submit"
-    >
-      Log in <LuChevronRight className="ml-auto" />
-    </Button>
-  );
-}
 
 export default Login;

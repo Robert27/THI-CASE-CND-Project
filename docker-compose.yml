@@ -60,7 +60,9 @@ services:
         condition: service_healthy
 
   interval-monitor:
-    image: ghcr.io/robert27/thi-case-cnd-project/interval-monitor:latest
+    build:
+      context: ./services/interval-monitor/
+      dockerfile: src/main/docker/Dockerfile.jvm
     environment:
       DB_USERNAME: postgres
       DB_PASSWORD: SecReT-PasSwOrD
@@ -74,21 +76,24 @@ services:
       GRPC_USERS_HOST: userservice
       GRPC_ORDERLIST_PORT: 9093
       GRPC_ORDERLIST_HOST: order-list
+      MOCK_ENABLED: true
+    ports:
+      - "8083:8081"
     depends_on:
       database:
         condition: service_healthy
 
-  frontend:
-    image: ghcr.io/robert27/thi-case-cnd-project/frontend:latest
-    environment:
-      JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JEqgNqMzO+9QnknqkEK27kaJ8iGvnGFyVFtzwUQuIdlZPjDr5U6SABgljdVGdZnpvKaK3ZWtzQjnXVLgpI80l+2Lg+bVFX3mqQOlCwca3QLrfzmEUiK4tTrIGgtQnYBJVnXUWZKl2qYxDlMNwKG+d/FDZTnnierjiy3aZCLZtnVnQFH0SRolMJLECGeOufh8yep+8ClHHO57jvTLRk4T0EKakwqIRa5nQFO/WBczfZWsVNXUH7epxax6n1yklquchXtgT1JOjj/2w3IbmMz5KN0muPJfU9cfct18QUtvHzYor5CyOGeOxxzinhanlZAyfOOSU1bMXG7Uev7hENtQQIDAQAB-----END PUBLIC KEY-----"
-      NEXTAUTH_SECRET: 9n0Gnw+JJ64DsMSXdejaLVNNlLtVzNmhijQlYorTa3Q=
-      NEXTAUTH_URL: http://localhost:4000
-      AUTH_SERVICE_URL: http://authservice:8081/login
-    expose:
-      - 3000
-    depends_on:
-      - authservice
+  # frontend:
+  #   image: ghcr.io/robert27/thi-case-cnd-project/frontend:latest
+  #   environment:
+  #     JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JEqgNqMzO+9QnknqkEK27kaJ8iGvnGFyVFtzwUQuIdlZPjDr5U6SABgljdVGdZnpvKaK3ZWtzQjnXVLgpI80l+2Lg+bVFX3mqQOlCwca3QLrfzmEUiK4tTrIGgtQnYBJVnXUWZKl2qYxDlMNwKG+d/FDZTnnierjiy3aZCLZtnVnQFH0SRolMJLECGeOufh8yep+8ClHHO57jvTLRk4T0EKakwqIRa5nQFO/WBczfZWsVNXUH7epxax6n1yklquchXtgT1JOjj/2w3IbmMz5KN0muPJfU9cfct18QUtvHzYor5CyOGeOxxzinhanlZAyfOOSU1bMXG7Uev7hENtQQIDAQAB-----END PUBLIC KEY-----"
+  #     NEXTAUTH_SECRET: 9n0Gnw+JJ64DsMSXdejaLVNNlLtVzNmhijQlYorTa3Q=
+  #     NEXTAUTH_URL: http://localhost:4000
+  #     AUTH_SERVICE_URL: http://authservice:8081/login
+  #   expose:
+  #     - 3000
+  #   depends_on:
+  #     - authservice
 
   nginx:
     image: nginx:latest
@@ -102,7 +107,7 @@ services:
       - authservice
       - object-management
       - interval-monitor
-      - frontend
+      # - frontend
 
   order-list:
     image: ghcr.io/robert27/thi-case-cnd-project/order-list:latest
@@ -126,7 +131,6 @@ services:
   url-validator:
     image: ghcr.io/robert27/thi-case-cnd-project/url-validator:latest
     ports:
-      - "8085:8080"
       - "9092:9092"
 
   get-item-info:

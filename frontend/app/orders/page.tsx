@@ -3,52 +3,200 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import {
+  LuCircleCheck,
+  LuPen,
+  LuShoppingCart,
+  LuTriangleAlert,
+  LuX,
+} from "react-icons/lu";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableColumn,
+  TableRow,
+  TableCell,
+  Button,
+  Tooltip,
+  Card,
+  CardBody,
+} from "@nextui-org/react";
+
+import ErrorDisplay from "@/components/ErrorDisplay";
+import PageHeader from "@/components/PageHeader";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { Order } from "@/types";
+
+type GroupedOrders = {
+  [key: string]: Order[];
+};
 
 export default function OrderPage() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin");
+    },
+  });
 
   const {
     data: orders,
     error,
     isLoading,
-  } = useQuery({
+  } = useQuery<Order[]>({
     queryKey: ["orders"],
     queryFn: async () => {
-      if (!session?.user) throw new Error("No token found");
       const res = await fetch("http://localhost:4000/rest/order/orders", {
         headers: {
-          Authorization: `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session?.accessToken}`,
         },
       });
 
-      if (!res.ok) {
-        throw new Error("Failed to fetch orders");
-      }
+      if (!res.ok) throw new Error("Failed to fetch orders");
 
       return res.json();
     },
     enabled: status === "authenticated",
   });
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const handleBuy = (itemId: number) => {
+    console.log("Buy item:", itemId);
+  };
 
-  if (error) {
-    return <div>Error: {(error as Error).message}</div>;
-  }
+  const handleCancel = (itemId: number) => {
+    console.log("Cancel item:", itemId);
+  };
+
+  const groupOrdersByDate = (orders: Order[]): GroupedOrders => {
+    return (
+      orders?.reduce((groups: GroupedOrders, order) => {
+        const date = new Date(order.cycleDate).toLocaleDateString("de-DE", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
+
+        if (!groups[date]) {
+          groups[date] = [];
+        }
+        groups[date].push(order);
+
+        return groups;
+      }, {}) || {}
+    );
+  };
+
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorDisplay error={error as Error} />;
+
+  const groupedOrders = groupOrdersByDate(orders || []);
+  const sortedDates = Object.keys(groupedOrders).sort((a, b) => {
+    const dateA = new Date(a.split(".").reverse().join("-"));
+    const dateB = new Date(b.split(".").reverse().join("-"));
+
+    return dateA.getTime() - dateB.getTime();
+  });
 
   return (
-    <div>
-      <div className="sm:flex-auto text-left">
-        <h1 className="text-4xl font-semibold text-primary">Order Lists</h1>
-        <p className="mt-2 text-m text-default-500">
-          View and confirm your orders here.
-        </p>
-      </div>
-      <pre className="mt-4 bg-gray-100 p-4 rounded">
-        {JSON.stringify(orders, null, 2)}
-      </pre>
+    <div className="max-w-7xl mx-auto p-4 space-y-6">
+      <PageHeader
+        description="View and confirm your orders here."
+        title="Order Lists"
+      />
+
+      {sortedDates.length === 0 ? (
+        <Card className="max-w-screen-md mx-auto space-y-4">
+          <CardBody className="text-center py-8">
+            <h3 className="text-xl font-semibold mb-2">No Orders Found</h3>
+            <p className="text-default-500">
+              No due orders found yet. Please check back later.
+              <br />
+              To create objects go to the objects page and assign them to a week
+              day.
+            </p>
+          </CardBody>
+        </Card>
+      ) : (
+        <div className="space-y-6">
+          {sortedDates.map((date) => (
+            <div key={date} className="space-y-2">
+              <h3 className="text-lg font-semibold">Cycle Date: {date}</h3>
+              <Table
+                aria-label="Orders table"
+                className="w-full"
+                selectionMode="none"
+              >
+                <TableHeader>
+                  <TableColumn>Item Name</TableColumn>
+                  <TableColumn>Description</TableColumn>
+                  <TableColumn>Order Quantity</TableColumn>
+                  <TableColumn>Status</TableColumn>
+                  <TableColumn>Actions</TableColumn>
+                </TableHeader>
+                <TableBody items={groupedOrders[date]}>
+                  {(item) => (
+                    <TableRow key={item.itemId}>
+                      <TableCell>{item.itemName}</TableCell>
+                      <TableCell>{item.description}</TableCell>
+                      <TableCell>
+                        {item.orderQuantity + " / " + item.availabilityQuantity}
+                      </TableCell>
+                      <TableCell>
+                        <Tooltip content={item.statusMessage}>
+                          {item.statusMessage.includes("Fehler") ? (
+                            <Button content="error" size="sm">
+                              <p className="text-warning">Error</p>
+                              <LuTriangleAlert className="text-warning text-xl" />
+                            </Button>
+                          ) : (
+                            <Button content="success" size="sm">
+                              <p className="text-success">Success</p>
+                              <LuCircleCheck className="text-success text-xl" />
+                            </Button>
+                          )}
+                        </Tooltip>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Tooltip
+                            content="Buy this item"
+                            size="md"
+                            onClick={() => handleBuy(item.itemId)}
+                          >
+                            <Button isIconOnly color="primary" size="sm">
+                              <LuShoppingCart />
+                            </Button>
+                          </Tooltip>
+                          <Tooltip
+                            content="Cancel this item"
+                            size="md"
+                            onClick={() => handleCancel(item.itemId)}
+                          >
+                            <Button isIconOnly color="default" size="sm">
+                              <LuX />
+                            </Button>
+                          </Tooltip>
+                          <Tooltip
+                            content="Cancel and edit this item"
+                            size="md"
+                            onClick={() => handleCancel(item.itemId)}
+                          >
+                            <Button isIconOnly color="default" size="sm">
+                              <LuPen />
+                            </Button>
+                          </Tooltip>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
