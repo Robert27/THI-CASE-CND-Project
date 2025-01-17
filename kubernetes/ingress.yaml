@@ -17,7 +17,7 @@ spec:
               service:
                 name: docs
                 port:
-                  number: 80
+                  name: docs-http
 
           - path: /rest/user/(.*)
             pathType: Prefix
@@ -25,7 +25,7 @@ spec:
               service:
                 name: userservice
                 port:
-                  number: 8080
+                  name: user-http
 
           - path: /rest/object/(.*)
             pathType: Prefix
@@ -33,7 +33,7 @@ spec:
               service:
                 name: object-management
                 port:
-                  number: 8080
+                  name: object-http
 
           - path: /rest/order/(.*)
             pathType: Prefix
@@ -41,7 +41,7 @@ spec:
               service:
                 name: order-list
                 port:
-                  number: 8082
+                  name: order-http
 
           - path: /rest/auth/(.*)
             pathType: Prefix
@@ -49,7 +49,7 @@ spec:
               service:
                 name: authservice
                 port:
-                  number: 8081
+                  name: auth-http
 
           - path: /rest/interval/(.*)
             pathType: Prefix
@@ -57,7 +57,7 @@ spec:
               service:
                 name: interval-monitor
                 port:
-                  number: 8081
+                  name: interval-http
 
           - path: /(.*)
             pathType: Prefix
@@ -65,4 +65,4 @@ spec:
               service:
                 name: frontend
                 port:
-                  number: 3000
+                  name: frontend-http

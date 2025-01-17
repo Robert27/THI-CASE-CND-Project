@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    io.kompose.service: database-data
+    app: database-data
   name: database-data
 spec:
   accessModes:

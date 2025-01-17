@@ -1,16 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    io.kompose.service: userservice
   name: userservice
 spec:
   ports:
-    - name: "9091"
+    - name: user-grpc
       port: 9091
-      targetPort: 9091
-    - name: "8080"
+    - name: user-http
       port: 8080
-      targetPort: 8080
   selector:
-    io.kompose.service: userservice
+    app: userservice

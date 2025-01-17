@@ -1,68 +1,49 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    io.kompose.service: database
   name: database
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: database
-  strategy:
-    type: Recreate
+      app: database
   template:
     metadata:
       labels:
-        io.kompose.network/thi-case-cnd-projekt-default: "true"
-        io.kompose.service: database
+        app: database
     spec:
       containers:
-        - env:
+        - name: database
+          image: postgres:17.2
+          env:
             - name: POSTGRES_DB
               value: database
             - name: POSTGRES_PASSWORD
               value: SecReT-PasSwOrD
             - name: POSTGRES_USER
               value: postgres
-          image: postgres:17.2
+ 
           livenessProbe:
             exec:
               command:
-                - bash
-                - -c
-                - "pg_isready -U postgres"
+                - pg_isready
+                - -U
+                - postgres
             initialDelaySeconds: 30
-            failureThreshold: 5
             periodSeconds: 10
-            timeoutSeconds: 5
-          readinessProbe:
-            exec:
-              command:
-                - bash
-                - -c
-                - "pg_isready -U postgres"
-            initialDelaySeconds: 5
-            periodSeconds: 5
-          name: database
-          ports:
-            - containerPort: 5432
-              protocol: TCP
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: database-data
             - mountPath: /docker-entrypoint-initdb.d/schema.sql
               name: database-cm1
-              readOnly: true
               subPath: schema.sql
-      restartPolicy: Always
       volumes:
         - name: database-data
           persistentVolumeClaim:
             claimName: database-data
-        - configMap:
+        - name: database-cm1
+          configMap:
+            name: database-cm1
             items:
               - key: schema.sql
                 path: schema.sql
-            name: database-cm1
-          name: database-cm1
