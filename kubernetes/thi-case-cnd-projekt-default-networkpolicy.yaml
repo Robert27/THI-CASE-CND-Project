@@ -1,0 +1,13 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: thi-case-cnd-projekt-default
+spec:
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              io.kompose.network/thi-case-cnd-projekt-default: "true"
+  podSelector:
+    matchLabels:
+      io.kompose.network/thi-case-cnd-projekt-default: "true"
