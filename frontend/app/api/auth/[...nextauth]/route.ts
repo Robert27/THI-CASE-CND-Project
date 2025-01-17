@@ -4,7 +4,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 const AUTH_SERVICE_URL = "/rest/auth/login";
 
-console.log("AUTH_SERVICE_URL:", AUTH_SERVICE_URL);
+console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
 const authOptions = {
   providers: [
     CredentialsProvider({
@@ -15,12 +15,16 @@ const authOptions = {
       },
       async authorize(credentials) {
         console.log("Credentials:", credentials);
-        const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:4000";
+        const baseUrl = process.env.NEXTAUTH_URL || "http://localhost";
+
+        console.log("Base URL:", baseUrl);
         const res = await fetch(`${baseUrl}${AUTH_SERVICE_URL}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(credentials),
         });
+
+        console.log("Response:", res);
         const user = await res.json();
 
         console.log("User:", user);
