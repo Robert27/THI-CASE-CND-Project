@@ -5,34 +5,48 @@ metadata:
     kompose.cmd: kompose convert -f docker-compose.yml -o kubernetes
     kompose.version: 1.35.0 (HEAD)
   labels:
-    io.kompose.service: frontend
-  name: frontend
+    io.kompose.service: order-list
+  name: order-list
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: frontend
+      io.kompose.service: order-list
   template:
     metadata:
       annotations:
         kompose.cmd: kompose convert -f docker-compose.yml -o kubernetes
         kompose.version: 1.35.0 (HEAD)
       labels:
-        io.kompose.service: frontend
+        io.kompose.service: order-list
     spec:
       containers:
         - env:
-            - name: AUTH_SERVICE_URL
-              value: http://authservice:8081/login
+            - name: DB_HOST
+              value: database
+            - name: DB_NAME
+              value: database
+            - name: DB_PASSWORD
+              value: SecReT-PasSwOrD
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USERNAME
+              value: postgres
+            - name: GRPC_OBJECTS_HOST
+              value: object-management
+            - name: GRPC_OBJECTS_PORT
+              value: "9090"
+            - name: GRPC_PRICECHECK_HOST
+              value: get-item-info
+            - name: GRPC_PRICECHECK_PORT
+              value: "9094"
             - name: JWT_PUBLIC_KEY
               value: '-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JEqgNqMzO+9QnknqkEK27kaJ8iGvnGFyVFtzwUQuIdlZPjDr5U6SABgljdVGdZnpvKaK3ZWtzQjnXVLgpI80l+2Lg+bVFX3mqQOlCwca3QLrfzmEUiK4tTrIGgtQnYBJVnXUWZKl2qYxDlMNwKG+d/FDZTnnierjiy3aZCLZtnVnQFH0SRolMJLECGeOufh8yep+8ClHHO57jvTLRk4T0EKakwqIRa5nQFO/WBczfZWsVNXUH7epxax6n1yklquchXtgT1JOjj/2w3IbmMz5KN0muPJfU9cfct18QUtvHzYor5CyOGeOxxzinhanlZAyfOOSU1bMXG7Uev7hENtQQIDAQAB-----END PUBLIC KEY-----'
-            - name: NEXTAUTH_SECRET
-              value: 9n0Gnw+JJ64DsMSXdejaLVNNlLtVzNmhijQlYorTa3Q=
-            - name: NEXTAUTH_URL
-              value: http://localhost:4000
-          image: ghcr.io/robert27/thi-case-cnd-project/frontend:latest
-          name: frontend
+          image: ghcr.io/robert27/thi-case-cnd-project/order-list:latest
+          name: order-list
           ports:
-            - containerPort: 3000
+            - containerPort: 9093
+              protocol: TCP
+            - containerPort: 8082
               protocol: TCP
       restartPolicy: Always

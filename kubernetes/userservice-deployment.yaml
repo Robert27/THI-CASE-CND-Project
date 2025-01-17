@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert -f docker-compose-cloud.yml --out kubernetes
+    kompose.cmd: kompose convert -f docker-compose.yml -o kubernetes
     kompose.version: 1.35.0 (HEAD)
   labels:
     io.kompose.service: userservice
@@ -15,7 +15,7 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose-cloud.yml --out kubernetes
+        kompose.cmd: kompose convert -f docker-compose.yml -o kubernetes
         kompose.version: 1.35.0 (HEAD)
       labels:
         io.kompose.service: userservice
@@ -32,11 +32,11 @@ spec:
               value: "5432"
             - name: DB_USERNAME
               value: postgres
-          image: ghcr.io/robert27/thi-case-cnd-project/user-service:main
+          image: ghcr.io/robert27/thi-case-cnd-project/user-service:latest
           name: userservice
           ports:
-            - containerPort: 8080
+            - containerPort: 9091
               protocol: TCP
-            - containerPort: 9019
+            - containerPort: 8080
               protocol: TCP
       restartPolicy: Always

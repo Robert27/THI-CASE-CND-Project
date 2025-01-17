@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert -f docker-compose-cloud.yml --out kubernetes
+    kompose.cmd: kompose convert -f docker-compose.yml -o kubernetes
     kompose.version: 1.35.0 (HEAD)
   labels:
     io.kompose.service: interval-monitor
@@ -15,7 +15,7 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose-cloud.yml --out kubernetes
+        kompose.cmd: kompose convert -f docker-compose.yml -o kubernetes
         kompose.version: 1.35.0 (HEAD)
       labels:
         io.kompose.service: interval-monitor
@@ -32,11 +32,25 @@ spec:
               value: "5432"
             - name: DB_USERNAME
               value: postgres
+            - name: GRPC_OBJECTS_HOST
+              value: object-management
+            - name: GRPC_OBJECTS_PORT
+              value: "9090"
+            - name: GRPC_ORDERLIST_HOST
+              value: order-list
+            - name: GRPC_ORDERLIST_PORT
+              value: "9093"
+            - name: GRPC_USERS_HOST
+              value: userservice
+            - name: GRPC_USERS_PORT
+              value: "9091"
             - name: JWT_PUBLIC_KEY
               value: '-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JEqgNqMzO+9QnknqkEK27kaJ8iGvnGFyVFtzwUQuIdlZPjDr5U6SABgljdVGdZnpvKaK3ZWtzQjnXVLgpI80l+2Lg+bVFX3mqQOlCwca3QLrfzmEUiK4tTrIGgtQnYBJVnXUWZKl2qYxDlMNwKG+d/FDZTnnierjiy3aZCLZtnVnQFH0SRolMJLECGeOufh8yep+8ClHHO57jvTLRk4T0EKakwqIRa5nQFO/WBczfZWsVNXUH7epxax6n1yklquchXtgT1JOjj/2w3IbmMz5KN0muPJfU9cfct18QUtvHzYor5CyOGeOxxzinhanlZAyfOOSU1bMXG7Uev7hENtQQIDAQAB-----END PUBLIC KEY-----'
-          image: ghcr.io/robert27/thi-case-cnd-project/interval-monitor:main
+            - name: MOCK_ENABLED
+              value: "true"
+          image: interval-monitor
           name: interval-monitor
           ports:
-            - containerPort: 8080
+            - containerPort: 8081
               protocol: TCP
       restartPolicy: Always

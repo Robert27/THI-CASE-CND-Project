@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert -f docker-compose-cloud.yml --out kubernetes
+    kompose.cmd: kompose convert -f docker-compose.yml -o kubernetes
     kompose.version: 1.35.0 (HEAD)
   labels:
     io.kompose.service: database
@@ -17,7 +17,7 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose-cloud.yml --out kubernetes
+        kompose.cmd: kompose convert -f docker-compose.yml -o kubernetes
         kompose.version: 1.35.0 (HEAD)
       labels:
         io.kompose.service: database
@@ -34,9 +34,7 @@ spec:
           livenessProbe:
             exec:
               command:
-                - pg_isready
-                - -U
-                - postgres
+                - pg_isready -U postgres
             failureThreshold: 5
             periodSeconds: 5
             timeoutSeconds: 10

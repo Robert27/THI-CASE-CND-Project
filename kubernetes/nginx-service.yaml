@@ -5,12 +5,12 @@ metadata:
     kompose.cmd: kompose convert -f docker-compose.yml -o kubernetes
     kompose.version: 1.35.0 (HEAD)
   labels:
-    io.kompose.service: database
-  name: database
+    io.kompose.service: nginx
+  name: nginx
 spec:
   ports:
-    - name: "5432"
-      port: 5432
-      targetPort: 5432
+    - name: "4000"
+      port: 4000
+      targetPort: 4000
   selector:
-    io.kompose.service: database
+    io.kompose.service: nginx

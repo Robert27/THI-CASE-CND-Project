@@ -5,15 +5,15 @@ metadata:
     kompose.cmd: kompose convert -f docker-compose.yml -o kubernetes
     kompose.version: 1.35.0 (HEAD)
   labels:
-    io.kompose.service: object-management
-  name: object-management
+    io.kompose.service: get-item-info
+  name: get-item-info
 spec:
   ports:
     - name: "8080"
       port: 8080
       targetPort: 8080
-    - name: "9090"
-      port: 9090
-      targetPort: 9090
+    - name: "9094"
+      port: 9094
+      targetPort: 9094
   selector:
-    io.kompose.service: object-management
+    io.kompose.service: get-item-info
