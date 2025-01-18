@@ -7,11 +7,8 @@ RUN gradle dependencies --no-daemon
 COPY src /tmp/src/
 RUN gradle build -x test --no-daemon
 
-FROM eclipse-temurin:23-jre-alpine AS app
-RUN apt-get update && \
-    apt-get install -y curl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+FROM eclipse-temurin:23-jre-alpine
+RUN apk --no-cache add bash curl
 WORKDIR /app
 COPY --from=builder /tmp/build/libs/*.jar /app/app.jar
 EXPOSE 8080
