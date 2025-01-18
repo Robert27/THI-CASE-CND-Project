@@ -31,7 +31,6 @@ spec:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ quote .Values.kubernetesClusterDomain }}
         image: {{ .Values.userservice.image }}
-        serviceAccountName: puller-service-account
         name: userservice
         resources: {}
       restartPolicy: Always

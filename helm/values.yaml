@@ -19,6 +19,7 @@ authservice:
     targetPort: 0
   replicas: 1
   type: ClusterIP
+
 database:
   database: 
     image: postgres:17.2
@@ -136,4 +137,3 @@ userservice:
   replicas: 1
   type: ClusterIP
   image: ghcr.io/robert27/thi-case-cnd-project/user-service:latest
-

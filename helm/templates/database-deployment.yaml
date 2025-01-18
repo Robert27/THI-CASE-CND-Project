@@ -23,7 +23,7 @@ spec:
         - name: POSTGRES_PASSWORD
           value: {{ quote .Values.global.database.password }}
         - name: POSTGRES_USER
-          value: {{ quote .Values.global.database.user }}
+          value: {{ quote .Values.global.database.username }}
         image: {{ .Values.database.database.image }}
         livenessProbe:
           exec:
