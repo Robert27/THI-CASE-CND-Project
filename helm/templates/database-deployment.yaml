@@ -19,15 +19,12 @@ spec:
       containers:
       - env:
         - name: POSTGRES_DB
-          value: {{ quote .Values.database.database.env.postgresDb }}
+          value: {{ quote .Values.global.database.name }}
         - name: POSTGRES_PASSWORD
-          value: {{ quote .Values.database.database.env.postgresPassword }}
+          value: {{ quote .Values.global.database.password }}
         - name: POSTGRES_USER
-          value: {{ quote .Values.database.database.env.postgresUser }}
-        - name: KUBERNETES_CLUSTER_DOMAIN
-          value: {{ quote .Values.kubernetesClusterDomain }}
-        image: {{ .Values.database.database.image.repository }}:{{ .Values.database.database.image.tag
-          | default .Chart.AppVersion }}
+          value: {{ quote .Values.global.database.user }}
+        image: {{ .Values.database.database.image }}
         livenessProbe:
           exec:
             command:

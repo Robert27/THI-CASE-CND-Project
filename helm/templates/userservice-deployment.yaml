@@ -19,20 +19,19 @@ spec:
       containers:
       - env:
         - name: DB_HOST
-          value: {{ quote .Values.userservice.userservice.env.dbHost }}
+          value: {{ quote .Values.global.database.host }}
         - name: DB_NAME
-          value: {{ quote .Values.userservice.userservice.env.dbName }}
+          value: {{ quote .Values.global.database.name }}
         - name: DB_PASSWORD
-          value: {{ quote .Values.userservice.userservice.env.dbPassword }}
+          value: {{ quote .Values.global.database.password }}
         - name: DB_PORT
-          value: {{ quote .Values.userservice.userservice.env.dbPort }}
+          value: {{ quote .Values.global.database.port }}
         - name: DB_USERNAME
-          value: {{ quote .Values.userservice.userservice.env.dbUsername }}
+          value: {{ quote .Values.global.database.username }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ quote .Values.kubernetesClusterDomain }}
-        image: {{ .Values.userservice.userservice.image.repository }}:{{ .Values.userservice.userservice.image.tag
-          | default .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.userservice.userservice.imagePullPolicy }}
+        image: {{ .Values.userservice.image }}
+        serviceAccountName: puller-service-account
         name: userservice
         resources: {}
       restartPolicy: Always

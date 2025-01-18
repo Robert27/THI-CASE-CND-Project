@@ -19,15 +19,15 @@ spec:
       containers:
       - env:
         - name: DB_HOST
-          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.dbHost }}
+          value: {{ quote .Values.getItemInfo.getItemInfo.env.dbHost }}
         - name: DB_NAME
-          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.dbName }}
+          value: {{ quote .Values.getItemInfo.getItemInfo.env.dbName }}
         - name: DB_PASSWORD
-          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.dbPassword }}
+          value: {{ quote .Values.getItemInfo.getItemInfo.env.dbPassword }}
         - name: DB_PORT
-          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.dbPort }}
+          value: {{ quote .Values.getItemInfo.getItemInfo.env.dbPort }}
         - name: DB_USERNAME
-          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.dbUsername }}
+          value: {{ quote .Values.getItemInfo.getItemInfo.env.dbUsername }}
         - name: GRPC_OBJECTS_HOST
           value: {{ quote .Values.intervalMonitor.intervalMonitor.env.grpcObjectsHost }}
         - name: GRPC_OBJECTS_PORT
@@ -43,13 +43,11 @@ spec:
         - name: GRPC_USERS_PORT
           value: {{ quote .Values.intervalMonitor.intervalMonitor.env.grpcUsersPort }}
         - name: JWT_PUBLIC_KEY
-          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.jwtPublicKey }}
+          value: {{ quote .Values.global.jwt.publicKey }}
         - name: MOCK_ENABLED
           value: {{ quote .Values.intervalMonitor.intervalMonitor.env.mockEnabled }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ quote .Values.kubernetesClusterDomain }}
-        image: {{ .Values.intervalMonitor.intervalMonitor.image.repository }}:{{ .Values.intervalMonitor.intervalMonitor.image.tag
-          | default .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.intervalMonitor.intervalMonitor.imagePullPolicy }}
+        image: {{ .Values.intervalMonitor.intervalMonitor.image }}
         name: interval-monitor
         resources: {}

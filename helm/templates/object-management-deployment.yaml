@@ -19,25 +19,23 @@ spec:
       containers:
       - env:
         - name: DB_HOST
-          value: {{ quote .Values.objectManagement.objectManagement.env.dbHost }}
+          value: {{ quote .Values.global.database.host }}
         - name: DB_NAME
-          value: {{ quote .Values.objectManagement.objectManagement.env.dbName }}
+          value: {{ quote .Values.global.database.name }}
         - name: DB_PASSWORD
-          value: {{ quote .Values.objectManagement.objectManagement.env.dbPassword }}
+          value: {{ quote .Values.global.database.password }}
         - name: DB_PORT
-          value: {{ quote .Values.objectManagement.objectManagement.env.dbPort }}
+          value: {{ quote .Values.global.database.port }}
         - name: DB_USERNAME
-          value: {{ quote .Values.objectManagement.objectManagement.env.dbUsername }}
+          value: {{ quote .Values.global.database.username }}
         - name: GRPC_URL_HOST
           value: {{ quote .Values.objectManagement.objectManagement.env.grpcUrlHost }}
         - name: GRPC_URL_PORT
           value: {{ quote .Values.objectManagement.objectManagement.env.grpcUrlPort }}
         - name: JWT_PUBLIC_KEY
-          value: {{ quote .Values.objectManagement.objectManagement.env.jwtPublicKey }}
+          value: {{ quote .Values.global.jwt.publicKey }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ quote .Values.kubernetesClusterDomain }}
-        image: {{ .Values.objectManagement.objectManagement.image.repository }}:{{ .Values.objectManagement.objectManagement.image.tag
-          | default .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.objectManagement.objectManagement.imagePullPolicy }}
+        image: {{ .Values.objectManagement.objectManagement.image }}
         name: object-management
         resources: {}

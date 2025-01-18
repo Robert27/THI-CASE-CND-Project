@@ -19,15 +19,15 @@ spec:
       containers:
       - env:
         - name: DB_HOST
-          value: {{ quote .Values.orderList.orderList.env.dbHost }}
+          value: {{ quote .Values.global.database.host }}
         - name: DB_NAME
-          value: {{ quote .Values.orderList.orderList.env.dbName }}
+          value: {{ quote .Values.global.database.name }}
         - name: DB_PASSWORD
-          value: {{ quote .Values.orderList.orderList.env.dbPassword }}
+          value: {{ quote .Values.global.database.password }}
         - name: DB_PORT
-          value: {{ quote .Values.orderList.orderList.env.dbPort }}
+          value: {{ quote .Values.global.database.port }}
         - name: DB_USERNAME
-          value: {{ quote .Values.orderList.orderList.env.dbUsername }}
+          value: {{ quote .Values.global.database.username }}
         - name: GRPC_OBJECTS_HOST
           value: {{ quote .Values.orderList.orderList.env.grpcObjectsHost }}
         - name: GRPC_OBJECTS_PORT
@@ -37,11 +37,10 @@ spec:
         - name: GRPC_PRICECHECK_PORT
           value: {{ quote .Values.orderList.orderList.env.grpcPricecheckPort }}
         - name: JWT_PUBLIC_KEY
-          value: {{ quote .Values.orderList.orderList.env.jwtPublicKey }}
+          value: {{ quote .Values.global.jwt.publicKey }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ quote .Values.kubernetesClusterDomain }}
-        image: {{ .Values.orderList.orderList.image.repository }}:{{ .Values.orderList.orderList.image.tag
-          | default .Chart.AppVersion }}
+        image: {{ .Values.orderList.orderList.image }}
         name: order-list
         resources: {}
       restartPolicy: Always

@@ -19,13 +19,11 @@ spec:
       containers:
       - env:
         - name: JWT_PRIVATE_KEY
-          value: {{ quote .Values.authservice.authservice.env.jwtPrivateKey }}
+          value: {{ quote .Values.global.jwt.privateKey }}
         - name: USERSERVICE_URL
           value: {{ quote .Values.authservice.authservice.env.userserviceUrl }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ quote .Values.kubernetesClusterDomain }}
-        image: {{ .Values.authservice.authservice.image.repository }}:{{ .Values.authservice.authservice.image.tag
-          | default .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.authservice.authservice.imagePullPolicy }}
+        image: {{ .Values.authservice.authservice.image }}
         name: authservice
         resources: {}

@@ -19,8 +19,6 @@ spec:
       - env:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ quote .Values.kubernetesClusterDomain }}
-        image: {{ .Values.docs.docs.image.repository }}:{{ .Values.docs.docs.image.tag
-          | default .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.docs.docs.imagePullPolicy }}
+        image: {{ quote .Values.docs.docs.image }}
         name: docs
         resources: {}

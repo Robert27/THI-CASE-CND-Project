@@ -20,8 +20,6 @@ spec:
       - env:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ quote .Values.kubernetesClusterDomain }}
-        image: {{ .Values.urlValidator.urlValidator.image.repository }}:{{ .Values.urlValidator.urlValidator.image.tag
-          | default .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.urlValidator.urlValidator.imagePullPolicy }}
+        image: {{ .Values.urlValidator.urlValidator.image }}
         name: url-validator
         resources: {}
