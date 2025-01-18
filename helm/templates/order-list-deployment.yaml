@@ -19,7 +19,7 @@ spec:
       containers:
       - env:
         - name: DB_HOST
-          value: {{ quote .Values.global.database.host }}
+          value: "{{ include "helm.fullname" . }}-{{ .Values.global.database.name }}"
         - name: DB_NAME
           value: {{ quote .Values.global.database.name }}
         - name: DB_PASSWORD
@@ -29,11 +29,11 @@ spec:
         - name: DB_USERNAME
           value: {{ quote .Values.global.database.username }}
         - name: GRPC_OBJECTS_HOST
-          value: {{ quote .Values.orderList.orderList.env.grpcObjectsHost }}
+          value: "{{ include "helm.fullname" . }}-{{ .Values.orderList.orderList.env.grpcObjectsHost }}"
         - name: GRPC_OBJECTS_PORT
           value: {{ quote .Values.orderList.orderList.env.grpcObjectsPort }}
         - name: GRPC_PRICECHECK_HOST
-          value: {{ quote .Values.orderList.orderList.env.grpcPricecheckHost }}
+          value: "{{ include "helm.fullname" . }}-{{ .Values.orderList.orderList.env.grpcPricecheckHost }}"
         - name: GRPC_PRICECHECK_PORT
           value: {{ quote .Values.orderList.orderList.env.grpcPricecheckPort }}
         - name: JWT_PUBLIC_KEY

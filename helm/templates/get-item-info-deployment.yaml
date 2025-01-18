@@ -19,7 +19,7 @@ spec:
       containers:
       - env:
         - name: DB_HOST
-          value: {{ quote .Values.global.database.host }}
+          value: "{{ include "helm.fullname" . }}-{{ .Values.global.database.name }}"
         - name: DB_NAME
           value: {{ quote .Values.global.database.name }}
         - name: DB_PASSWORD
@@ -29,11 +29,11 @@ spec:
         - name: DB_USERNAME
           value: {{ quote .Values.global.database.username }}
         - name: GRPC_OBJECTS_HOST
-          value: {{ quote .Values.getItemInfo.getItemInfo.env.grpcObjectsHost }}
+          value: "{{ include "helm.fullname" . }}-{{ .Values.getItemInfo.getItemInfo.env.grpcObjectsHost }}"
         - name: GRPC_OBJECTS_PORT
           value: {{ quote .Values.getItemInfo.getItemInfo.env.grpcObjectsPort }}
         - name: GRPC_URL_HOST
-          value: {{ quote .Values.getItemInfo.getItemInfo.env.grpcUrlHost }}
+          value: "{{ include "helm.fullname" . }}-{{ .Values.getItemInfo.getItemInfo.env.grpcUrlHost }}"
         - name: GRPC_URL_PORT
           value: {{ quote .Values.getItemInfo.getItemInfo.env.grpcUrlPort }}
         - name: KUBERNETES_CLUSTER_DOMAIN

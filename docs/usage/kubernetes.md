@@ -15,7 +15,7 @@ Ebenso ist es möglich, die Anwendung in einem Kubernetes-Cluster zu deployen. H
 1. Erstellen Sie einen neuen Namespace für Ihre Anwendung:
 
 ```bash
-kubectl create namespace smart-order
+kubectl create namespace smartorder
 ```
 
 2. Konfigurieren Sie den Zugriff auf die GitHub Container Registry:
@@ -27,10 +27,15 @@ kubectl create secret docker-registry ghcr-secret \
   --docker-server=ghcr.io \
   --docker-username=IHR_GITHUB_BENUTZERNAME \
   --docker-password=IHR_GITHUB_TOKEN \
-  --docker-email=IHRE_EMAIL
+  --docker-email=IHRE_EMAIL \
+  --namespace smartorder
 ```
 
-Kubernetes sollte dieses Secret automatisch dem Standard-Service-Konto im Standard-Namensraum zuweisen, sodass es für die Pull-Anforderungen verwendet wird.
+3. Weisen Sie das Secret dem Standard-Service-Account zu:
+
+```bash
+kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "ghcr-secret"}]}' -n smartorder
+```
 
 ## Deployment der Anwendung
 
@@ -47,7 +52,7 @@ helm dependency update
 Führen Sie die Installation mit folgendem Befehl durch:
 
 ```bash
-helm install app .
+helm install app . -n smartorder
 ```
 
 ### 3. Überprüfung des Deployments
@@ -55,7 +60,7 @@ helm install app .
 #### Status der Pods überprüfen:
 
 ```bash
-kubectl get pods
+kubectl get pods -n smartorder
 ```
 
 #### Logs einsehen (falls erforderlich):

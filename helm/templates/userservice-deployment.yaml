@@ -19,7 +19,7 @@ spec:
       containers:
       - env:
         - name: DB_HOST
-          value: {{ quote .Values.global.database.host }}
+          value: "{{ include "helm.fullname" . }}-{{ .Values.global.database.name }}"
         - name: DB_NAME
           value: {{ quote .Values.global.database.name }}
         - name: DB_PASSWORD

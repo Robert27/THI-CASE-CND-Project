@@ -19,7 +19,7 @@ spec:
       containers:
       - env:
         - name: DB_HOST
-          value: {{ quote .Values.global.database.host }}
+          value: "{{ include "helm.fullname" . }}-{{ .Values.global.database.name }}"
         - name: DB_NAME
           value: {{ quote .Values.global.database.name }}
         - name: DB_PASSWORD
@@ -29,17 +29,15 @@ spec:
         - name: DB_USERNAME
           value: {{ quote .Values.global.database.username }}
         - name: GRPC_OBJECTS_HOST
-          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.grpcObjectsHost }}
+          value: "{{ include "helm.fullname" . }}-{{ .Values.intervalMonitor.intervalMonitor.env.grpcObjectsHost }}"
         - name: GRPC_OBJECTS_PORT
           value: {{ quote .Values.intervalMonitor.intervalMonitor.env.grpcObjectsPort }}
         - name: GRPC_ORDERLIST_HOST
-          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.grpcOrderlistHost
-            }}
+          value: "{{ include "helm.fullname" . }}-{{ .Values.intervalMonitor.intervalMonitor.env.grpcOrderlistHost }}"
         - name: GRPC_ORDERLIST_PORT
-          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.grpcOrderlistPort
-            }}
+          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.grpcOrderlistPort}}
         - name: GRPC_USERS_HOST
-          value: {{ quote .Values.intervalMonitor.intervalMonitor.env.grpcUsersHost }}
+          value: "{{ include "helm.fullname" . }}-{{ .Values.intervalMonitor.intervalMonitor.env.grpcUsersHost }}"
         - name: GRPC_USERS_PORT
           value: {{ quote .Values.intervalMonitor.intervalMonitor.env.grpcUsersPort }}
         - name: JWT_PUBLIC_KEY

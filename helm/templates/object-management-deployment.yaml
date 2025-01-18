@@ -19,7 +19,7 @@ spec:
       containers:
       - env:
         - name: DB_HOST
-          value: {{ quote .Values.global.database.host }}
+          value: "{{ include "helm.fullname" . }}-{{ .Values.global.database.name }}"
         - name: DB_NAME
           value: {{ quote .Values.global.database.name }}
         - name: DB_PASSWORD
@@ -29,7 +29,7 @@ spec:
         - name: DB_USERNAME
           value: {{ quote .Values.global.database.username }}
         - name: GRPC_URL_HOST
-          value: {{ quote .Values.objectManagement.objectManagement.env.grpcUrlHost }}
+          value: "{{ include "helm.fullname" . }}-{{ .Values.objectManagement.objectManagement.env.grpcUrlHost }}"
         - name: GRPC_URL_PORT
           value: {{ quote .Values.objectManagement.objectManagement.env.grpcUrlPort }}
         - name: JWT_PUBLIC_KEY
