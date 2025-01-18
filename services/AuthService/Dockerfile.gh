@@ -2,7 +2,7 @@
 # The maven install and package commands are run in the actions workflow, so the image only needs to copy the built application files.
 # This speeds up the image build process because the dependencies are already installed and cached.
 # For a normal multi-stage build, please visit the Dockerfile file.
-FROM openjdk:23-jdk-slim
+FROM eclipse-temurin:23-jre-alpine
 WORKDIR /app
 COPY build/libs/*.jar /app/app.jar
 EXPOSE 8081

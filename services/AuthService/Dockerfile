@@ -5,9 +5,9 @@ COPY build.gradle /tmp
 COPY settings.gradle /tmp
 RUN gradle dependencies --no-daemon
 COPY src /tmp/src/
-RUN gradle build -x test --no-daemon --no-daemon
+RUN gradle build -x test --no-daemon
 
-FROM openjdk:23-jdk-slim AS app
+FROM eclipse-temurin:23-jre-alpine AS app
 WORKDIR /app
 COPY --from=builder /tmp/build/libs/*.jar /app/app.jar
 EXPOSE 8081
