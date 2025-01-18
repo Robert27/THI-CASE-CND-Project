@@ -7,7 +7,8 @@ RUN gradle dependencies --no-daemon
 COPY src /tmp/src/
 RUN gradle build -x test --no-daemon
 
-FROM openjdk:23-jdk-slim AS app
+FROM eclipse-temurin:23-jre-alpine AS app
+RUN apk --no-cache add bash curl
 WORKDIR /app
 COPY --from=builder /tmp/build/libs/*.jar /app/app.jar
 EXPOSE 8080
