@@ -40,6 +40,6 @@ spec:
         name: object-management
         resources: {}
         livenessProbe:
-          {{- toYaml .Values.global.quarkus.livenessProbe | nindent 10 }}
+          {{- toYaml .Values.objectManagement.livenessProbe | nindent 10 }}
         readinessProbe:
-          {{- toYaml .Values.global.quarkus.readinessProbe | nindent 10 }}
+          {{- toYaml .Values.objectManagement.readinessProbe | nindent 10 }}

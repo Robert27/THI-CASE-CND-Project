@@ -48,6 +48,6 @@ spec:
         name: interval-monitor
         resources: {}
         livenessProbe:
-          {{- toYaml .Values.global.quarkus.livenessProbe | nindent 10 }}
+          {{- toYaml .Values.intervalMonitor.livenessProbe | nindent 10 }}
         readinessProbe:
-          {{- toYaml .Values.global.quarkus.readinessProbe | nindent 10 }}
+          {{- toYaml .Values.intervalMonitor.readinessProbe | nindent 10 }}

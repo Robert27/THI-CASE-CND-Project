@@ -62,6 +62,12 @@ services:
       JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
       GRPC_URL_HOST: url-validator
       GRPC_URL_PORT: 9092
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/q/health | grep UP || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
     expose:
       - 8080
       - 9090
@@ -86,6 +92,12 @@ services:
       GRPC_ORDERLIST_PORT: 9093
       GRPC_ORDERLIST_HOST: order-list
       MOCK_ENABLED: true
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8081/q/health | grep UP || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
     expose:
       - 8081
     restart: unless-stopped
