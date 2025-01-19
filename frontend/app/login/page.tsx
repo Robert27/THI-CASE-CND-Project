@@ -26,7 +26,6 @@ const Login: React.FC = () => {
       });
 
       if (res?.error) {
-        console.log("res error :::: ", res);
         setErrorMessage(res.error);
         setPending(false);
       } else {

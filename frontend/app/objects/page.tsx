@@ -128,7 +128,6 @@ export default function ObjectsPage() {
         try {
           const data = await res.json();
 
-          console.log(data);
           errorMsg = data.errorMessage || errorMsg;
         } catch {}
         throw new Error(errorMsg);
@@ -211,7 +210,6 @@ export default function ObjectsPage() {
         return acc;
       }, {} as Partial<StorageObject>);
 
-      console.log("changes", changes);
       const res = await fetch(`${httpHost}/rest/object/item/${id}`, {
         method: "PATCH",
         headers: {

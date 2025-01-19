@@ -31,7 +31,6 @@ export default function EditObjectModal({
   alertMessage: string | null;
   onAlertClose: () => void;
 }) {
-  console.log("editObject", editObject);
   const [localEditObject, setLocalEditObject] = useState<StorageObject | null>(
     editObject
   );

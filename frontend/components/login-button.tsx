@@ -17,7 +17,6 @@ export default function LoginButton() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  console.log("username", session?.user?.username);
   const handleLogout = () => {
     signOut({ redirect: false });
     localStorage.removeItem("next-auth.session-token");

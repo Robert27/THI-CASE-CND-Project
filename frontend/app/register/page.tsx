@@ -32,8 +32,7 @@ const Register: React.FC = () => {
         );
       }
     },
-    onSuccess: (data) => {
-      console.log("User registered successfully", data);
+    onSuccess: () => {
       toast.success("Registration successful");
       window.location.href = "/login";
     },

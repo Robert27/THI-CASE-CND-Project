@@ -25,7 +25,6 @@ export default function AccountPage() {
       oldPassword: string;
       newPassword: string;
     }) => {
-      console.log("Payload:", payload);
       const res = await fetch(`${httpHost}/rest/user/user/${userId}/changepw`, {
         method: "POST",
         headers: {
@@ -42,7 +41,6 @@ export default function AccountPage() {
       }
       const data = await res.json();
 
-      console.log("Data:", data);
       if (!data.success === true) {
         throw new Error("Password change failed");
       }

@@ -15,7 +15,6 @@ const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log("Credentials:", credentials);
         let res;
 
         try {
@@ -30,7 +29,6 @@ const authOptions = {
         }
         const user = await res.json();
 
-        console.log("User:", user);
         if (res.ok && user && user.token) {
           return user;
         } else {

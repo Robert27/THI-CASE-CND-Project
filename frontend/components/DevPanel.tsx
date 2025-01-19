@@ -18,8 +18,6 @@ export default function DevPanel() {
     enabled: isEnabled,
   });
 
-  console.log("currentDate", currentDate);
-
   const mutation = useMutation({
     mutationFn: setMockDate,
     onSuccess: () => {
