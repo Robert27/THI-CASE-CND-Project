@@ -47,3 +47,7 @@ spec:
         image: {{ .Values.intervalMonitor.intervalMonitor.image }}
         name: interval-monitor
         resources: {}
+        livenessProbe:
+          {{- toYaml .Values.global.quarkus.livenessProbe | nindent 10 }}
+        readinessProbe:
+          {{- toYaml .Values.global.quarkus.readinessProbe | nindent 10 }}
