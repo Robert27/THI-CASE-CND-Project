@@ -7,9 +7,14 @@ Natürlich bietet es auch die Möglichkeit, sich als Nutzer zu registrieren, ein
 
 ## Verwenden ohne Docker
 
+Zum entwickeln und testen des Frontends ohne Docker, können Sie die folgenden Schritte befolgen. Allerdings wird empfohlen, die API über das Docker Compose Setup zu verwenden.
+
 ### Umgebungsvariablen
 
 Kopieren Sie die `.env.local.example` Datei und benennen Sie sie in `.env.local` um. Passen Sie die Werte der Umgebungsvariablen an.
+Dies ist besonders wichtig, um die API-URL zu setzen, damit das Frontend die API erreichen kann.
+
+````
 
 ### Lokales bauen und starten
 
@@ -19,4 +24,4 @@ Kopieren Sie die `.env.local.example` Datei und benennen Sie sie in `.env.local`
 corepack enable
 pnpm install
 pnpm run dev
-```
+````
