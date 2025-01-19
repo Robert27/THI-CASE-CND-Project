@@ -19,6 +19,8 @@ import {
 } from "@nextui-org/react";
 import Fuse from "fuse.js";
 
+import { httpHost } from "../providers";
+
 import ErrorDisplay from "@/components/ErrorDisplay";
 import PageHeader from "@/components/PageHeader";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -45,7 +47,7 @@ export default function ObjectsPage() {
   const { data: categories = [] } = useQuery<Category[]>({
     queryKey: ["categories"],
     queryFn: async () => {
-      const res = await fetch("/rest/object/category");
+      const res = await fetch(httpHost + "/rest/object/category");
 
       if (!res.ok) throw new Error("Failed to fetch categories");
 
@@ -61,7 +63,7 @@ export default function ObjectsPage() {
     queryKey: ["objects"],
     queryFn: async () => {
       if (!session?.user) throw new Error("No token found");
-      const res = await fetch("/rest/object/item", {
+      const res = await fetch(httpHost + "/rest/object/item", {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
         },
@@ -111,7 +113,7 @@ export default function ObjectsPage() {
   >({
     mutationFn: async (newObjectData) => {
       if (!session?.user) throw new Error("No token found");
-      const res = await fetch("/rest/object/item", {
+      const res = await fetch(httpHost + "/rest/object/item", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -148,7 +150,7 @@ export default function ObjectsPage() {
   const deleteObjectMutation = useMutation<void, Error, number>({
     mutationFn: async (id) => {
       if (!session?.user) throw new Error("No token found");
-      const res = await fetch(`/rest/object/item/${id}`, {
+      const res = await fetch(`${httpHost}/rest/object/item/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -210,7 +212,7 @@ export default function ObjectsPage() {
       }, {} as Partial<StorageObject>);
 
       console.log("changes", changes);
-      const res = await fetch(`/rest/object/item/${id}`, {
+      const res = await fetch(`${httpHost}/rest/object/item/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

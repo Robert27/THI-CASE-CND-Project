@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
+import { httpHost } from "../providers";
+
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { AuthForm } from "@/components/auth/AuthForm";
 
@@ -14,7 +16,7 @@ const Register: React.FC = () => {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch("/rest/user/user", {
+      const res = await fetch(httpHost + "/rest/user/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

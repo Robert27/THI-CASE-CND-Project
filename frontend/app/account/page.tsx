@@ -6,6 +6,8 @@ import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
+import { httpHost } from "../providers";
+
 import { AuthLayout } from "@/components/auth/AuthLayout";
 
 export default function AccountPage() {
@@ -24,7 +26,7 @@ export default function AccountPage() {
       newPassword: string;
     }) => {
       console.log("Payload:", payload);
-      const res = await fetch(`/rest/user/user/${userId}/changepw`, {
+      const res = await fetch(`${httpHost}/rest/user/user/${userId}/changepw`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,7 +65,7 @@ export default function AccountPage() {
   // Delete Account Mutation
   const deleteAccountMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch(`/rest/user/user/${userId}`, {
+      const res = await fetch(`${httpHost}/rest/user/user/${userId}`, {
         method: "DELETE",
       });
 

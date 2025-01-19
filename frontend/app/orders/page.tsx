@@ -33,6 +33,8 @@ type GroupedOrders = {
   [key: string]: Order[];
 };
 
+const httpHost = process.env.NEXT_PUBLIC_HTTP_HOST ?? "";
+
 export default function OrderPage() {
   const { data: session, status } = useSession({
     required: true,
@@ -50,7 +52,7 @@ export default function OrderPage() {
   } = useQuery<Order[]>({
     queryKey: ["orders"],
     queryFn: async () => {
-      const res = await fetch("/rest/order/orders", {
+      const res = await fetch(httpHost + "/rest/order/orders", {
         headers: {
           Authorization: `Bearer ${session?.accessToken}`,
         },
@@ -71,7 +73,7 @@ export default function OrderPage() {
       itemId: number;
       quantity: number;
     }) => {
-      const res = await fetch("/rest/order/orders/perform", {
+      const res = await fetch(httpHost + "/rest/order/orders/perform", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -99,7 +101,7 @@ export default function OrderPage() {
 
   const abortOrderMutation = useMutation({
     mutationFn: async (itemId: number) => {
-      const res = await fetch(`/rest/order/orders/abort/${itemId}`, {
+      const res = await fetch(`${httpHost}/rest/order/orders/abort/${itemId}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${session?.accessToken}`,

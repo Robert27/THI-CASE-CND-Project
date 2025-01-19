@@ -1,4 +1,4 @@
-import { Input, Button } from "@nextui-org/react";
+import { Input, Button, Spinner } from "@nextui-org/react";
 import { LuChevronRight } from "react-icons/lu";
 import Link from "next/link";
 
@@ -63,10 +63,16 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         <Button
           aria-disabled={isPending}
           className="w-full bg-gradient-to-r from-primary to-secondary text-white font-semibold 
-                   py-3 rounded-lg transition-transform hover:scale-102 active:scale-98 mt-2"
+             py-3 rounded-lg transition-transform hover:scale-102 active:scale-98 mt-2"
           type="submit"
         >
-          {isPending ? `${buttonText}ing...` : buttonText} <LuChevronRight />
+          {isPending ? (
+            <Spinner color="white" size="sm" />
+          ) : (
+            <>
+              {buttonText} <LuChevronRight />
+            </>
+          )}
         </Button>
       </form>
       <div className="text-center text-sm text-foreground-500 pt-8">

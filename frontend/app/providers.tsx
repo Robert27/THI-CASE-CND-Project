@@ -22,6 +22,8 @@ declare module "@react-types/shared" {
   }
 }
 
+export const httpHost = process.env.NEXT_PUBLIC_HTTP_HOST;
+
 export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
   const queryClient = new QueryClient();
