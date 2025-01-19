@@ -36,8 +36,8 @@ jobs:
 
       - name: Build with Gradle
         run: |
-          ./gradlew dependencies --no-daemon
-          ./gradlew build -x test --no-daemon
+          ./gradlew dependencies --no-daemon --parallel
+          ./gradlew build --no-daemon --parallel
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta

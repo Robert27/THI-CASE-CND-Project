@@ -3,9 +3,9 @@ FROM gradle:8.11.1-jdk23 AS builder
 WORKDIR /tmp
 COPY build.gradle /tmp
 COPY settings.gradle /tmp
-RUN gradle dependencies --no-daemon
+RUN gradle dependencies --no-daemon --parallel
 COPY src /tmp/src/
-RUN gradle build -x test --no-daemon
+RUN gradle build --no-daemon --parallel
 
 FROM eclipse-temurin:23-jre-alpine
 RUN apk --no-cache add bash curl
