@@ -3,8 +3,8 @@ services:
     image: postgres:17.2
     container_name: database
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: SecReT-PasSwOrD
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: database
     volumes:
       - db_data:/var/lib/postgresql/data
@@ -24,8 +24,8 @@ services:
       DB_HOST: database
       DB_NAME: database
       DB_PORT: 5432
-      DB_USERNAME: postgres
-      DB_PASSWORD: SecReT-PasSwOrD
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
       test: ["CMD-SHELL", "curl localhost:8080/actuator/health | grep UP || exit 1"]
       interval: 5s
@@ -43,7 +43,7 @@ services:
   authservice:
     image: ghcr.io/robert27/thi-case-cnd-project/auth-service:latest
     environment:
-      JWT_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDgkSqA2ozM771CeSeqQQrbuRonyIa+cYXJUW3PBRC4h2Vk+MOvlTpIAGCWN1UZ1mem8pordla3NCOddUuCkjzSX7YuD5tUVfeapA6ULBxrdAut/OYRSIri1OsgaC1CdgElWddRZkqXapjEOUw3Aob538UNlOeeJ6uOLLdpkItm2dWdAUfRJGiUwksQIZ465+HzJ6n7wKUcc7nuO9MtGThPQQpqTCohFrmdAU79YFzN9laxU1dQft6nFrHqfXKSWq5yFe2BPUk6OP/bDchuYzPko3Sa48l9T1x9y3XxBS28fNiivkLI4Z47HHOKeFqeVkDJ845JTVsxcbtR6/uEQ21BAgMBAAECggEAAL73gHpGLNyANfGeFdAyf4laLDCoornqaY4WMP5bNsNOxtEwVGuvLmCl8Xz/xBHn9T0c3jEXitmm/QjQAxm5dWXXZPuTSgPt4+5QlOIF1CUmCfvRlDqEwsnvRmou+eekPrueKslas3pDEj/LrR3nVRQog1BWNqD66AJMN6ynWErP9Ycr5UnX8oNU3mRZ4EekNSbPkjH+tSe7wbXnp1wER8cPeRN6R6GW6mcm/eTlJ2ovqCQ/Xg/ExbpKrh5p8IoqCMuTW8z5MDcrt0x7F4E8bbDIymrOaw7Z4Xq/ZEVyefNQo7y22Sp9G5ri4U2kKYCTAOHuakbJNb18nxKKnNv7gQKBgQDyJLs7kydBAauR7tHFCN6w/iocC0i3oZ72AiMbS1/Z02uzUQZKnfhdByJ9hyZLnSj9U/+TgGG0KvptAulCn01FTEHqs6vvvlrqhq3tf6sG+bfhlgOiUZ39czRK0C1iKmI9Yek5EK9GB/Crsqm0NTq1mjwBVlxw2aKPSlA+X+TfkQKBgQDtavMd7aBzALXZFnhWg2PAqfHEuwDrihHmU0VT+DgWZ+mBvfYUTQ/XttWI2jI/3QdbGIe6+5S31f5kLAZrRVzvIknkuiCXO7W2O5DnD7r1YejGK5E02njhiJ3nuasNx0Qg5Sn1C+EeWfvR9+KQXplcjYPuElZL6hlNAPMCo346sQKBgQDTTpiRoZXE1ddKT3WBk376R6KpvHMlxIW6uxy1ye4IYcZ/wjpSTU6aqApCLvmNTMWjZHUI3CTnHAZTsRGr0OaWjbiMP2TQn3YpaYRIWHwAZ1U/KDFdqgnMToeYrdic7M20MUhcQyIhY/Zzb0NG/piQN9sbc6jR1ipVDw29kONi8QKBgGAXQlDhpWgGaJN1mb0CLrSC0/yY53Vti3MaTtv+gcznv8WoOdnbmsbnFCPwlBfvAJQpKH5QZs/FB9JJU0vFZijPSvMNNjWfkBsynqI2Zqf8ObdDWOD4b6ZwoeBw8D+CYBukRMgOR83+A4Lm/kcKUq34BOate0n8dMMK2FBAFc3xAoGAFnI8QxlXWPpAvaN+jTNPYHDBGSb2xf2jpPUhX8EB1ETfredJlcafVKdgCu1OQnZUqnOGHh6qsGBuondcepuw3d8NegrRjKf9AgKnqqUXHZLKEpiuAnUJDDUope8xAtKHbBTu+jV8XDQyhDbfmmMC+vrYnO3FlPBnB/sXgtrP9m8=-----END PRIVATE KEY-----"
+      JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
       USERSERVICE_URL: http://userservice:8080/user
     expose:
       - 8081
@@ -54,12 +54,12 @@ services:
   object-management:
     image: ghcr.io/robert27/thi-case-cnd-project/object-management:latest
     environment:
-      DB_USERNAME: postgres
-      DB_PASSWORD: SecReT-PasSwOrD
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_PORT: 5432
       DB_HOST: database
       DB_NAME: database
-      JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JEqgNqMzO+9QnknqkEK27kaJ8iGvnGFyVFtzwUQuIdlZPjDr5U6SABgljdVGdZnpvKaK3ZWtzQjnXVLgpI80l+2Lg+bVFX3mqQOlCwca3QLrfzmEUiK4tTrIGgtQnYBJVnXUWZKl2qYxDlMNwKG+d/FDZTnnierjiy3aZCLZtnVnQFH0SRolMJLECGeOufh8yep+8ClHHO57jvTLRk4T0EKakwqIRa5nQFO/WBczfZWsVNXUH7epxax6n1yklquchXtgT1JOjj/2w3IbmMz5KN0muPJfU9cfct18QUtvHzYor5CyOGeOxxzinhanlZAyfOOSU1bMXG7Uev7hENtQQIDAQAB-----END PUBLIC KEY-----"
+      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
       GRPC_URL_HOST: url-validator
       GRPC_URL_PORT: 9092
     expose:
@@ -73,12 +73,12 @@ services:
   interval-monitor:
     image: ghcr.io/robert27/thi-case-cnd-project/interval-monitor:latest
     environment:
-      DB_USERNAME: postgres
-      DB_PASSWORD: SecReT-PasSwOrD
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_PORT: 5432
       DB_HOST: database
       DB_NAME: database
-      JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JEqgNqMzO+9QnknqkEK27kaJ8iGvnGFyVFtzwUQuIdlZPjDr5U6SABgljdVGdZnpvKaK3ZWtzQjnXVLgpI80l+2Lg+bVFX3mqQOlCwca3QLrfzmEUiK4tTrIGgtQnYBJVnXUWZKl2qYxDlMNwKG+d/FDZTnnierjiy3aZCLZtnVnQFH0SRolMJLECGeOufh8yep+8ClHHO57jvTLRk4T0EKakwqIRa5nQFO/WBczfZWsVNXUH7epxax6n1yklquchXtgT1JOjj/2w3IbmMz5KN0muPJfU9cfct18QUtvHzYor5CyOGeOxxzinhanlZAyfOOSU1bMXG7Uev7hENtQQIDAQAB-----END PUBLIC KEY-----"
+      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
       GRPC_OBJECTS_PORT: 9090
       GRPC_OBJECTS_HOST: object-management
       GRPC_USERS_PORT: 9091
@@ -96,8 +96,8 @@ services:
   frontend:
     image: ghcr.io/robert27/thi-case-cnd-project/frontend:latest
     environment:
-      JWT_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JEqgNqMzO+9QnknqkEK27kaJ8iGvnGFyVFtzwUQuIdlZPjDr5U6SABgljdVGdZnpvKaK3ZWtzQjnXVLgpI80l+2Lg+bVFX3mqQOlCwca3QLrfzmEUiK4tTrIGgtQnYBJVnXUWZKl2qYxDlMNwKG+d/FDZTnnierjiy3aZCLZtnVnQFH0SRolMJLECGeOufh8yep+8ClHHO57jvTLRk4T0EKakwqIRa5nQFO/WBczfZWsVNXUH7epxax6n1yklquchXtgT1JOjj/2w3IbmMz5KN0muPJfU9cfct18QUtvHzYor5CyOGeOxxzinhanlZAyfOOSU1bMXG7Uev7hENtQQIDAQAB-----END PUBLIC KEY-----"
-      NEXTAUTH_SECRET: 9n0Gnw+JJ64DsMSXdejaLVNNlLtVzNmhijQlYorTa3Q=
+      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       NEXTAUTH_URL: http://localhost:4000
       AUTH_SERVICE_URL: http://authservice:8081/login
     expose:
@@ -124,12 +124,12 @@ services:
   order-list:
     image: ghcr.io/robert27/thi-case-cnd-project/order-list:latest
     environment:
-      DB_USERNAME: postgres
-      DB_PASSWORD: SecReT-PasSwOrD
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_PORT: 5432
       DB_HOST: database
       DB_NAME: database
-      JWT_PUBLIC_KEY: -----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JEqgNqMzO+9QnknqkEK27kaJ8iGvnGFyVFtzwUQuIdlZPjDr5U6SABgljdVGdZnpvKaK3ZWtzQjnXVLgpI80l+2Lg+bVFX3mqQOlCwca3QLrfzmEUiK4tTrIGgtQnYBJVnXUWZKl2qYxDlMNwKG+d/FDZTnnierjiy3aZCLZtnVnQFH0SRolMJLECGeOufh8yep+8ClHHO57jvTLRk4T0EKakwqIRa5nQFO/WBczfZWsVNXUH7epxax6n1yklquchXtgT1JOjj/2w3IbmMz5KN0muPJfU9cfct18QUtvHzYor5CyOGeOxxzinhanlZAyfOOSU1bMXG7Uev7hENtQQIDAQAB-----END PUBLIC KEY-----
+      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
       GRPC_PRICECHECK_PORT: 9094
       GRPC_PRICECHECK_HOST: get-item-info
       GRPC_OBJECTS_PORT: 9090
@@ -150,8 +150,8 @@ services:
   get-item-info:
     image: ghcr.io/robert27/thi-case-cnd-project/get-item-info:latest
     environment:
-      DB_USERNAME: postgres
-      DB_PASSWORD: SecReT-PasSwOrD
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_PORT: 5432
       DB_HOST: database
       DB_NAME: database
