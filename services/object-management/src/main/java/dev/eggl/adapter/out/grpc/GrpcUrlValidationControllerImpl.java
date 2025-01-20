@@ -7,7 +7,7 @@ import io.quarkus.grpc.GrpcClient;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class GrpcUrlValidationController implements UrlValidationPort {
+public class GrpcUrlValidationControllerImpl implements UrlValidationPort {
     @GrpcClient("urlvalidation")
     UrlValidationService grpcUserService;
 
@@ -16,9 +16,8 @@ public class GrpcUrlValidationController implements UrlValidationPort {
         UrlvalidationProto.ValidateUrlRequest request = UrlvalidationProto.ValidateUrlRequest.newBuilder()
                 .setUrl(url)
                 .build();
-        boolean isValid = grpcUserService.validateUrl(request)
+        return grpcUserService.validateUrl(request)
                 .onItem().transform(response -> response.getValid() && response.getReachable())
                 .await().indefinitely();
-        return isValid;
     }
 }

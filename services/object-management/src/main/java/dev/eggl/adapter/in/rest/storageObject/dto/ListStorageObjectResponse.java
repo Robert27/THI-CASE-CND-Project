@@ -1,4 +1,4 @@
-package dev.eggl.adapter.in.rest.storageObject;
+package dev.eggl.adapter.in.rest.storageObject.dto;
 
 import dev.eggl.domain.model.StorageObject;
 

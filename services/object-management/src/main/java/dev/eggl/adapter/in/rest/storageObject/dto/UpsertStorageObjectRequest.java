@@ -1,6 +1,6 @@
-package dev.eggl.adapter.in.rest.storageObject;
+package dev.eggl.adapter.in.rest.storageObject.dto;
 
-public record CreateStorageObjectRequest(
+public record UpsertStorageObjectRequest(
         String name,
         String description,
         Integer categoryId,

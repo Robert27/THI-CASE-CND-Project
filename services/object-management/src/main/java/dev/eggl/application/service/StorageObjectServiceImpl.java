@@ -11,14 +11,14 @@ import dev.eggl.port.out.UrlValidationPort;
 import java.util.Date;
 import java.util.List;
 
-public class StorageObjectService implements StorageObjectUseCase {
+public class StorageObjectServiceImpl implements StorageObjectUseCase {
     private final StorageObjectRepository storageObjectRepository;
     private final CategoryRepository categoryRepository;
     private final UrlValidationPort urlValidationPort;
     private final AuthenticationUseCase authenticationUseCase;
 
-    public StorageObjectService(StorageObjectRepository storageObjectRepository, CategoryRepository categoryRepository,
-            UrlValidationPort urlValidationPort, AuthenticationUseCase authenticationUseCase) {
+    public StorageObjectServiceImpl(StorageObjectRepository storageObjectRepository, CategoryRepository categoryRepository,
+                                    UrlValidationPort urlValidationPort, AuthenticationUseCase authenticationUseCase) {
         this.storageObjectRepository = storageObjectRepository;
         this.categoryRepository = categoryRepository;
         this.urlValidationPort = urlValidationPort;
@@ -34,7 +34,7 @@ public class StorageObjectService implements StorageObjectUseCase {
 
     @Override
     public StorageObject create(String name, String description, Integer categoryId, String reorderUrl,
-            Integer quantity, Integer weekday, String token)
+                                Integer quantity, Integer weekday, String token)
             throws IllegalArgumentException {
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Authorization token must be provided");
@@ -82,7 +82,7 @@ public class StorageObjectService implements StorageObjectUseCase {
 
     @Override
     public StorageObject update(Integer id, String name, String description, Integer categoryId, String reorderUrl,
-            Integer quantity, Integer weekday, String token)
+                                Integer quantity, Integer weekday, String token)
             throws IllegalArgumentException {
         AuthenticatedUser user;
         try {

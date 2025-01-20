@@ -6,10 +6,10 @@ import dev.eggl.port.out.CategoryRepository;
 
 import java.util.List;
 
-public class ListCategoryService implements CategoryListUseCase {
+public class ListCategoryServiceImpl implements CategoryListUseCase {
     private final CategoryRepository categoryRepository;
 
-    public ListCategoryService(CategoryRepository categoryRepository) {
+    public ListCategoryServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 

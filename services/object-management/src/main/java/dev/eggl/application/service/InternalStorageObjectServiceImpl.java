@@ -7,10 +7,10 @@ import dev.eggl.port.out.StorageObjectRepository;
 import java.util.List;
 import java.util.Map;
 
-public class InternalStorageObjectService implements InternalStorageObjectUseCase {
+public class InternalStorageObjectServiceImpl implements InternalStorageObjectUseCase {
     private final StorageObjectRepository storageObjectRepository;
 
-    public InternalStorageObjectService(StorageObjectRepository storageObjectRepository) {
+    public InternalStorageObjectServiceImpl(StorageObjectRepository storageObjectRepository) {
         this.storageObjectRepository = storageObjectRepository;
     }
 

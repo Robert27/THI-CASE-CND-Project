@@ -1,5 +1,6 @@
 package dev.eggl.adapter.in.rest.category;
 
+import dev.eggl.adapter.in.rest.category.dto.ListCategoryResponse;
 import dev.eggl.domain.model.Category;
 import dev.eggl.port.in.CategoryListUseCase;
 import jakarta.ws.rs.GET;
@@ -11,16 +12,16 @@ import java.util.List;
 
 @Path("/category")
 @Produces(MediaType.APPLICATION_JSON)
-public class CategoryController {
+public class RestCategoryController {
 
     private final CategoryListUseCase categoryListUseCase;
 
-    public CategoryController(CategoryListUseCase categoryListUseCase) {
+    public RestCategoryController(CategoryListUseCase categoryListUseCase) {
         this.categoryListUseCase = categoryListUseCase;
     }
 
     @GET
-    public List<ListCategoryModel> findAll() {
+    public List<ListCategoryResponse> findAll() {
         List<Category> categories;
 
         try {
@@ -30,7 +31,7 @@ public class CategoryController {
         }
 
         return categories.stream()
-                .map(ListCategoryModel::fromDomainModel)
+                .map(ListCategoryResponse::fromDomainModel)
                 .toList();
     }
 
