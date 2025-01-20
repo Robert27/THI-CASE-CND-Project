@@ -21,12 +21,12 @@ import {
   Tooltip,
   Card,
   CardBody,
+  Spinner,
 } from "@nextui-org/react";
 import { toast } from "react-toastify";
 
 import ErrorDisplay from "@/components/ErrorDisplay";
 import PageHeader from "@/components/PageHeader";
-import LoadingSpinner from "@/components/LoadingSpinner";
 import { Order } from "@/types";
 
 type GroupedOrders = {
@@ -34,6 +34,32 @@ type GroupedOrders = {
 };
 
 const httpHost = process.env.NEXT_PUBLIC_HTTP_HOST ?? "";
+
+const useLoadingMessages = () => {
+  const messages = [
+    "Fetching your orders...",
+    "Checking latest prices...",
+    "Updating availability...",
+    "Creating order list...",
+    "Almost there...",
+    "Hang tight, we're on it...",
+    "Just a moment more...",
+    "Preparing your data...",
+    "Loading your orders...",
+    "Finalizing details...",
+  ];
+  const [currentMessage, setCurrentMessage] = React.useState(0);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentMessage((prev) => (prev + 1) % messages.length);
+    }, 1500);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return messages[currentMessage];
+};
 
 export default function OrderPage() {
   const { data: session, status } = useSession({
@@ -147,8 +173,8 @@ export default function OrderPage() {
       }, {}) || {}
     );
   };
+  const loadingMessage = useLoadingMessages();
 
-  if (isLoading) return <LoadingSpinner />;
   if (error) return <ErrorDisplay error={error as Error} />;
 
   const groupedOrders = groupOrdersByDate(orders || []);
@@ -166,105 +192,116 @@ export default function OrderPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-4 space-y-6">
+    <div className="max-w-7xl mx-auto p-4 pt-8 space-y-6">
       <PageHeader
         description="View and confirm your orders here."
         title="Order Lists"
       />
 
-      {sortedDates.length === 0 ? (
-        <Card className="max-w-screen-md mx-auto space-y-4">
-          <CardBody className="text-center py-8">
-            <h3 className="text-xl font-semibold mb-2">No Orders Found</h3>
-            <p className="text-default-500">
-              No due orders found yet. Please check back later.
-              <br />
-              To create objects go to the objects page and assign them to a week
-              day.
+      <div className="mt-8">
+        {isLoading ? (
+          <div className="flex flex-col items-center gap-4 py-8">
+            <Spinner size="lg" />
+            <p className="text-default-500 animate-pulse mt-1 font-bold">
+              {loadingMessage}
             </p>
-          </CardBody>
-        </Card>
-      ) : (
-        <div className="space-y-6">
-          {sortedDates.map((date) => (
-            <div key={date} className="space-y-2">
-              <h3 className="text-lg font-semibold">Orders for {date}</h3>
-              <Table
-                aria-label="Orders table"
-                className="w-full"
-                selectionMode="none"
-              >
-                <TableHeader>
-                  <TableColumn>Item Name</TableColumn>
-                  <TableColumn>Order Quantity</TableColumn>
-                  <TableColumn>Price</TableColumn>
-                  <TableColumn>Status</TableColumn>
-                  <TableColumn>Actions</TableColumn>
-                </TableHeader>
-                <TableBody items={groupedOrders[date]}>
-                  {(item) => (
-                    <TableRow key={item.itemId}>
-                      <TableCell>
-                        <Tooltip content={item.description}>
-                          {item.itemName}
-                        </Tooltip>
-                      </TableCell>
+          </div>
+        ) : sortedDates.length === 0 ? (
+          <Card className="max-w-screen-md mx-auto space-y-4">
+            <CardBody className="text-center py-8">
+              <h3 className="text-xl font-semibold mb-2">No Orders Found</h3>
+              <p className="text-default-500">
+                No due orders found yet. Please check back later.
+                <br />
+                To create objects go to the objects page and assign them to a
+                week day.
+              </p>
+            </CardBody>
+          </Card>
+        ) : (
+          <div className="space-y-6">
+            {sortedDates.map((date) => (
+              <div key={date} className="space-y-2">
+                <h3 className="text-lg font-semibold">Orders for {date}</h3>
+                <Table
+                  aria-label="Orders table"
+                  className="w-full"
+                  selectionMode="none"
+                >
+                  <TableHeader>
+                    <TableColumn>Item Name</TableColumn>
+                    <TableColumn>Order Quantity</TableColumn>
+                    <TableColumn>Price</TableColumn>
+                    <TableColumn>Status</TableColumn>
+                    <TableColumn>Actions</TableColumn>
+                  </TableHeader>
+                  <TableBody items={groupedOrders[date]}>
+                    {(item) => (
+                      <TableRow key={item.itemId}>
+                        <TableCell>
+                          <Tooltip content={item.description}>
+                            {item.itemName}
+                          </Tooltip>
+                        </TableCell>
 
-                      <TableCell>
-                        {item.orderQuantity + " / " + item.availabilityQuantity}
-                      </TableCell>
-                      <TableCell>{formatPrice(item.price)}</TableCell>
-                      <TableCell>
-                        <Tooltip content={item.statusMessage}>
-                          {item.statusMessage.includes("Fehler") ? (
-                            <Button content="error" size="sm">
-                              <p className="text-warning">Error</p>
-                              <LuTriangleAlert className="text-warning text-xl" />
-                            </Button>
-                          ) : (
-                            <Button content="success" size="sm">
-                              <p className="text-success">Success</p>
-                              <LuCircleCheck className="text-success text-xl" />
-                            </Button>
-                          )}
-                        </Tooltip>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          <Tooltip content="Buy this item" size="md">
-                            <Button
-                              isIconOnly
-                              color="primary"
-                              isLoading={performOrderMutation.isPending}
-                              size="sm"
-                              onPress={() =>
-                                handleBuy(item.itemId, item.orderQuantity)
-                              }
-                            >
-                              <LuShoppingCart />
-                            </Button>
+                        <TableCell>
+                          {item.orderQuantity +
+                            " / " +
+                            item.availabilityQuantity}
+                        </TableCell>
+                        <TableCell>{formatPrice(item.price)}</TableCell>
+                        <TableCell>
+                          <Tooltip content={item.statusMessage}>
+                            {item.statusMessage.includes("Fehler") ? (
+                              <Button content="error" size="sm">
+                                <p className="text-warning">Error</p>
+                                <LuTriangleAlert className="text-warning text-xl" />
+                              </Button>
+                            ) : (
+                              <Button content="success" size="sm">
+                                <p className="text-success">Success</p>
+                                <LuCircleCheck className="text-success text-xl" />
+                              </Button>
+                            )}
                           </Tooltip>
-                          <Tooltip content="Cancel this item" size="md">
-                            <Button
-                              isIconOnly
-                              color="default"
-                              isLoading={abortOrderMutation.isPending}
-                              size="sm"
-                              onPress={() => handleCancel(item.itemId)}
-                            >
-                              <LuX />
-                            </Button>
-                          </Tooltip>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          ))}
-        </div>
-      )}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-2">
+                            <Tooltip content="Buy this item" size="md">
+                              <Button
+                                isIconOnly
+                                color="primary"
+                                isLoading={performOrderMutation.isPending}
+                                size="sm"
+                                onPress={() =>
+                                  handleBuy(item.itemId, item.orderQuantity)
+                                }
+                              >
+                                <LuShoppingCart />
+                              </Button>
+                            </Tooltip>
+                            <Tooltip content="Cancel this item" size="md">
+                              <Button
+                                isIconOnly
+                                color="default"
+                                isLoading={abortOrderMutation.isPending}
+                                size="sm"
+                                onPress={() => handleCancel(item.itemId)}
+                              >
+                                <LuX />
+                              </Button>
+                            </Tooltip>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

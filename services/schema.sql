@@ -55,7 +55,8 @@ create table if not exists order_object
         primary key,
     item_id      integer   not null
         constraint fk_item
-            references objects,
+            references objects
+            on delete cascade,
     user_id      integer   not null
         constraint fk_user
             references users,

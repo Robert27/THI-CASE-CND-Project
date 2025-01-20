@@ -24,9 +24,8 @@ import { httpHost } from "../providers";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import PageHeader from "@/components/PageHeader";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import CreateObjectModal from "@/components/CreateObjectModal";
-import EditObjectModal from "@/components/EditObjectModal";
-import { StorageObject, Category } from "@/types";
+import UniversalObjectModal from "@/components/UniversalObjectModal";
+import { StorageObject, Category, StorageObjectResponse } from "@/types";
 
 export default function ObjectsPage() {
   const { data: session, status } = useSession({
@@ -56,10 +55,10 @@ export default function ObjectsPage() {
   });
 
   const {
-    data: items = [],
+    data: items = null,
     error: fetchError,
     isLoading,
-  } = useQuery<StorageObject[]>({
+  } = useQuery<StorageObjectResponse>({
     queryKey: ["objects"],
     queryFn: async () => {
       if (!session?.user) throw new Error("No token found");
@@ -87,12 +86,14 @@ export default function ObjectsPage() {
   ];
 
   const fuse = new Fuse(
-    items.map((item) => ({
-      ...item,
-      weekdayName: weekdays[item.weekday],
-      categoryName:
-        categories.find((c) => c.id === item.categoryId)?.name || "Unknown",
-    })),
+    items?.items
+      ? items.items.map((item) => ({
+          ...item,
+          weekdayName: weekdays[item.weekday],
+          categoryName:
+            categories.find((c) => c.id === item.categoryId)?.name || "Unknown",
+        }))
+      : [],
     {
       keys: ["name", "weekdayName", "categoryName"],
       threshold: 0.4,
@@ -100,11 +101,15 @@ export default function ObjectsPage() {
     }
   );
 
-  const filteredItems = searchQuery.trim()
-    ? fuse
-        .search(searchQuery)
-        .map((result) => items.find((item) => item.id === result.item.id)!)
-    : items;
+  const filteredItems =
+    searchQuery.trim() && items?.items
+      ? fuse
+          .search(searchQuery)
+          .map((result) =>
+            items.items.find((item) => item.id === result.item.id)
+          )
+          .filter((item): item is StorageObject => item !== undefined)
+      : items?.items || [];
 
   const createObjectMutation = useMutation<
     void,
@@ -341,34 +346,33 @@ export default function ObjectsPage() {
                 )}
               </TableBody>
             </Table>
+            <div className="text-sm text-default-500 text-center mt-4">
+              Total items: {items?.totalItems || 0}
+            </div>
           </div>
         </div>
       </div>
 
-      <CreateObjectModal
-        key={String(isModalOpen)}
-        alertMessage={alertMessage}
-        categories={categories}
-        isOpen={isModalOpen}
-        onAlertClose={handleAlertClose}
-        onClose={() => {
-          setIsModalOpen(false);
-          setAlertMessage(null);
-        }}
-        onSubmit={handleSubmit}
-      />
-
-      <EditObjectModal
+      <UniversalObjectModal
         alertMessage={alertMessage}
         categories={categories}
         editObject={editObject}
-        isOpen={isEditModalOpen}
+        isOpen={isModalOpen || isEditModalOpen}
+        mode={isModalOpen ? "create" : "edit"}
         onAlertClose={handleAlertClose}
         onClose={() => {
+          setIsModalOpen(false);
           setIsEditModalOpen(false);
+          setEditObject(null);
           setAlertMessage(null);
         }}
-        onSubmit={handleEditSubmit}
+        onSubmit={(data) => {
+          if (isModalOpen) {
+            handleSubmit(data as Omit<StorageObject, "id">);
+          } else {
+            handleEditSubmit(data as StorageObject);
+          }
+        }}
       />
     </div>
   );

@@ -4,6 +4,13 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
+export type StorageObjectResponse = {
+  items: StorageObject[];
+  totalItems: number;
+  hasMore: boolean;
+  nextPageToken: null | string;
+};
+
 export type StorageObject = {
   id: number;
   name: string;
