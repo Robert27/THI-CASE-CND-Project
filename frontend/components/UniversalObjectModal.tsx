@@ -35,6 +35,7 @@ type UniversalObjectModalProps = {
   mode: "create" | "edit";
   editObject?: StorageObject | null;
   isLoading?: boolean; // Add this prop
+  prefillData?: Omit<StorageObject, "id" | "reorderUrl"> | null;
 };
 
 const MOCK_BASE_URL =
@@ -56,7 +57,8 @@ export default function UniversalObjectModal({
   onAlertClose,
   mode,
   editObject,
-  isLoading = false, // Add this prop with default
+  isLoading = false,
+  prefillData,
 }: UniversalObjectModalProps) {
   const [formData, setFormData] = useState<Partial<StorageObject>>({
     name: "",
@@ -72,6 +74,8 @@ export default function UniversalObjectModal({
   useEffect(() => {
     if (mode === "edit" && editObject) {
       setFormData(editObject);
+    } else if (mode === "create" && prefillData) {
+      setFormData(prefillData);
     } else {
       setFormData({
         name: "",
@@ -82,7 +86,7 @@ export default function UniversalObjectModal({
         reorderUrl: "",
       });
     }
-  }, [mode, editObject, isOpen]);
+  }, [mode, editObject, isOpen, prefillData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
