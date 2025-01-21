@@ -57,9 +57,10 @@ public class StorageObjectServiceImpl implements StorageObjectUseCase {
         }
         if (quantity == null || quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be greater than 0");
+        } else if (quantity > 50) {
+            throw new IllegalArgumentException("Quantity must be less than or equal to 50");
         }
 
-        // try to authenticate the user
         AuthenticatedUser user;
         try {
             user = authenticationUseCase.authenticate(token);
@@ -120,7 +121,6 @@ public class StorageObjectServiceImpl implements StorageObjectUseCase {
             existingObject.setCategoryId(categoryId);
         }
         if (reorderUrl != null) {
-            System.out.println("reorderUrl: " + reorderUrl);
             if (!urlValidationPort.validateUrl(reorderUrl)) {
                 System.out.println("url is invalid");
                 throw new IllegalArgumentException("Reorder URL is invalid or unreachable");
@@ -134,6 +134,8 @@ public class StorageObjectServiceImpl implements StorageObjectUseCase {
         if (quantity != null) {
             if (quantity <= 0) {
                 throw new IllegalArgumentException("Quantity must be greater than 0");
+            } else if (quantity > 50) {
+                throw new IllegalArgumentException("Quantity must be less than or equal to 50");
             }
             existingObject.setQuantity(quantity);
         }
