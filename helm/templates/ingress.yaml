@@ -12,8 +12,7 @@ spec:
       services:
         - name: {{ include "helm.fullname" . }}-userservice
           port: 8080
-          weighted:
-            weight: 1
+          weight: 1
       middlewares:
         - name: strip-prefix
 
@@ -23,8 +22,7 @@ spec:
       services:
         - name: {{ include "helm.fullname" . }}-authservice
           port: 8080
-          weighted:
-            weight: 1
+          weight: 1
       middlewares:
         - name: strip-prefix
           
@@ -34,8 +32,7 @@ spec:
       services:
         - name: {{ include "helm.fullname" . }}-object-management
           port: 8080
-          weighted:
-            weight: 1
+          weight: 1
       middlewares:
         - name: strip-prefix
 
@@ -45,8 +42,7 @@ spec:
       services:
         - name: {{ include "helm.fullname" . }}-order-list
           port: 8080
-          weighted:
-            weight: 1
+          weight: 1
       middlewares:
         - name: strip-prefix
 
@@ -56,8 +52,7 @@ spec:
       services:
         - name: {{ include "helm.fullname" . }}-interval-monitor
           port: 8080
-          weighted:
-            weight: 1
+          weight: 1
       middlewares:
         - name: strip-prefix
   
@@ -67,8 +62,7 @@ spec:
       services:
         - name: {{ include "helm.fullname" . }}-docs
           port: 80
-          weighted:
-            weight: 1
+          weight: 1
         
     - match: PathPrefix(`/`)
       kind: Rule
@@ -76,8 +70,7 @@ spec:
       services:
         - name: {{ include "helm.fullname" . }}-frontend
           port: 3000
-          weighted:
-            weight: 1
+          weight: 1
 
 ---
 apiVersion: traefik.io/v1alpha1
