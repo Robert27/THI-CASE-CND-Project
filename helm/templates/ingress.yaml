@@ -63,6 +63,8 @@ spec:
         - name: {{ include "helm.fullname" . }}-docs
           port: 80
           weight: 1
+      middlewares:
+        - name: rewrite-docs
 
     - match: PathPrefix(`/`)
       kind: Rule
@@ -116,3 +118,12 @@ spec:
   stripPrefix:
     prefixes:
       - /rest/interval
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: rewrite-docs
+spec:
+  stripPrefix:
+    prefixes:
+      - /docs
