@@ -62,8 +62,9 @@ export default function RootLayout({
               <main>{children}</main>
               <footer className="w-full flex items-center justify-center py-3">
                 <span className="text-sm text-center text-default-500">
-                  © {new Date().getFullYear()} {siteConfig.name} - A student
-                  project at THI
+                  © {new Date().getFullYear()} - {siteConfig.name}
+                  <br />
+                  Robert Eggl - Leonie Rößler - Andreas Ziegltrum
                 </span>
                 <Link
                   isExternal

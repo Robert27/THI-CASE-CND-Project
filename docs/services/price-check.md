@@ -1,4 +1,4 @@
-# Preisüberwachungs
+# Preisüberwachung
 
 Der Preisüberwachungs-Service ist ein Service zum Abfragen von Objektpreisen.
 Er bietet die Möglichkeit den aktuellen Preis sowie die Verfügbarkeit eines Objektes abzufragen und in der Datenbank zu speichern.

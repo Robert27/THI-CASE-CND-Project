@@ -26,7 +26,13 @@ export default function LoginButton() {
   return status === "authenticated" ? (
     <Dropdown>
       <DropdownTrigger>
-        <Avatar alt="User" color="primary" name={session?.user?.username} />
+        <Avatar
+          isBordered
+          alt="User"
+          color="primary"
+          name={session?.user?.username}
+          size="sm"
+        />
       </DropdownTrigger>
       <DropdownMenu>
         <DropdownItem

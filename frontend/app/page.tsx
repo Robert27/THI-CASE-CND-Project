@@ -36,7 +36,7 @@ export default function Home() {
         )}
         <div className="inline-block max-w-xl text-center justify-center">
           {session?.user?.username && (
-            <div className="text-3xl font-bold mb-4">
+            <div className="text-3xl font-bold mb-4 animate-wiggle">
               Hello {session.user.username} 👋
             </div>
           )}

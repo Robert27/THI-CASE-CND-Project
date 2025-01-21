@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { LuPen, LuTrash2, LuCopy } from "react-icons/lu";
+import { LuPen, LuTrash2, LuCopy, LuPlus } from "react-icons/lu";
 import {
   Button,
   Alert,
@@ -16,6 +16,7 @@ import {
   TableRow,
   Chip,
   Tooltip,
+  Input,
 } from "@nextui-org/react";
 import Fuse from "fuse.js";
 
@@ -310,19 +311,22 @@ export default function ObjectsPage() {
 
           {/* Search and New Button Section */}
           <div className="flex justify-between items-center mb-4">
-            <input
-              className="w-64 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            <Input
+              className="w-64  py-2  "
               placeholder="Search objects..."
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+              }}
             />
             <Button
               color="primary"
-              size="lg"
+              size="md"
               onPress={() => setIsModalOpen(true)}
             >
-              + New Object
+              <LuPlus />
+              New Object
             </Button>
           </div>
 

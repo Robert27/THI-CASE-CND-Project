@@ -265,10 +265,17 @@ export default function UniversalObjectModal({
               >
                 {mode === "create" ? "Create" : "Save"}
               </Button>
+              {!canSubmit && (
+                <p className="text-xs text-default-500 self-center ml-4">
+                  Fill in all required fields to submit
+                </p>
+              )}
             </div>
           </Form>
 
-          <div className="mt-4 p-4 bg-default-100 rounded-lg">
+          <div className="h-px bg-divider my-4" />
+
+          <div className="p-4 bg-default-100 rounded-lg">
             <h3 className="text-sm font-semibold mb-2">Available Mock Links</h3>
             <p className="text-sm text-default-500 mb-3">
               Use these mock API endpoints for testing. Click a button to copy

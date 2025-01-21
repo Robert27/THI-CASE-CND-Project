@@ -6,15 +6,19 @@
     0% {
         transform: translate(0px, 0px) scale(1);
     }
+
     25% {
         transform: translate(40px, -40px) scale(1.1);
     }
+
     50% {
         transform: translate(-20px, 40px) scale(0.9);
     }
+
     75% {
         transform: translate(-30px, -30px) scale(1.05);
     }
+
     100% {
         transform: translate(0px, 0px) scale(1);
     }
@@ -24,18 +28,53 @@
     0% {
         transform: translate(0px, 0px) scale(1);
     }
+
     25% {
         transform: translate(-40px, 40px) scale(1.1);
     }
+
     50% {
         transform: translate(20px, -40px) scale(0.9);
     }
+
     75% {
         transform: translate(30px, 30px) scale(1.05);
     }
+
     100% {
         transform: translate(0px, 0px) scale(1);
     }
+}
+
+@keyframes wiggle {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    20% {
+        transform: rotate(-2deg);
+    }
+
+    40% {
+        transform: rotate(2deg);
+    }
+
+    60% {
+        transform: rotate(-1deg);
+    }
+
+    80% {
+        transform: rotate(1deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+
+}
+
+.animate-wiggle {
+    animation: wiggle 0.5s ease-in-out;
 }
 
 .animate-blob {
@@ -71,5 +110,3 @@
 .dark .dot-grid {
     background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.2) 1.5px, transparent 0);
 }
-
-/* Remove any previous additional dot-grid styles */

@@ -79,9 +79,9 @@ function sidebarServices(): DefaultTheme.SidebarItem[] {
         { text: "Intervall Monitoring", link: "interval-monitor" },
         { text: "Nutzerverwaltung", link: "user-management" },
         { text: "Authentifizierung", link: "authentication" },
-        { text: "Preis- und URL-Überwachung", link: "price-url" },
+        { text: "Preisüberwachung", link: "price-check" },
         { text: "Bestellungsverwaltung", link: "order-management" },
-        { text: "Frontend", link: "frontend" },
+        { text: "URL-Validierung", link: "url-validation" },
       ],
     },
     {
