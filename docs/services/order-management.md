@@ -174,7 +174,40 @@ Diese Adapter rufen externe Services auf, um Preise bzw. Artikel-Details abzuhol
 
 ---
 
-## Zusammenfassung
+## Installation und Start in einer VM
 
-Der **Order List Service** bietet eine zentrale Verwaltung für Bestelllisten. Er integriert mehrere externe Dienste (Preisabfrage, Artikelverwaltung, externe Bestellabwicklung), sodass **Endkunden** oder **interne Services** lediglich gegen eine REST- oder gRPC-Schnittstelle arbeiten müssen und keine Details der externen Systeme kennen. Die Anwendung folgt einer klar getrennten **Ports-&-Adapters-Architektur**, was eine gute Wartbarkeit und Erweiterbarkeit sicherstellt.
+### Voraussetzungen:
+- **Betriebssystem:** Linux-basierte Distribution (z. B. Ubuntu, CentOS)
+- **Vorinstallierte Software:**
+    - Java 21 JDK (z. B. OpenJDK)
+    - Maven 3.9.9 oder höher
+- **Zugriff auf Internet:** Für Maven-Repositories
+### Installation: 
+
+1. Klonen Sie das Repository und wechseln Sie in den Projektordner
+   ```bash
+   git clone https://github.com/roberteggl/THI-CASE-CND-Projekt.git
+   cd THI-CASE-CND-Projekt/services/order-list
+   ```
+2. Installieren Sie die Abhängigkeiten und bauen Sie das Projekt
+   ```bash
+   mvn package
+   ```
+    Nach erfolgreichem Build wird die ausführbare Datei im Verzeichnis target erstellt.
+
+3. Starten Sie den Dienst mit:
+   ```bash
+   java -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -jar target/quarkus-app/quarkus-run.jar
+   ```
+Parameter-Erklärung:
+- `-Dquarkus.http.host=0.0.0.0`: Setzt die Bind-Adresse des HTTP-Servers auf `0.0.0.0`. Ermöglicht den Zugriff auf den Dienst von allen Netzwerkadressen, nicht nur localhost.
+- `-Djava.util.logging.manager=org.jboss.logmanager.LogManager`: Setzt den Log-Manager auf `org.jboss.logmanager`, der von Quarkus verwendet wird.
+- `-jar target/quarkus-app/quarkus-run.jar`: Startet die Anwendung aus der Quarkus-Build-Struktur.
+
+Anschließend ist die Anwendung über http://localhost:8082 erreichbar. 
+
 ---
+
+## Zusammenfassung:
+
+Der Order List Service bietet eine zentrale Verwaltung für Bestelllisten. Er integriert mehrere externe Dienste (Preisabfrage, Artikelverwaltung, externe Bestellabwicklung), sodass **Endkunden** oder **interne Services** lediglich gegen eine REST- oder gRPC-Schnittstelle arbeiten müssen und keine Details der externen Systeme kennen. Die Anwendung folgt einer klar getrennten **Ports-&-Adapters-Architektur**, was eine gute Wartbarkeit und Erweiterbarkeit sicherstellt.
