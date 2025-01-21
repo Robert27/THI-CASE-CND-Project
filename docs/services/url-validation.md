@@ -4,7 +4,7 @@
 
 Der URL-Validierungs-Service ist ein Service zur Validierung von URLs.
 
-- **Autor**: Leonie Rößler
+- **Autorin**: Leonie Rößler
 - **Architektur**: -
 - **Technologie**: Quarkus (Java)
 

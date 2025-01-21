@@ -2,9 +2,9 @@
 
 <!-- Content for Bestellungsverwaltung -->
 Bestelllistenservice 
-Autor: Leonie Rößler
-Architektur: Hexagonal
-Technologie: Quarkus (Java)
+- Autorin: Leonie Rößler
+- Architektur: Hexagonal
+- Technologie: Quarkus (Java)
 
 Der **Order List Service** verwaltet Bestellungen („Orders“) und ist Bestandteil eines größeren Systems, in dem Artikel (Items) angelegt, deren Preise überwacht und Bestellungen schließlich ausgeführt werden können.
 Anlegen von Bestellobjekten in einer Bestellliste, Ausgabe Bestellliste für User, Durchführen von Bestellungen, Löschen ("Stornieren") von Bestellungen
