@@ -1,7 +1,5 @@
 # Preisüberwachungs
 
-<!-- Content for Preisüberwachungs -->
-
 Der Preisüberwachungs-Service ist ein Service zum Abfragen von Objektpreisen.
 Er bietet die Möglichkeit den aktuellen Preis sowie die Verfügbarkeit eines Objektes abzufragen und in der Datenbank zu speichern.
 
@@ -90,4 +88,4 @@ Parameter-Erklärung:
 - `-Djava.util.logging.manager=org.jboss.logmanager.LogManager`: Setzt den Log-Manager auf `org.jboss.logmanager`, der von Quarkus verwendet wird.
 - `-jar target/quarkus-app/quarkus-run.jar`: Startet die Anwendung aus der Quarkus-Build-Struktur.
 
-Anschließend ist die Anwendung über http://localhost:8086 erreichbar. 
+Anschließend ist die Anwendung über `http://localhost:808` erreichbar. 
