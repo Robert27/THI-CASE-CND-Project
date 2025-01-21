@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { LuPen, LuTrash2 } from "react-icons/lu";
+import { LuPen, LuTrash2, LuCopy } from "react-icons/lu";
 import {
   Button,
   Alert,
@@ -41,6 +41,10 @@ export default function ObjectsPage() {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [alertPageMessage, setAlertPageMessage] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [prefillData, setPrefillData] = useState<Omit<
+    StorageObject,
+    "id" | "reorderUrl"
+  > | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -260,8 +264,23 @@ export default function ObjectsPage() {
     },
   });
 
+  const handleDuplicate = (object: StorageObject) => {
+    const { id, reorderUrl, ...strippedObject } = object;
+
+    setPrefillData(strippedObject);
+    setIsModalOpen(true);
+  };
+
   const handleAlertClose = () => {
     setAlertMessage(null);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setIsEditModalOpen(false);
+    setEditObject(null);
+    setAlertMessage(null);
+    setPrefillData(null);
   };
 
   if (isLoading) return <LoadingSpinner />;
@@ -346,6 +365,16 @@ export default function ObjectsPage() {
                             <LuPen />
                           </Button>
                         </Tooltip>
+                        <Tooltip content="Duplicate this item" size="md">
+                          <Button
+                            isIconOnly
+                            color="default"
+                            size="sm"
+                            onPress={() => handleDuplicate(item)}
+                          >
+                            <LuCopy />
+                          </Button>
+                        </Tooltip>
                         <Tooltip content="Delete this item" size="md">
                           <Button
                             isIconOnly
@@ -378,13 +407,9 @@ export default function ObjectsPage() {
         }
         isOpen={isModalOpen || isEditModalOpen}
         mode={isModalOpen ? "create" : "edit"}
+        prefillData={prefillData}
         onAlertClose={handleAlertClose}
-        onClose={() => {
-          setIsModalOpen(false);
-          setIsEditModalOpen(false);
-          setEditObject(null);
-          setAlertMessage(null);
-        }}
+        onClose={handleModalClose}
         onSubmit={(data) => {
           if (isModalOpen) {
             handleSubmit(data as Omit<StorageObject, "id">);
