@@ -59,6 +59,18 @@ getItemInfo:
     port: 9094
   replicas: 1
   type: ClusterIP
+  livenessProbe:
+    httpGet:
+      path: /q/health/live
+      port: 8086
+    initialDelaySeconds: 30
+    periodSeconds: 5
+  readinessProbe:
+    httpGet:
+      path: /q/health/ready
+      port: 8086
+    initialDelaySeconds: 30
+    periodSeconds: 5
 intervalMonitor:
   intervalMonitor:
     env:
@@ -131,17 +143,44 @@ orderList:
     targetPort: 8082
   replicas: 1
   type: ClusterIP
+  livenessProbe:
+    httpGet:
+      path: /q/health/live
+      port: 8082
+    initialDelaySeconds: 30
+    periodSeconds: 5
+  readinessProbe:
+    httpGet:
+      path: /q/health/ready
+      port: 8082
+    initialDelaySeconds: 30
+    periodSeconds: 5
 pvc:
   databaseData:
     storageRequest: 100Mi
 urlValidator:
-  ports:
-  - name: url-grpc
-    port: 9092
-  replicas: 1
-  type: ClusterIP
   urlValidator:
     image: ghcr.io/robert27/thi-case-cnd-project/url-validator:latest
+  ports:
+    - name: url-grpc
+      port: 9092
+    - name: order-http
+      port: 8080
+      targetPort: 8085
+  replicas: 1
+  type: ClusterIP
+  livenessProbe:
+    httpGet:
+      path: /q/health/live
+      port: 8085
+    initialDelaySeconds: 30
+    periodSeconds: 5
+  readinessProbe:
+    httpGet:
+      path: /q/health/ready
+      port: 8085
+    initialDelaySeconds: 30
+    periodSeconds: 5
 
 userservice:
   ports:

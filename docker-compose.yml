@@ -146,6 +146,12 @@ services:
       GRPC_PRICECHECK_HOST: get-item-info
       GRPC_OBJECTS_PORT: 9090
       GRPC_OBJECTS_HOST: object-management
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8082/q/health | grep UP || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
     expose:
       - 9093
       - 8082
@@ -156,8 +162,16 @@ services:
 
   url-validator:
     image: ghcr.io/robert27/thi-case-cnd-project/url-validator:latest
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8085/q/health | grep UP || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
     expose:
       - 9092
+      - 8085
+    restart: unless-stopped
 
   get-item-info:
     image: ghcr.io/robert27/thi-case-cnd-project/get-item-info:latest
@@ -171,8 +185,14 @@ services:
       GRPC_OBJECTS_HOST: object-management
       GRPC_URL_PORT: 9092
       GRPC_URL_HOST: url-validator
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8086/q/health | grep UP || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
     expose:
-      - 8080
+      - 8086
       - 9094
     depends_on:
       database:
