@@ -4,12 +4,12 @@
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview"
   },
-  "dependencies": {},
   "devDependencies": {
-    "vitepress": "^1.5.0",
-    "@types/node": "latest"
+    "@types/node": "latest",
+    "vitepress": "^1.6.1"
   },
   "resolutions": {
     "rollup": "npm:@rollup/wasm-node"
-  }
+  },
+  "packageManager": "pnpm@9.7.1+sha512.faf344af2d6ca65c4c5c8c2224ea77a81a5e8859cbc4e06b1511ddce2f0151512431dd19e6aff31f2c6a8f5f2aced9bd2273e1fed7dd4de1868984059d2c4247"
 }

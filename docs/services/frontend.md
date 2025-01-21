@@ -4,6 +4,7 @@ Das Dashboard ist die Benutzeroberfläche für die Verwaltung der Objekte und Be
 Natürlich bietet es auch die Möglichkeit, sich als Nutzer zu registrieren, einzuloggen und das Passwort zu ändern.
 
 - **Technologie**: Next.js (React)
+- **Autor**: Robert Eggl
 
 ## Verwenden ohne Docker
 
@@ -14,8 +15,6 @@ Zum entwickeln und testen des Frontends ohne Docker, können Sie die folgenden S
 Kopieren Sie die `.env.local.example` Datei und benennen Sie sie in `.env.local` um. Passen Sie die Werte der Umgebungsvariablen an.
 Dies ist besonders wichtig, um die API-URL zu setzen, damit das Frontend die API erreichen kann.
 
-````
-
 ### Lokales bauen und starten
 
 - Node.js v20.0.0 oder höher
@@ -24,4 +23,6 @@ Dies ist besonders wichtig, um die API-URL zu setzen, damit das Frontend die API
 corepack enable
 pnpm install
 pnpm run dev
-````
+```
+
+Das Frontend sollte nun unter `http://localhost:3000` erreichbar sein.

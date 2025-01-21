@@ -11,6 +11,16 @@ Er bietet die Möglichkeit je Nutzer Objekte zu erstellen, bearbeiten und lösch
 
 Der Objekt Management Service ist ein Service zur Verwaltung von Objekten.
 
+## Architketur Skizze
+
+<img src="../assets/object-hexa.svg" alt="Architektur Skizze" />
+
+## Sequenzdiagramm
+
+Das folgende Sequenzdiagramm zeigt den vereinfachten Ablauf der Objektverwaltung ohne die Berücksichtigung der hexagonalen Architektur.
+
+![Objekt Management Sequenzdiagramm](../assets/object-sequence.svg)
+
 ### REST API
 
 Die REST API bietet die Möglichkeit, Objekte zu erstellen, bearbeiten und löschen. Die API ist durch die JWT Authentifizierung geschützt.
@@ -43,14 +53,10 @@ Der Objekt Management Service bietet als Server die folgenden Services an:
 | GetStorageObjectsByIds | StorageObjectIdsRequest | StorageObjectsReply | Abrufen von Speicherobjekten anhand ihrer IDs |
 | FindAllDayUsers        | DayUsersRequest         | DayUsersReply       | Finden aller Nutzer-Objekte eines Tages       |
 
-## Architketur Skizze
-
-<img src="../assets/object-hexa.svg" alt="Architektur Skizze" />
-
 ## Start ohne Docker
 
-Der Service kann ohne Docker gestartet werden. Dazu muss die Anwendung lokal gebaut und gestartet werden. Allerdings erfordert dieser Dienst die Abhängigkeit zum Nutzer-Management-Service, der URL Validierung und der Datenbank.
-Die Schritte der anderen Services müssen daher ebenfalls ausgeführt werden, andernfalls wird der Service nicht ordnungsgemäß funktionieren.
+Der Service kann ohne Docker gestartet werden. Dazu muss die Anwendung lokal gebaut und gestartet werden. Allerdings erfordert dieser Dienst die Abhängigkeit zum Nutzer-Management-Service, der URL Validierung und der Datenbank, welche mit dem sql script initialisiert wird. Dazu wird die Verwendung des bereitgestellten Docker Compose Setups empfohlen.
+Bei nicht beachten der Abhängigkeiten wird der Service nicht ordnungsgemäß funktionieren.
 
 Gehen Sie wie folgt vor:
 
@@ -60,10 +66,10 @@ Gehen Sie wie folgt vor:
 
    ```sh
    git clone https://github.com/roberteggl/THI-CASE-CND-Projekt.git
-   cd THI-CASE-CND-Projekt/object-management
+   cd THI-CASE-CND-Projekt/services/object-management
    ```
 
-3. **Maven Build**: Führen Sie den Maven-Build aus, um die Anwendung zu erstellen.
+3. **Maven Build**: Führen Sie den Maven-Build aus, um die Anwendung zu erstellen. Dieser Schritt führt die Installation, die Tests und das Erstellen des JAR-Files durch.
 
    ```sh
    mvn package
@@ -74,5 +80,11 @@ Gehen Sie wie folgt vor:
    ```sh
    java -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -jar target/quarkus-app/quarkus-run.jar
    ```
+
+   Was dieser Befehl macht:
+
+   - `-Dquarkus.http.host`: Setzt den Host auf `0.0.0.0`, damit die Anwendung von außen erreichbar ist.
+   - `-Djava.util.logging.manager`: Setzt den Logging Manager auf den von Quarkus verwendeten, um die Logausgabe zu verbessern.
+   - `target/quarkus-app/quarkus-run.jar`: Startet die Anwendung mit dem JAR-File, das durch den Maven Build erstellt wurde.
 
 5. **Zugriff auf die Anwendung**: Die Anwendung ist nun unter `http://localhost:8080` erreichbar.
