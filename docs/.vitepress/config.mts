@@ -89,7 +89,7 @@ function sidebarServices(): DefaultTheme.SidebarItem[] {
       collapsed: false,
       items: [
         { text: "Web App", link: "frontend" },
-        { text: "Docs", link: "docs" },
+        { text: "Dokumentation", link: "docs" },
       ],
     },
   ];
