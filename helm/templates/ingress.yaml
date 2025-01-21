@@ -14,7 +14,7 @@ spec:
           port: 8080
           weight: 1
       middlewares:
-        - name: strip-prefix
+        - name: strip-prefix-user
 
     - match: PathPrefix(`/rest/auth/`)
       kind: Rule
@@ -24,8 +24,8 @@ spec:
           port: 8080
           weight: 1
       middlewares:
-        - name: strip-prefix
-          
+        - name: strip-prefix-auth
+
     - match: PathPrefix(`/rest/object/`)
       kind: Rule
       priority: 10
@@ -34,7 +34,7 @@ spec:
           port: 8080
           weight: 1
       middlewares:
-        - name: strip-prefix
+        - name: strip-prefix-object
 
     - match: PathPrefix(`/rest/order/`)
       kind: Rule
@@ -44,7 +44,7 @@ spec:
           port: 8080
           weight: 1
       middlewares:
-        - name: strip-prefix
+        - name: strip-prefix-order
 
     - match: PathPrefix(`/rest/interval/`)
       kind: Rule
@@ -54,8 +54,8 @@ spec:
           port: 8080
           weight: 1
       middlewares:
-        - name: strip-prefix
-  
+        - name: strip-prefix-interval
+
     - match: PathPrefix(`/docs`)
       kind: Rule
       priority: 5
@@ -63,7 +63,7 @@ spec:
         - name: {{ include "helm.fullname" . }}-docs
           port: 80
           weight: 1
-        
+
     - match: PathPrefix(`/`)
       kind: Rule
       priority: 1
@@ -71,18 +71,48 @@ spec:
         - name: {{ include "helm.fullname" . }}-frontend
           port: 3000
           weight: 1
-
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: strip-prefix
+  name: strip-prefix-user
 spec:
   stripPrefix:
     prefixes:
       - /rest/user
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-prefix-auth
+spec:
+  stripPrefix:
+    prefixes:
       - /rest/auth
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-prefix-object
+spec:
+  stripPrefix:
+    prefixes:
       - /rest/object
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-prefix-order
+spec:
+  stripPrefix:
+    prefixes:
       - /rest/order
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-prefix-interval
+spec:
+  stripPrefix:
+    prefixes:
       - /rest/interval
-      - /docs
