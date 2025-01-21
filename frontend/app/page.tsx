@@ -4,6 +4,8 @@ import { button as buttonStyles } from "@nextui-org/theme";
 import { useSession } from "next-auth/react";
 import { FaBook } from "react-icons/fa6";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
+import Confetti from "react-confetti-boom";
 
 import { siteConfig } from "@/config/site";
 import { GithubIcon } from "@/components/icons";
@@ -13,10 +15,25 @@ const queryClient = new QueryClient();
 
 export default function Home() {
   const { data: session } = useSession();
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  const handleSmartOrderClick = () => {
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 2000);
+  };
 
   return (
     <QueryClientProvider client={queryClient}>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+        {showConfetti && (
+          <Confetti
+            colors={["#b008da", "#167af5", "#d63ef4", "#0eb4f5"]}
+            effectCount={60}
+            launchSpeed={1.3}
+            particleCount={60}
+            shapeSize={20}
+          />
+        )}
         <div className="inline-block max-w-xl text-center justify-center">
           {session?.user?.username && (
             <div className="text-3xl font-bold mb-4">
@@ -26,7 +43,17 @@ export default function Home() {
           <div className="space-y-4">
             <h1 className="text-5xl font-bold">
               Welcome to{" "}
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+              <span
+                className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary cursor-pointer"
+                role="button"
+                tabIndex={0}
+                onClick={handleSmartOrderClick}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handleSmartOrderClick();
+                  }
+                }}
+              >
                 SmartOrder
               </span>
             </h1>

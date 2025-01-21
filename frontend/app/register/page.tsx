@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import Confetti from "react-confetti-boom";
 
 import { httpHost } from "../providers";
 
@@ -13,6 +14,7 @@ const Register: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -33,8 +35,11 @@ const Register: React.FC = () => {
       }
     },
     onSuccess: () => {
+      setShowConfetti(true);
       toast.success("Registration successful");
-      window.location.href = "/login";
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2000); // Redirect after 2 seconds to show confetti
     },
     onError: (error) => {
       // Handle error
@@ -50,24 +55,35 @@ const Register: React.FC = () => {
   };
 
   return (
-    <AuthLayout
-      errorMessage={errorMessage}
-      subtitle="Create your new account"
-      title="SmartOrder Register"
-    >
-      <AuthForm
-        bottomLinkHref="/login"
-        bottomLinkText="Login here"
-        bottomText="Already have an account?"
-        buttonText="Register"
-        isPending={mutation.isPending}
-        password={password}
-        setPassword={setPassword}
-        setUsername={setUsername}
-        username={username}
-        onSubmit={formSubmitted}
-      />
-    </AuthLayout>
+    <>
+      {showConfetti && (
+        <Confetti
+          colors={["#b008da", "#167af5", "#d63ef4", "#0eb4f5"]}
+          effectCount={60}
+          launchSpeed={1.3}
+          particleCount={60}
+          shapeSize={20}
+        />
+      )}
+      <AuthLayout
+        errorMessage={errorMessage}
+        subtitle="Create your new account"
+        title="SmartOrder Register"
+      >
+        <AuthForm
+          bottomLinkHref="/login"
+          bottomLinkText="Login here"
+          bottomText="Already have an account?"
+          buttonText="Register"
+          isPending={mutation.isPending}
+          password={password}
+          setPassword={setPassword}
+          setUsername={setUsername}
+          username={username}
+          onSubmit={formSubmitted}
+        />
+      </AuthLayout>
+    </>
   );
 };
 

@@ -311,7 +311,7 @@ export default function ObjectsPage() {
           {/* Search and New Button Section */}
           <div className="flex justify-between items-center mb-4">
             <input
-              className="w-64 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-64 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Search objects..."
               type="text"
               value={searchQuery}

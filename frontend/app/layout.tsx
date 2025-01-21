@@ -37,26 +37,42 @@ export default function RootLayout({
       <head />
       <body
         className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen font-sans antialiased overflow-x-hidden",
           fontSans.variable
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative">
-            <Navbar />
-            <main>{children}</main>
-            <footer className="w-full flex items-center justify-center py-3">
-              <span className="text-sm text-center text-default-500">
-                © {new Date().getFullYear()} {siteConfig.name} - A student
-                project at THI
-              </span>
-              <Link
-                isExternal
-                className="flex items-center gap-1 text-current"
-                href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template"
-                title="nextui.org homepage"
-              />
-            </footer>
+          <div className="relative min-h-screen">
+            {/* Gradient Mesh Background */}
+            <div className="fixed inset-0 -z-30">
+              <div className="absolute inset-0">
+                <div className="absolute top-[5%] left-[10%] w-[45%] h-[40%] bg-purple-500 rounded-full mix-blend-normal filter blur-2xl opacity-40 animate-blob" />
+                <div className="absolute top-[25%] right-[15%] w-[40%] h-[35%] bg-blue-500 rounded-full mix-blend-normal filter blur-3xl opacity-30 animate-blob-reverse animation-delay-2000" />
+                <div className="absolute bottom-[20%] left-[20%] w-[42%] h-[38%] bg-pink-500 rounded-full mix-blend-normal filter blur-xl opacity-40 animate-blob animation-delay-4000" />
+                <div className="absolute bottom-[15%] right-[15%] w-[38%] h-[40%] bg-purple-400 rounded-full mix-blend-normal filter blur-2xl opacity-30 animate-blob-reverse animation-delay-3000" />
+                <div className="absolute top-[45%] left-[5%] w-[35%] h-[35%] bg-blue-400 rounded-full mix-blend-normal filter blur-xl opacity-40 animate-blob animation-delay-1000" />
+              </div>
+            </div>
+            {/* Blur Overlay */}
+            <div className="fixed inset-0 bg-background/45 backdrop-blur-[100px] -z-20" />
+            {/* Dot Grid Overlay */}
+            <div className="fixed inset-0 dot-grid opacity-70 -z-10 pointer-events-none" />
+            <div className="relative z-0">
+              <Navbar />
+              <main>{children}</main>
+              <footer className="w-full flex items-center justify-center py-3">
+                <span className="text-sm text-center text-default-500">
+                  © {new Date().getFullYear()} {siteConfig.name} - A student
+                  project at THI
+                </span>
+                <Link
+                  isExternal
+                  className="flex items-center gap-1 text-current"
+                  href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template"
+                  title="nextui.org homepage"
+                />
+              </footer>
+            </div>
           </div>
         </Providers>
       </body>
