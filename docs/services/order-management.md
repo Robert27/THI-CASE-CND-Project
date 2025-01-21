@@ -23,6 +23,9 @@ Der folgende Text wurde von ChatGPT generiert.
 
 Die Anwendung folgt einer **Hexagonalen Architektur** (Ports & Adapters), wodurch die Kernlogik (Domain) sauber von technischen Details (Datenbankzugriff, externe Services) getrennt ist.
 
+## Architektur Skizze
+
+![Order-List-Architektur](../assets/orderlist-hexa.png)
 
 ## Architektur (Kurzbeschreibung)
 
