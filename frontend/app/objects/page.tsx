@@ -39,6 +39,7 @@ export default function ObjectsPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editObject, setEditObject] = useState<StorageObject | null>(null);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertPageMessage, setAlertPageMessage] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const queryClient = useQueryClient();
@@ -48,7 +49,12 @@ export default function ObjectsPage() {
     queryFn: async () => {
       const res = await fetch(httpHost + "/rest/object/category");
 
-      if (!res.ok) throw new Error("Failed to fetch categories");
+      if (!res.ok) {
+        const error = "Failed to fetch categories";
+
+        setAlertPageMessage(error);
+        throw new Error(error);
+      }
 
       return res.json();
     },
@@ -61,14 +67,24 @@ export default function ObjectsPage() {
   } = useQuery<StorageObjectResponse>({
     queryKey: ["objects"],
     queryFn: async () => {
-      if (!session?.user) throw new Error("No token found");
+      if (!session?.user) {
+        const error = "No token found";
+
+        setAlertPageMessage(error);
+        throw new Error(error);
+      }
       const res = await fetch(httpHost + "/rest/object/item", {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
         },
       });
 
-      if (!res.ok) throw new Error("Failed to fetch objects");
+      if (!res.ok) {
+        const error = "Failed to fetch objects";
+
+        setAlertPageMessage(error);
+        throw new Error(error);
+      }
 
       return res.json();
     },
@@ -176,7 +192,7 @@ export default function ObjectsPage() {
       queryClient.invalidateQueries({ queryKey: ["objects"] });
     },
     onError: (error) => {
-      alert(error.message);
+      setAlertMessage(error.message);
     },
   });
 
@@ -263,13 +279,13 @@ export default function ObjectsPage() {
             />
           </div>
 
-          {alertMessage && (
+          {alertPageMessage && (
             <Alert
               className="rounded-lg"
               color="danger"
-              onClose={() => setAlertMessage(null)}
+              onClose={() => setAlertPageMessage(null)}
             >
-              {alertMessage}
+              {alertPageMessage}
             </Alert>
           )}
 
@@ -357,6 +373,9 @@ export default function ObjectsPage() {
         alertMessage={alertMessage}
         categories={categories}
         editObject={editObject}
+        isLoading={
+          createObjectMutation.isPending || updateObjectMutation.isPending
+        }
         isOpen={isModalOpen || isEditModalOpen}
         mode={isModalOpen ? "create" : "edit"}
         onAlertClose={handleAlertClose}
