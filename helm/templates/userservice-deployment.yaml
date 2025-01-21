@@ -31,14 +31,6 @@ spec:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ quote .Values.kubernetesClusterDomain }}
         image: {{ .Values.userservice.image }}
-        livenessProbe:
-            exec:
-              command:
-                - curl localhost:8080/actuator/health | grep UP || exit 1
-            failureThreshold: 3
-            initialDelaySeconds: 60
-            periodSeconds: 5
-            timeoutSeconds: 17
         name: userservice
         resources: {}
       restartPolicy: Always
