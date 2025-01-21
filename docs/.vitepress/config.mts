@@ -84,6 +84,14 @@ function sidebarServices(): DefaultTheme.SidebarItem[] {
         { text: "Frontend", link: "frontend" },
       ],
     },
+    {
+      text: "Frontend",
+      collapsed: false,
+      items: [
+        { text: "Web App", link: "frontend" },
+        { text: "Docs", link: "docs" },
+      ],
+    },
   ];
 }
 
