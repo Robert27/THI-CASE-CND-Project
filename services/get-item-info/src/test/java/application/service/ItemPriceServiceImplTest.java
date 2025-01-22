@@ -1,4 +1,3 @@
-
 package application.service;
 
 import application.port.ObjectManagementPort;
@@ -147,4 +146,3 @@ class ItemPriceServiceImplTest {
         verify(priceLogRepository).findById(logId);
     }
 }
-
