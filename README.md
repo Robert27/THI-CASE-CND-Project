@@ -5,4 +5,12 @@ Es besteht aus diversen Microservices, die zusammen ein cloud native System bild
 
 Es kann sowohl lokal, per Docker Compose, als auch in einem Kubernetes-Cluster mit Helm deployed werden.
 
-Genauere Informationen lassen sich dem Wiki entnehmen, welches unter [case.eggl.dev](https://case.eggl.dev/) bzw. in [/docs](/docs) zu finden ist.
+## Gruppenmitglieder
+
+- Robert Eggl
+- Leonie Rößler
+- Andreas Ziegltrum
+
+## Dokumentation
+
+Sämtliche Informationen lassen sich dem Wiki entnehmen, welches unter [case.eggl.dev](https://case.eggl.dev/) deployed und im Ordner [/docs](/docs) zu finden ist.
