@@ -74,23 +74,32 @@ function sidebarServices(): DefaultTheme.SidebarItem[] {
       text: "Services",
       collapsed: false,
       items: [
-        { text: "Objekt Verwaltung", link: "object-management" },
-        { text: "Intervall Monitoring", link: "interval-monitor" },
-        { text: "Nutzerverwaltung", link: "user-management" },
-        { text: "Authentifizierung", link: "authentication" },
-        { text: "Preisüberwachung", link: "price-check" },
-        { text: "Bestellungsverwaltung", link: "order-management" },
-        { text: "URL-Validierung", link: "url-validation" },
+        {
+          text: "Robert Eggl",
+          items: [
+            { text: "Objekt Verwaltung", link: "object-management" },
+            { text: "Intervall Monitoring", link: "interval-monitor" },
+            { text: "Frontend", link: "frontend" },
+          ],
+        },
+        {
+          text: "Andreas Zieltrum",
+          items: [
+            { text: "Nutzerverwaltung", link: "user-management" },
+            { text: "Authentifizierung", link: "authentication" },
+          ],
+        },
+        {
+          text: "Leonie Rößler",
+          items: [
+            { text: "Preisüberwachung", link: "price-check" },
+            { text: "Bestellungsverwaltung", link: "order-management" },
+            { text: "URL-Validierung", link: "url-validation" },
+          ],
+        },
       ],
     },
-    {
-      text: "Frontend",
-      collapsed: false,
-      items: [
-        { text: "Web App", link: "frontend" },
-        { text: "Dokumentation", link: "docs" },
-      ],
-    },
+    { text: "Dokumentation", link: "docs" },
   ];
 }
 

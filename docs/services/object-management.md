@@ -13,7 +13,7 @@ Der Objekt Management Service ist ein Service zur Verwaltung von Objekten.
 
 ## Architketur Skizze
 
-<img src="../assets/object-hexa.svg" alt="Architektur Skizze" />
+<img src="../assets/object-hexa.png" alt="Architektur Skizze" />
 
 ## Sequenzdiagramm
 
