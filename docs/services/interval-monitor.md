@@ -24,16 +24,19 @@ Der Service arbeitet in folgenden Schritten:
 
 Die Log-Tabelle erfüllt mehrere wichtige Funktionen:
 
-1. **Idempotenz**: Auch wenn der Bestellservice doppelte Bestellungen ablehnt, stellt die Log-Tabelle eine zusätzliche Sicherheitsschicht dar
-2. **Performance**: Schnelle lokale Prüfung ohne Netzwerkanfragen an den Bestellservice
-3. **Audit-Trail**: Historische Nachverfolgung aller übergebenen Bestellungen
-4. **Fehleranalyse**: Ermöglicht die Identifikation von Problemen im Bestellprozess
+- **Idempotenz**: Auch wenn der Bestellservice doppelte Bestellungen ablehnt, stellt die Log-Tabelle eine zusätzliche Sicherheitsschicht dar
+- **Performance**: Schnelle lokale Prüfung ohne Netzwerkanfragen an den Bestellservice
+- **Audit-Trail**: Historische Nachverfolgung aller übergebenen Bestellungen
+- **Fehleranalyse**: Ermöglicht die Identifikation von Problemen im Bestellprozess
 
 Diese Architektur gewährleistet Zuverlässigkeit und Effizienz bei der Verarbeitung der Bestellungen.
 
 ### Sequenzdiagramm
 
+Das folgende Sequenzdiagramm zeigt den vereinfachten Ablauf des Interval Monitoring Services.
+::: details Sequenzdiagramm anzeigen
 ![Intervall Monitoring Sequenzdiagramm](../assets/interval-sequence.svg)
+:::
 
 ### REST API für Mock-Modus
 

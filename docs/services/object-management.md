@@ -18,8 +18,9 @@ Der Objekt Management Service ist ein Service zur Verwaltung von Objekten.
 ## Sequenzdiagramm
 
 Das folgende Sequenzdiagramm zeigt den vereinfachten Ablauf der Objektverwaltung ohne die Berücksichtigung der hexagonalen Architektur.
-
+::: details Sequenzdiagramm anzeigen
 ![Objekt Management Sequenzdiagramm](../assets/object-sequence.svg)
+:::
 
 ### REST API
 
