@@ -9,7 +9,7 @@ export default defineConfig({
   lang: "de-DE",
   themeConfig: {
     nav: [
-      { text: "Dokumentation", link: "/services/philosophy" },
+      { text: "Dokumentation", link: "/services/overview" },
       { text: "Verwendung", link: "/usage/docker" },
     ],
     search: {

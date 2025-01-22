@@ -54,7 +54,11 @@ Wird die Anwendung jedoch im Docker Compose gestartet, ist der Service unter `ht
 | GET    | /mock         | Ruft das aktuell konfigurierte Mock-Datum ab          | application/json |
 | POST   | /mock/date    | Setzt ein neues Datum für den Mock-Modus (YYYY-MM-DD) | text/plain       |
 
-> **Hinweis**: Der Mock-Modus ist nur für Entwicklungs- und Testzwecke gedacht und sollte in Produktivumgebungen deaktiviert sein. Es findet keine Überprüfung der Authentifizierung statt.
+Daneben wird von Quarkus automatisch ein Health-Check unter `/q/health` bereitgestellt, welcher von Docker Compose und Kubernetes verwendet wird.
+
+::: warning Hinweis
+Der Mock-Modus ist nur für Entwicklungs- und Testzwecke gedacht und sollte in Produktivumgebungen deaktiviert sein. Es findet keine Überprüfung der Authentifizierung statt.
+:::
 
 ## Start ohne Docker
 

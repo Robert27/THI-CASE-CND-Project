@@ -41,6 +41,8 @@ Wird die Anwendung jedoch im Docker Compose gestartet, ist der Service unter `ht
 | PATCH  | [/item/{id}](#putobjectid)    | Ein bestehendes Objekt für einen authentifizierten Nutzer bearbeiten |
 | DELETE | [/item/{id}](#deleteobjectid) | Ein bestehendes Objekt für einen authentifizierten Nutzer löschen    |
 
+Daneben wird von Quarkus automatisch ein Health-Check unter `/q/health` bereitgestellt, welcher von Docker Compose und Kubernetes verwendet wird.
+
 ### gRPC
 
 gRPC dient zur Kommunikation zwischen den Services und ist daher nicht von außen erreichbar.

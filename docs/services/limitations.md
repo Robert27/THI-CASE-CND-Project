@@ -1,6 +1,6 @@
 # Limitationen
 
-Da es sich bei diesem Projekt um eine Studienarbeit handelt, gibt es einige Limitationen, die keine vollständige Funktionalität für den produktiven Einsatz garantieren. Diese Limitationen sind:
+Da es sich bei diesem Projekt um ein Studierendenprojekt handelt, gibt es einige Limitationen, die keine vollständige Funktionalität für den produktiven Einsatz garantieren. Diese Limitationen sind:
 
 - **Preise**: Es werden keine realen Preise verwendet, sondern fiktive Werte, um die Funktionalität zu demonstrieren. Dazu müssen spezielle im Frontend bereitgestellte Mock Links verwendet werden.
 - **Bestellungen**: Es werden keine echten Bestellungen durchgeführt, sondern nur simuliert.
