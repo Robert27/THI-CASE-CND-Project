@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { LuCog } from "react-icons/lu";
 import { Card, CardBody, CardHeader, Input } from "@heroui/react";
+import { toast } from "react-toastify";
 
 import { getMockEnabled, getMockDate, setMockDate } from "@/app/api/mock";
 
@@ -22,6 +23,7 @@ export default function DevPanel() {
     mutationFn: setMockDate,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mockDate"] });
+      toast.success("Mock date has been updated.");
     },
   });
 
@@ -57,11 +59,11 @@ export default function DevPanel() {
               innerWrapper: "bg-transparent",
               inputWrapper: [
                 "shadow-xl",
-                "dark:bg-default/60",
-                "backdrop-blur-xl",
-                "backdrop-saturate-200",
-                "group-data-[focus=true]:bg-default-200/50",
-                "dark:group-data-[focus=true]:bg-default/60",
+                "bg-transparent",
+                "border",
+                "border-default-500",
+                "dark:border-default-400",
+                "group-data-[focus=true]:border-default-700",
                 "!cursor-text",
               ],
             }}

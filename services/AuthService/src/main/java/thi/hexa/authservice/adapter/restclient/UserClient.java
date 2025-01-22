@@ -1,12 +1,16 @@
 package thi.hexa.authservice.adapter.restclient;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import thi.hexa.authservice.adapter.restclient.dto.GetUserResponse;
 import thi.hexa.authservice.adapter.restclient.dto.ValidatePasswordReply;
 import thi.hexa.authservice.adapter.restclient.dto.ValidatePasswordRequest;
+import thi.hexa.authservice.application.JwtUtil;
 import thi.hexa.authservice.domain.User;
+
+import java.util.Collections;
 
 @Service
 public class UserClient {
@@ -14,10 +18,23 @@ public class UserClient {
     @Value("${userservice.url:http://localhost:8080/user}")
     private String userServiceUrl;
 
+    private String token = JwtUtil.generateAuthToken();
+
     private final RestTemplate restTemplate;
 
     public UserClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+        addAuthorizationInterceptor();
+    }
+
+    private void addAuthorizationInterceptor() {
+        // Add an interceptor to the RestTemplate to include the Authorization header
+        this.restTemplate.setInterceptors(
+                Collections.singletonList((request, body, execution) -> {
+                    request.getHeaders().add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+                    return execution.execute(request, body);
+                })
+        );
     }
 
     public boolean validatePassword(String username, String password) {
