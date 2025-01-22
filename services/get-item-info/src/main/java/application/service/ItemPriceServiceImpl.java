@@ -94,7 +94,7 @@ public class ItemPriceServiceImpl implements ItemPriceService {
                 result.setMessage(e.getMessage());
             }
 
-            // 5) Das Ergebnis in unsere Gesamtliste packen – egal ob Fehler oder Erfolg
+            // 5) Das Ergebnis in Gesamtliste packen – egal ob Fehler oder Erfolg
             results.add(result);
         }
 

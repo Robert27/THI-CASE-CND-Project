@@ -1,8 +1,5 @@
 package adapters.inbound.rest;
 
-import adapters.inbound.rest.dto.BulkCheckRequest;
-import adapters.inbound.rest.dto.BulkCheckResultDTO;
-import adapters.inbound.rest.dto.BulkCheckResponse;
 import domain.ItemPriceService;
 import domain.model.PriceLog;
 import jakarta.inject.Inject;
@@ -11,9 +8,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.enterprise.context.RequestScoped;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Path("/")
 @RequestScoped
