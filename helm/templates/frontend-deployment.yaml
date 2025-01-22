@@ -18,7 +18,10 @@ spec:
       containers:
       - env:
         - name: JWT_PUBLIC_KEY
-          value: {{ quote .Values.global.jwt.publicKey }}
+          valueFrom:
+            secretKeyRef:
+              name: jwt-keys
+              key: public.key
         - name: NEXTAUTH_SECRET
           value: {{ quote .Values.frontend.frontend.env.nextauthSecret }}
         - name: AUTH_SERVICE_URL
