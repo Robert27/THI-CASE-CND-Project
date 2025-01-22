@@ -1,6 +1,6 @@
 # Kubernetes mit Helm
 
-Ebenso ist es möglich, die Anwendung in einem Kubernetes-Cluster zu deployen. Hierfür wird Helm verwendet, um die Anwendung zu verwalten und zu konfigurieren. Es basiert auf den in der GitHub Container Registry veröffentlichten Images.
+Ebenso ist es möglich, die Anwendung in einem Kubernetes-Cluster zu deployen. Hierfür wird Helm verwendet, um die Anwendung zu verwalten und zu konfigurieren. Es basiert auf den in der GitHub Container Registry veröffentlichten Images, mehr dazu siehe [Bauautomarisierung](/usage/ci).
 
 ## Voraussetzungen
 

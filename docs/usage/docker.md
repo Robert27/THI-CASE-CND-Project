@@ -15,6 +15,7 @@ Die vertraulichen Umgebungsvariablen sind in einer `.env` Datei im Root des Proj
 ## Vorgebaute Container verwenden
 
 Die vorgebauten Container aus der GitHub Container Registry verwendet werden. Diese werden automatisch beim Pushes des jeweiligen Service Ordners gebaut und veröffentlicht. Die selben Zugriffsrechte wie für das Repository sind notwendig.
+Mehr Informationen dazu, siehe [Bauautomarisierung](/usage/ci).
 
 ```sh
 docker login ghcr.io

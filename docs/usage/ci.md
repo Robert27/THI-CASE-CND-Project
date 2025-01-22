@@ -11,3 +11,9 @@ Allerdings müssen zwangsläufig zwei Images gebaut werden, da die Anwendung auf
 
 Daher wird für den GitHub Actions Build ein eigenes Dockerfile verwendet, das nur das finale Image auf der jeweiligen Architektur bereitstellt. Das eigentliche Installieren der Abhängigkeiten und das Bauen der Anwendung wird in der GitHub Actions Konfiguration durchgeführt.
 Dies hat den Vorteil, dass die Bauzeit von etwa 10 Minuten auf etwa 2 Minuten reduziert wird. Ebenso können durch das vorgezogene Installieren der Abhängigkeiten die GitHub Cache Funktionen genutzt werden, um die Bauzeit weiter zu reduzieren.
+
+## Zugriff auf die Container Registry
+
+Die bereitgestellten Container können über die GitHub Container Registry bezogen werden. Dazu muss sich der Nutzer mit seinem GitHub Account anmelden und die Zugriffsrechte für das Repository besitzen.
+
+Die einzelnen Schritt zur Authentifizierung und zum Bezug der Container sind in den jeweiligen Dokumentation zu [Docker](/usage/docker#vorgebaute-container-verwenden) und [Kubernetes](/usage/kubernetes#container-registry-einrichtung) beschrieben.
