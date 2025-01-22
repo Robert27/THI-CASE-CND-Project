@@ -14,8 +14,15 @@ authservice:
   - name: auth-http
     targetPort: 8081
     port: 8080
-  replicas: 1
+  replicas: 2
   type: ClusterIP
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "500m"
+    limits:
+      memory: "512Mi"
+      cpu: "1"
 
 database:
   database: 
@@ -25,6 +32,13 @@ database:
     port: 5432
   replicas: 2
   type: ClusterIP
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "500m"
+    limits:
+      memory: "1Gi"
+      cpu: "2"
 
 docs:
   docs:
@@ -33,6 +47,14 @@ docs:
   - name: docs-http
     port: 80
   type: ClusterIP
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "100m"
+    limits:
+      memory: "128Mi"
+      cpu: "200m"
+
 frontend:
   frontend:
     env:
@@ -43,6 +65,14 @@ frontend:
   - name: frontend-http
     port: 3000
   type: ClusterIP
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "500m"
+    limits:
+      memory: "512Mi"
+      cpu: "1"
+
 getItemInfo:
   getItemInfo:
     env:
@@ -55,6 +85,13 @@ getItemInfo:
   - name: item-grpc
     port: 9094
   replicas: 1
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "250m"
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
   type: ClusterIP
   livenessProbe:
     httpGet:
@@ -68,6 +105,7 @@ getItemInfo:
       port: 8086
     initialDelaySeconds: 30
     periodSeconds: 5
+
 intervalMonitor:
   intervalMonitor:
     env:
@@ -84,6 +122,13 @@ intervalMonitor:
     port: 8080
     targetPort: 8081
   replicas: 1
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "250m"
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
   type: ClusterIP
   livenessProbe:
     httpGet:
@@ -98,6 +143,7 @@ intervalMonitor:
     initialDelaySeconds: 30
     periodSeconds: 5
 kubernetesClusterDomain: cluster.local
+
 objectManagement:
   objectManagement:
     env:
@@ -111,6 +157,13 @@ objectManagement:
   - name: object-grpc
     port: 9090
   replicas: 1
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "500m"
+    limits:
+      memory: "512Mi"
+      cpu: "1"
   type: ClusterIP
   livenessProbe:
     httpGet:
@@ -124,6 +177,7 @@ objectManagement:
       port: 8080
     initialDelaySeconds: 30
     periodSeconds: 5
+
 orderList:
   orderList:
     env:
@@ -139,6 +193,13 @@ orderList:
     port: 8080
     targetPort: 8082
   replicas: 1
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "500m"
+    limits:
+      memory: "512Mi"
+      cpu: "1"
   type: ClusterIP
   livenessProbe:
     httpGet:
@@ -165,6 +226,13 @@ urlValidator:
       port: 8080
       targetPort: 8085
   replicas: 1
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "100m"
+    limits:
+      memory: "128Mi"
+      cpu: "200m"
   type: ClusterIP
   livenessProbe:
     httpGet:
@@ -187,5 +255,21 @@ userservice:
     port: 8080
     targetPort: 8080
   replicas: 1
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "250m"
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
   type: ClusterIP
   image: ghcr.io/robert27/thi-case-cnd-project/user-service:latest
+
+defaultResources:
+  requests:
+    memory: "128Mi"
+    cpu: "250m"
+  limits:
+    memory: "256Mi"
+    cpu: "500m"
+

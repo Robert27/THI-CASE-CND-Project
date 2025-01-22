@@ -21,4 +21,5 @@ spec:
           value: {{ quote .Values.kubernetesClusterDomain }}
         image: {{ quote .Values.docs.docs.image }}
         name: docs
-        resources: {}
+        resources:
+          {{ include "helm.resources" (list "docs" .) | nindent 10 }}

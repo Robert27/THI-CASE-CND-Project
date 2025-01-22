@@ -30,4 +30,5 @@ spec:
           value: {{ quote .Values.kubernetesClusterDomain }}
         image: {{ .Values.frontend.frontend.image }}
         name: frontend
-        resources: {}
+        resources:
+          {{ include "helm.resources" (list "frontend" .) | nindent 10 }}

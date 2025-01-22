@@ -5,6 +5,9 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
+
+
+
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
@@ -22,6 +25,8 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 {{- end }}
 {{- end }}
+
+
 
 {{/*
 Create chart name and version as used by the chart label.
@@ -59,4 +64,21 @@ Create the name of the service account to use
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
+{{- end }}
+
+
+{{/*
+Resource requests and limits
+*/}}
+{{- define "helm.resources" -}}
+{{- $serviceName := index . 0 -}}
+{{- $ctx := index . 1 -}}
+{{- /* Access the specific service configuration under the top level of values */ -}}
+{{- $service := (index $ctx.Values $serviceName) | default dict }}
+requests:
+  memory: "{{ $service.resources.requests.memory | default $ctx.Values.defaultResources.requests.memory }}"
+  cpu: "{{ $service.resources.requests.cpu | default $ctx.Values.defaultResources.requests.cpu }}"
+limits:
+  memory: "{{ $service.resources.limits.memory | default $ctx.Values.defaultResources.limits.memory }}"
+  cpu: "{{ $service.resources.limits.cpu | default $ctx.Values.defaultResources.limits.cpu }}"
 {{- end }}

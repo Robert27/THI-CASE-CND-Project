@@ -40,4 +40,5 @@ spec:
           value: {{ quote .Values.kubernetesClusterDomain }}
         image: {{ .Values.getItemInfo.getItemInfo.image }}
         name: get-item-info
-        resources: {}
+        resources:
+          {{ include "helm.resources" (list "getItemInfo" .) | nindent 10 }}

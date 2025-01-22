@@ -45,5 +45,6 @@ spec:
           value: {{ quote .Values.kubernetesClusterDomain }}
         image: {{ .Values.orderList.orderList.image }}
         name: order-list
-        resources: {}
+        resources:
+          {{ include "helm.resources" (list "orderList" .) | nindent 10 }}
       restartPolicy: Always

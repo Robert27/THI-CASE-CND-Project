@@ -37,5 +37,6 @@ spec:
           value: {{ quote .Values.kubernetesClusterDomain }}
         image: {{ .Values.userservice.image }}
         name: userservice
-        resources: {}
+        resources:
+          {{ include "helm.resources" (list "userservice" .) | nindent 10 }}
       restartPolicy: Always

@@ -49,7 +49,8 @@ spec:
           value: {{ quote .Values.intervalMonitor.intervalMonitor.env.mockEnabled }}
         image: {{ .Values.intervalMonitor.intervalMonitor.image }}
         name: interval-monitor
-        resources: {}
+        resources:
+          {{ include "helm.resources" (list "intervalMonitor" .) | nindent 10 }}
         livenessProbe:
           {{- toYaml .Values.intervalMonitor.livenessProbe | nindent 10 }}
         readinessProbe:

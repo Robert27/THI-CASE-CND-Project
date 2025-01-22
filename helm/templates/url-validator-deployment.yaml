@@ -22,4 +22,5 @@ spec:
           value: {{ quote .Values.kubernetesClusterDomain }}
         image: {{ .Values.urlValidator.urlValidator.image }}
         name: url-validator
-        resources: {}
+        resources:
+          {{ include "helm.resources" (list "urlValidator" .) | nindent 10 }}

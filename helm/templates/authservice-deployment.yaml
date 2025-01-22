@@ -29,4 +29,5 @@ spec:
           value: {{ quote .Values.kubernetesClusterDomain }}
         image: {{ .Values.authservice.authservice.image }}
         name: authservice
-        resources: {}
+        resources:
+          {{ include "helm.resources" (list "authservice" .) | nindent 10 }}

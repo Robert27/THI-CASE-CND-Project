@@ -34,7 +34,8 @@ spec:
           initialDelaySeconds: 30
           periodSeconds: 10
         name: database
-        resources: {}
+        resources:
+          {{ include "helm.resources" (list "database" .) | nindent 10 }}
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
           name: database-data
