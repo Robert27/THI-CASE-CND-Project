@@ -11,7 +11,6 @@ Bestelllistenservice
 Der **Order List Service** verwaltet Bestellungen („Orders“) und ist Bestandteil eines größeren Systems, in dem Artikel (Items) angelegt, deren Preise überwacht und Bestellungen schließlich ausgeführt werden können.
 Anlegen von Bestellobjekten in einer Bestellliste, Ausgabe Bestellliste für User, Durchführen von Bestellungen, Löschen ("Stornieren") von Bestellungen
 
-Der folgende Text wurde von ChatGPT generiert.
 
 ## Überblick
 
@@ -60,13 +59,13 @@ Die Anwendung folgt einer **Hexagonalen Architektur** (Ports & Adapters), wodurc
   - `ABORTED` – Bestellung wurde abgebrochen
 
 - **PerformOrderResult**  
-  Enthält den Ergebnisstatus und eine Nachricht.
+  Enthält den Ergebnisstatus einer Bestellung und eine Nachricht.
 
 - **PriceResult**  
-  Enthält Informationen zu Preis, Verfügbarkeit, Log-Id und einer Status-Message.
+  Enthält Informationen zu Preis, Verfügbarkeit, Log-Id und eine Status-Message.
 
 - **ItemDetails**  
-  Beschreibt die Artikel-Details (Name, URL, Beschreibung, Menge), die von einem externen Service stammen.
+  Enthält die Artikel-Details (Name, URL, Beschreibung, Menge), die von dem Object-Management Service stammen.
 
 ---
 
@@ -87,15 +86,26 @@ Base-Path: `/orders`
    - **Request Body** (`PerformOrderRequest`):
      ```json
      {
-       "itemId": 1001,
-       "quantity": 5
+       "itemId": <ItemId>,
+       "quantity": <Quantity>
      }
      ```
-   - **Response**: HTTP-Status entsprechend Ergebnis (z. B. 200 bei Erfolg) und eine Message.
-
+   - **Response**: StatusCode entsprechend dem Ergebnis (z. B. 200 bei Erfolg) und eine Status-Message.
+     ```json
+     {
+       "statusCode": <StatusCode>,
+       "message": <Message>
+     }
+     ```
 3. **POST** `/orders/abort/{itemId}`
    - **Beschreibung**: Bricht eine offene Bestellung (OrderStatus=OPEN) ab.
-   - **Response**: 200 (OK), falls erfolgreich.
+   - **Response**: StatusCode entsprechend dem Ergebnis (z. B. 200 bei Erfolg) und eine Status-Message.
+     ```json
+     {
+       "statusCode": <StatusCode>,
+       "message": <Message>
+     }
+     ```
 
 > **Hinweis**: Nutzer muss authentifiziert sein.
 
@@ -112,15 +122,15 @@ Der gRPC-Service ist unter `OrderListServiceGrpc` implementiert.
   - **Request**:
     ```protobuf
     message GenerateOrderListRequest {
-      int32 userId = 1;
-      repeated int32 objectIds = 2;
-      string date = 3;
+      int32 userId = <UserId>;
+      repeated int32 objectIds = <ObjectIds>;
+      string date = <Date>;
     }
     ```
   - **Reply**:
     ```protobuf
     message GenerateOrderListReply {
-      bool success = 1;
+      bool success = <true/false>;
     }
     ```
   - **Beispiel**:
@@ -141,7 +151,7 @@ Diese Adapter rufen externe Services auf, um Preise bzw. Artikel-Details abzuhol
 1. **generateOrderList(userId, itemIds, cycleDate)**
 
    - Legt neue `OrderObject`s an, wenn noch keine offene oder identische Bestellung existiert.
-   - Typischer Einsatzzweck: Automatisches Bestellen bestimmter Artikel zu einem bestimmten Tag.
+   - Einsatzzweck: Automatisches Anlegen von Bestelllisten bestimmter Artikel zu einem bestimmten Tag.
 
 2. **getOpenOrders(userId)**
 
@@ -149,9 +159,9 @@ Diese Adapter rufen externe Services auf, um Preise bzw. Artikel-Details abzuhol
    - Ruft intern `ObjectManagementPort` und `PriceMonitoringPort` auf, um die Bestellungen mit Item- und Preisdaten anzureichern.
    - Setzt Verfügbarkeits-Flags und Meldungen.
 
-3. **performOrder(userId, itemId, quantity, authToken)**
+3. **performOrder(userId, itemId, quantity)**
 
-   - Prüft, ob die Bestellung (itemId) für den User überhaupt offen ist.
+   - Prüft, ob die Bestellung (itemId) für den User offen ist.
    - Ruft den **OrderExecutionPort** auf (REST-Client), um den externen Bestellvorgang auszulösen.
    - Aktualisiert den Status: `DONE` bei Erfolg oder `FAILED` bei Fehler.
 
@@ -164,7 +174,7 @@ Diese Adapter rufen externe Services auf, um Preise bzw. Artikel-Details abzuhol
 
 1. **Client** ruft `GET /orders` auf und erhält eine Liste aller offenen Bestellungen (mit Preisinfos).
 2. **Client** wählt eine Bestellung aus und ruft `POST /orders/perform` auf mit `itemId` und `quantity`.
-3. Der Service fragt bei Bedarf Details ab und ruft den OrderExecution-Endpunkt auf.
+3. Der Service fragt die Objekt-URL von dem Order-Management-Service ab und ruft den OrderExecution-Endpunkt auf.
 4. Im Erfolgsfall wird der Status auf `DONE` gesetzt und der Client bekommt eine 200-Antwort.
 
 ---
@@ -175,7 +185,7 @@ Diese Adapter rufen externe Services auf, um Preise bzw. Artikel-Details abzuhol
   - Host und Port für den PriceCheck gRPC-Service
 - `objectmanagement.host` / `objectmanagement.port`
   - Host und Port für den ObjectManagement gRPC-Service
-- Datenbankzugangskonfiguration (z. B. `quarkus.datasource.jdbc.url`, `quarkus.datasource.username`, …)
+- Datenbankzugangskonfiguration (z. B. `quarkus.datasource.jdbc.url`, `quarkus.datasource.username`, `quarkus.datasource.password`)
 - Weitere quarkus-spezifische Settings (Log Level, etc.)
 
 ---
