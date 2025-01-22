@@ -15,30 +15,63 @@ Der Service empfängt Anfragen mit einer Liste von Artikel-IDs und gibt entsprec
 ### Ablauf:
 
 1. Der Service erwartet eine gRPC-Anfrage (`PriceCheckRequest`) mit einer Liste von Artikel-IDs (`itemIds`).
-2. Um die Artikel-URLs zu erhalten, wird der **Object Management Service** mit einer entsprechenden Anfrage kontaktiert.
-3. Die URLs werden anschließend über den **Validation Service** validiert.
+2. Um die Artikel-URLs zu erhalten, wird der **Object-Management-Service** mit einer entsprechenden Anfrage kontaktiert.
+3. Die URLs werden anschließend über den **URL-Validation-Service** validiert.
 4. Bei positiver Rückmeldung wird die URL (Mock-Server) kontaktiert, um Preis und Verfügbarkeit zu erhalten.
 5. Der Service gibt eine Liste von Ergebnissen zurück. Jedes Ergebnis enthält Details zu einem Artikel.
 
 
-## Adapter
-
-### Inbound:
-- **gRPC**: `checkPrices`
-- **REST**:
-    - `checkPriceByUrl`
-    - `checkPriceById`
-    - `getLogById`
-
-### Outbound:
-- **gRPC**:
-    - `ObjectManagement`
-    - `UrlValidation`
-- **JPA**: `savePriceLog`
-- **REST**: `checkPrice`
-
 ---
 
+## Inbound Adapter
+
+#### REST-Endpunkte
+
+**Hinweis:** Einige der definierten Endpunkte existieren, werden jedoch derzeit nicht genutzt.
+
+
+| HTTP-Methode | Pfad               | Beschreibung                        | Status      |
+|--------------|--------------------|-------------------------------------|-------------|
+| `POST`       | `/check-price/url` | Überprüft den Preis eines Artikels anhand einer URL | **Nicht genutzt** |
+| `POST`       | `/check-price/id`  | Überprüft den Preis eines Artikels anhand seiner ID  | **Nicht genutzt** |
+| `GET`        | `/get-log/{logId}` | Ruft ein Preisprotokoll anhand der Log-ID ab       | **Nicht genutzt** |
+- **REST Endpunkte (`GetItemResource`):**
+    - Aktuell definiert, jedoch nicht in der Anwendung aktiv genutzt. Können in zukünftigen Erweiterungen genutzt werden (z.B. für das Abrufen älterer Preislogs für einen Preisverlauf).
+
+
+
+#### gRPC-Endpunkte
+| RPC-Methode    | Beschreibung                                     | Status          |
+|----------------|--------------------------------------------------|-----------------|
+| `checkPrices`  | Überprüft die Preise mehrerer Artikel anhand ihrer IDs | **Aktiv genutzt** |
+- **gRPC Service (`PriceCheckGrpcService`):**
+    - Aktiv genutzt zur gleichzeitigen Überprüfung der Preise mehrerer Artikel anhand ihrer Ids. 
+## Outbound Adapter
+
+| Adapter                      | Typ          | Methode              | Beschreibung                                                  | Status   |
+|------------------------------|--------------|----------------------|---------------------------------------------------------------|----------|
+| `PriceCheckAdapter`          | HTTP Adapter | `checkPrice`         | Führt einen HTTP GET-Request zur Preisüberprüfung aus        | **Aktiv genutzt**    |
+| `URLValidationGrpcClient`    | gRPC Client  | `validateUrl`        | Validiert URLs über einen externen gRPC-Service               | **Aktiv genutzt** |
+| `ObjectManagementGrpcClient` | gRPC Client  | `getReorderUrlsByIds` | Ruft Reorder-URLs für Artikel über einen externen gRPC-Service ab | **Aktiv genutzt** |
+
+- **HTTP Adapter (`PriceCheckAdapter`):**
+    - Dient zur externen Preisüberprüfung und stellt sicher, dass die Preis- und Verfügbarkeitsdaten aktuell sind.
+
+- **gRPC Clients (`URLValidationGrpcClient`, `ObjectManagementGrpcClient`):**
+    - Kommuniziert mit anderen Diensten zur URL-Validierung und zur Verwaltung von Reorder-URLs.
+
+
+### Datenbankzugriffe
+
+| Adapter              | Typ         | Methode        | Beschreibung                                      | Status  |
+|----------------------|-------------|----------------|---------------------------------------------------|---------|
+| `PriceLogRepository` | JPA/Panache | `savePriceLog` | Speichert ein `PriceLog` in der Datenbank         | **Aktiv genutzt**   |
+| `PriceLogRepository` | JPA/Panache  | `findById`     | Findet ein `PriceLog` anhand der Log-ID            | **Nicht genutzt**   |
+- **`savePriceLog`:** Wird verwendet, um neue Preisprotokolle in der Datenbank zu speichern, wodurch eine Historie der Preisüberprüfungen erstellt wird.
+- **`findById`:** Ermöglicht das Abrufen spezifischer Preisprotokolle anhand ihrer ID, was für Nachverfolgung und Analysezwecke nützlich ist.
+
+
+---
 ## Ports
 
 - `ObjectManagementPort`
@@ -55,7 +88,11 @@ Der Service empfängt Anfragen mit einer Liste von Artikel-IDs und gibt entsprec
 
 ### Models:
 - `PriceLog`
-- `BulkCheckResult` 
+- `BulkCheckResult`
+
+
+
+
 
 --- 
 ## Installation und Start in einer VM
