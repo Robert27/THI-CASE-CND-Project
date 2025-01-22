@@ -207,7 +207,7 @@ export default function OrderPage() {
             </p>
           </div>
         ) : sortedDates.length === 0 ? (
-          <Card className="max-w-screen-md mx-auto space-y-4">
+          <Card className="max-w-screen-md mx-auto space-y-4 backdrop-blur-xl bg-default-100/40">
             <CardBody className="text-center py-8">
               <h3 className="text-xl font-semibold mb-2">No Orders Found</h3>
               <p className="text-default-500">

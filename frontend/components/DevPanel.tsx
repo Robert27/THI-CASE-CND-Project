@@ -26,8 +26,11 @@ export default function DevPanel() {
   });
 
   return (
-    <Card className="max-w-xl w-full mt-8" isDisabled={!isEnabled}>
-      <CardHeader className="flex gap-3">
+    <Card
+      className="max-w-xl w-full mt-8 backdrop-blur-xl bg-default-100/30"
+      isDisabled={!isEnabled}
+    >
+      <CardHeader className="flex pb-1">
         <div className="flex flex-col">
           <div className="flex gap-2 items-center">
             <LuCog size={22} />{" "}
@@ -41,8 +44,27 @@ export default function DevPanel() {
         </div>
       </CardHeader>
       <CardBody>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           <Input
+            className="w-64 justify-center"
+            classNames={{
+              // https://stackoverflow.com/questions/78637238/change-color-textarea-nextui
+              label: "text-black/50 dark:text-white/90",
+              input: [
+                "text-black/90 dark:text-white/90",
+                "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+              ],
+              innerWrapper: "bg-transparent",
+              inputWrapper: [
+                "shadow-xl",
+                "dark:bg-default/60",
+                "backdrop-blur-xl",
+                "backdrop-saturate-200",
+                "group-data-[focus=true]:bg-default-200/50",
+                "dark:group-data-[focus=true]:bg-default/60",
+                "!cursor-text",
+              ],
+            }}
             isDisabled={!isEnabled}
             label="Mock Date"
             type="date"

@@ -312,7 +312,26 @@ export default function ObjectsPage() {
           {/* Search and New Button Section */}
           <div className="flex justify-between items-center mb-4">
             <Input
-              className="w-64  py-2  "
+              className="w-64"
+              classNames={{
+                // https://stackoverflow.com/questions/78637238/change-color-textarea-nextui
+                label: "text-black/50 dark:text-white/90",
+                input: [
+                  "text-black/90 dark:text-white/90",
+                  "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+                ],
+                innerWrapper: "bg-transparent",
+                inputWrapper: [
+                  "shadow-xl",
+                  "bg-white/70",
+                  "dark:bg-default/60",
+                  "backdrop-blur-xl",
+                  "backdrop-saturate-200",
+                  "group-data-[focus=true]:bg-default-200/50",
+                  "dark:group-data-[focus=true]:bg-default/60",
+                  "!cursor-text",
+                ],
+              }}
               placeholder="Search objects..."
               type="text"
               value={searchQuery}
@@ -321,11 +340,12 @@ export default function ObjectsPage() {
               }}
             />
             <Button
+              className="text-white font-medium"
               color="primary"
               size="md"
               onPress={() => setIsModalOpen(true)}
             >
-              <LuPlus />
+              <LuPlus scale={1.5} />
               New Object
             </Button>
           </div>
@@ -353,7 +373,7 @@ export default function ObjectsPage() {
                     </TableCell>
                     <TableCell>{item.quantity}</TableCell>
                     <TableCell>
-                      <Chip color="primary" size="sm">
+                      <Chip className="text-white" color="primary" size="sm">
                         {weekdays[item.weekday]}
                       </Chip>
                     </TableCell>
@@ -366,7 +386,7 @@ export default function ObjectsPage() {
                             size="sm"
                             onPress={() => handleEdit(item)}
                           >
-                            <LuPen />
+                            <LuPen color="white" />
                           </Button>
                         </Tooltip>
                         <Tooltip content="Duplicate this item" size="md">

@@ -29,6 +29,7 @@ export default function LoginButton() {
         <Avatar
           isBordered
           alt="User"
+          className="text-white"
           color="primary"
           name={session?.user?.username}
           size="sm"

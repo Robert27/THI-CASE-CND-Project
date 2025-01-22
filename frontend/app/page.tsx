@@ -68,11 +68,11 @@ export default function Home() {
 
         <div className="flex gap-3 flex-col mb-8 mt-8">
           <Link
-            className={buttonStyles({
+            className={`${buttonStyles({
               color: "primary",
               radius: "full",
               variant: "shadow",
-            })}
+            })} text-white`}
             href="/objects"
           >
             Get Started
@@ -80,7 +80,7 @@ export default function Home() {
           <div className="flex gap-3">
             <Link
               isExternal
-              className={buttonStyles({ variant: "bordered", radius: "full" })}
+              className={`${buttonStyles({ variant: "bordered", radius: "full" })} border-slate-400/50`}
               href={siteConfig.links.github}
             >
               <GithubIcon size={20} />
@@ -88,10 +88,10 @@ export default function Home() {
             </Link>
             <Link
               isExternal
-              className={buttonStyles({ variant: "bordered", radius: "full" })}
+              className={`${buttonStyles({ variant: "bordered", radius: "full" })}  border-slate-400/50`}
               href={siteConfig.links.docs}
             >
-              <FaBook className="text-default-500" size={20} />
+              <FaBook size={15} />
               Docs
             </Link>
           </div>
