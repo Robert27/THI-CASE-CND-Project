@@ -14,7 +14,7 @@ import {
   Select,
   SelectItem,
   Spinner,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { toast } from "react-toastify";
 
 import { StorageObject } from "@/types";

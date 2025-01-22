@@ -7,7 +7,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Link,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";

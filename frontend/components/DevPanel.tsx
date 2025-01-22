@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { LuCog } from "react-icons/lu";
-import { Card, CardBody, CardHeader, Input } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Input } from "@heroui/react";
 
 import { getMockEnabled, getMockDate, setMockDate } from "@/app/api/mock";
 

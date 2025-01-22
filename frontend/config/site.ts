@@ -1,4 +1,5 @@
 export type SiteConfig = typeof siteConfig;
+const httpHost = process.env.NEXT_PUBLIC_HTTP_HOST ?? "";
 
 export const siteConfig = {
   name: "SmartOrder",
@@ -25,6 +26,6 @@ export const siteConfig = {
   ],
   links: {
     github: "https://github.com/Robert27/THI-CASE-CND-Project",
-    docs: "/docs",
+    docs: httpHost + "/docs",
   },
 };

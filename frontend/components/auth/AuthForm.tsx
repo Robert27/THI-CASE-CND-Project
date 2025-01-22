@@ -1,4 +1,4 @@
-import { Input, Button, Spinner } from "@nextui-org/react";
+import { Input, Button, Spinner } from "@heroui/react";
 import { LuChevronRight } from "react-icons/lu";
 import Link from "next/link";
 

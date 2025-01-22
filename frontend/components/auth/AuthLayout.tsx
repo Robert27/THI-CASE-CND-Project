@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert } from "@nextui-org/react";
+import { Alert } from "@heroui/react";
 
 import { Logo } from "@/components/icons";
 

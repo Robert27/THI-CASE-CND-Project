@@ -3,7 +3,7 @@
 import type { ThemeProviderProps } from "next-themes";
 
 import * as React from "react";
-import { NextUIProvider } from "@nextui-org/system";
+import { HeroUIProvider } from "@heroui/system";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -32,7 +32,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 
   return (
     <SessionProvider>
-      <NextUIProvider navigate={router.push}>
+      <HeroUIProvider navigate={router.push}>
         <NextThemesProvider {...themeProps}>
           <ToastContainer
             draggable
@@ -51,7 +51,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
             {children}
           </QueryClientProvider>
         </NextThemesProvider>
-      </NextUIProvider>
+      </HeroUIProvider>
     </SessionProvider>
   );
 }

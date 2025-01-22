@@ -17,7 +17,7 @@ import {
   Chip,
   Tooltip,
   Input,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import Fuse from "fuse.js";
 
 import { httpHost } from "../providers";

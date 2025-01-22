@@ -22,7 +22,7 @@ import {
   Card,
   CardBody,
   Spinner,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { toast } from "react-toastify";
 
 import ErrorDisplay from "@/components/ErrorDisplay";
