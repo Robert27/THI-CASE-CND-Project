@@ -65,6 +65,10 @@ export default function AccountPage() {
     mutationFn: async () => {
       const res = await fetch(`${httpHost}/rest/user/user/${userId}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
       });
 
       if (!res.ok) {

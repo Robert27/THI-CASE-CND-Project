@@ -57,5 +57,15 @@ public class JwtUtil {
                 .signWith(getPrivateKey(), SignatureAlgorithm.RS256) // Use RS256 for signing
                 .compact();
     }
+    public static String generateAuthToken() {
+        return Jwts.builder()
+                .header().type("JWT").and()
+                .subject("authservice")
+                .issuedAt(new Date())
+                .issuer("AuthService")
+                .signWith(getPrivateKey(), SignatureAlgorithm.RS256) // Use RS256 for signing
+                .compact();
+    }
+
 }
 

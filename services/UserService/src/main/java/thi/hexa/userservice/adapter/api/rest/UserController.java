@@ -26,7 +26,14 @@ public class UserController {
     private JwtController jwtController;
 
     @GetMapping("/{user_id}")
-    public UserResponse findUser(@PathVariable int user_id){
+    public UserResponse findUser(@PathVariable int user_id, @RequestHeader("Authorization") String authHeader){
+        AuthInfo authInfo = extractAuthInfo(authHeader);
+        if (authInfo == null) {
+            throw new UnautherizedException("Unauthorized");
+        }
+        if (authInfo.isAuthservice()||authInfo.getUserId() != user_id) {
+            throw new UnautherizedException("Unauthorized");
+        }
         User u = userService.getUser(user_id);
         if(u != null){
             return new UserResponse(u.getUser_id(), u.getUsername());
@@ -35,7 +42,11 @@ public class UserController {
     }
 
     @GetMapping("username/{username}")
-    public UserResponse findUserByUsername(@PathVariable String username){
+    public UserResponse findUserByUsername(@PathVariable String username, @RequestHeader("Authorization") String authHeader){
+        AuthInfo authInfo = extractAuthInfo(authHeader);
+        if(authInfo == null || !authInfo.isAuthservice()){
+            throw new UnautherizedException("Invalid user");
+        }
         User u = userService.getUserByUsername(username);
         if(u != null){
             return new UserResponse(u.getUser_id(), u.getUsername());
@@ -83,7 +94,11 @@ public class UserController {
     }
 
     @GetMapping("/userids")
-    public UserIdsResponse getUserIds(){
+    public UserIdsResponse getUserIds(@RequestHeader("Authorization") String authHeader){
+        AuthInfo authInfo = extractAuthInfo(authHeader);
+        if(authInfo == null || !authInfo.isAuthservice()){
+            throw new UnautherizedException("Invalid user");
+        }
         List<User> ul = userService.getAllUsers();
         List<Integer> il = new ArrayList<>();
         for (User u : ul) {
