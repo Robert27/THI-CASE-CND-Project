@@ -19,27 +19,35 @@ hero:
 
 features:
   - title: Nutzerverwaltung
-    details: Ein hexagonaler Service zur Verwaltung des Nutzerkontos.
+    icon: 🧑‍💻
+    details: Ein hexagonaler Service zum Erstellen, Bearbeiten und Löschen des Nutzerkontos.
     link: /services/user-management
   - title: Authentifizierung
-    details: Ein hexagonaler Service zur Authentifizierung des Nutzers.
+    icon: 🔐
+    details: Ein hexagonaler Service zur Authentifizierung und Bereitstellung des JWT Tokens.
     link: /services/authentication
   - title: Objektverwaltung
-    details: Ein hexagonaler Service zur Verwaltung der Objekte.
+    icon: 📦
+    details: Ein hexagonaler Service zum Erstellen, Bearbeiten und Löschen von Objekten.
     link: /services/object-management
   - title: Intervall Monitoring
-    details: Ein Service zur Prüfung des Bestellzyklus.
+    icon: 🕒
+    details: Ein Service zur Prüfung von Intervallen und benachrichtigen des Bestellservices.
     link: /services/interval-monitor
   - title: URL Validierung
-    details: Ein Service zur Validierung der Produkt-URLs.
+    icon: 🔗
+    details: Ein Service zur Validierung der Produkt-URLs, bei Erstellung von Objekten.
     link: /services/url-validation
   - title: Preisüberwachung
-    details: Ein Service zur Überwachung der Produktpreise.
+    icon: 💰
+    details: Ein Service zur Überwachung der Produktpreise, zur Bereitstellung des aktuellen Preises.
     link: /services/price-check
   - title: Bestellverwaltung
-    details: Ein Service zur Verwaltung der Bestellungen.
+    icon: 📝
+    details: Ein Service zum Zusammenstellen und Bestellen der anstehenden Objekten.
     link: /services/order-management
   - title: Frontend
-    details: Ein Next.js Frontend zur Verwendung der Services.
+    icon: 🖥️
+    details: Ein React Frontend zur Verwendung der Services. Es implementiert sämtliche Funktionen.
     link: /services/frontend
 ---

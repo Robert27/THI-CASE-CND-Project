@@ -7,5 +7,5 @@ Im Frontend wird NextAuth verwendet, um die Authentifizierung auf serverseitigem
 Im Token ist neben dem Nutzernamen auch die User-ID enthalten, um die Identifikation des Nutzers zu ermöglichen. Der Nutzer daher kann nur auf seine eigenen Objekte zugreifen und bearbeiten.
 
 ::: warning Hinweis
-Folglich wird drigend empfohlen den privaten und öffentlichen Schlüssel, welcher als Demo im Repository liegt, zu ersetzen. Die Schlüssel können in der `.env` bzw. bei Helm in `jwt-secrets.yaml` (bei Verwendung von Kubernetes) angepasst werden.
+Folglich wird drigend empfohlen den privaten und öffentlichen Schlüssel, welcher als Demo im Repository liegt, zu ersetzen. Die Schlüssel können in der `.env` bzw. bei Helm in `jwt-secrets.yaml` (bei Verwendung von Kubernetes) angepasst werden. Weitere Informationen lassen sich in der [Konfiguration](/usage/configuration#encryption-key) finden.
 :::
