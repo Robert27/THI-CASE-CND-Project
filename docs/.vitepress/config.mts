@@ -10,7 +10,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: "Dokumentation", link: "/services/philosophy" },
-      { text: "Verwendung", link: "/usage/local" },
+      { text: "Verwendung", link: "/usage/docker" },
     ],
     search: {
       provider: "local",
@@ -65,7 +65,6 @@ function sidebarServices(): DefaultTheme.SidebarItem[] {
       text: "Architektur",
       collapsed: false,
       items: [
-        { text: "Philosophie", link: "philosophy" },
         { text: "Aufbau", link: "overview" },
         { text: "Limitationen", link: "limitations" },
         { text: "Sicherheit", link: "security" },
@@ -101,10 +100,17 @@ function sidebarUsage(): DefaultTheme.SidebarItem[] {
       text: "Verwendung",
       collapsed: false,
       items: [
-        { text: "Ohne Docker", link: "local" },
         { text: "Docker", link: "docker" },
         { text: "Kubernetes", link: "kubernetes" },
+        { text: "Ohne Docker", link: "local" },
+      ],
+    },
+    {
+      text: "Weitere Informationen",
+      collapsed: false,
+      items: [
         { text: "Konfiguration", link: "configuration" },
+        { text: "Bauautomatisierung", link: "ci" },
       ],
     },
   ];

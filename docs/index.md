@@ -12,10 +12,10 @@ hero:
   actions:
     - theme: brand
       text: Architektur und Services
-      link: /services/philosophy
+      link: /services/overview
     - theme: alt
       text: Verwendung
-      link: /usage/local
+      link: /usage/docker
 
 features:
   - title: Nutzerverwaltung
