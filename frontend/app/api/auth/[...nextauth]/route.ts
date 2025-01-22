@@ -30,7 +30,22 @@ const authOptions = {
         const user = await res.json();
 
         if (res.ok && user && user.token) {
-          return user;
+          try {
+            const formattedKey = process.env
+              .JWT_PUBLIC_KEY!.replace("-----BEGIN PUBLIC KEY-----", "")
+              .replace("-----END PUBLIC KEY-----", "")
+              .replace(/\\n/g, "\n");
+
+            jwt.verify(
+              user.token,
+              `-----BEGIN PUBLIC KEY-----\n${formattedKey}\n-----END PUBLIC KEY-----`
+            );
+
+            return user;
+          } catch (err) {
+            console.error("Token verification failed:", err);
+            throw new Error("Invalid token");
+          }
         } else {
           console.error("Failed to authenticate:", user);
           throw new Error(user.reason || "Failed to authenticate");

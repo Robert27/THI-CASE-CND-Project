@@ -40,6 +40,12 @@ Diese Architektur gewährleistet Zuverlässigkeit und Effizienz bei der Verarbei
 Der Service bietet Endpunkte für einen Mock-Modus, der für Demonstrations- und Testzwecke verwendet werden kann.
 Im Mock-Modus wird ein benutzerdefiniertes Datum für die Intervallprüfung verwendet und die Prüfung erfolgt alle 15 Sekunden statt alle 4 Stunden.
 
+#### Host
+
+Standalone ist der Service unter `http://localhost:8081` erreichbar.
+
+Wird die Anwendung jedoch im Docker Compose gestartet, ist der Service unter `http://localhost:4000/rest/interval` erreichbar. Bei Verwendung von Kubernetes ist der Service extern unter `http://localhost/rest/interval` erreichbar.
+
 #### Endpunkte
 
 | Method | Path          | Description                                           | Content-Type     |

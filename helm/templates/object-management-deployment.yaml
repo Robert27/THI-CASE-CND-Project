@@ -33,7 +33,10 @@ spec:
         - name: GRPC_URL_PORT
           value: {{ quote .Values.objectManagement.objectManagement.env.grpcUrlPort }}
         - name: JWT_PUBLIC_KEY
-          value: {{ quote .Values.global.jwt.publicKey }}
+          valueFrom:
+            secretKeyRef:
+              name: jwt-keys
+              key: public.key
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ quote .Values.kubernetesClusterDomain }}
         image: {{ .Values.objectManagement.objectManagement.image }}

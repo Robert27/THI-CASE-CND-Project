@@ -29,7 +29,7 @@ Die REST API bietet die Möglichkeit, Objekte zu erstellen, bearbeiten und lösc
 
 Standalone ist der Service unter `http://localhost:8080` erreichbar.
 
-Wird die Anwendung jedoch in einem Docker Container gestartet, ist der Service unter `http://localhost:4000/object` erreichbar. Dies ist durch den Reverse Proxy NGINX gewährleistet.
+Wird die Anwendung jedoch im Docker Compose gestartet, ist der Service unter `http://localhost:4000/rest/object` erreichbar. Bei Verwendung von Kubernetes ist der Service extern unter `http://localhost/rest/object` erreichbar.
 
 #### Endpunkte
 

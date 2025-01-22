@@ -14,7 +14,7 @@ openssl genrsa -out private.pem 2048
 openssl rsa -in private.pem -outform PEM -pubout -out public.pem
 ```
 
-Anschließend müssen die Schlüssel in den jeweiligen Umgebungen hinterlegt werden.
+Anschließend müssen die Schlüssel in den jeweiligen Umgebungen hinterlegt werden. Dies ist bei Docker in der `.env`-Datei und bei Helm in der `jwt-secrets.yaml`-Datei möglich.
 
 ## Mock Mode
 

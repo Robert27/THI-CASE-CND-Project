@@ -19,7 +19,10 @@ spec:
       containers:
       - env:
         - name: JWT_PRIVATE_KEY
-          value: {{ quote .Values.global.jwt.privateKey }}
+          valueFrom:
+            secretKeyRef:
+              name: jwt-keys
+              key: private.key
         - name: USERSERVICE_URL
           value: http://{{ include "helm.fullname" . }}-userservice:8080/user
         - name: KUBERNETES_CLUSTER_DOMAIN

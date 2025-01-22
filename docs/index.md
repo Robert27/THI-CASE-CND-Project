@@ -30,10 +30,16 @@ features:
   - title: Intervall Monitoring
     details: Ein Service zur Prüfung des Bestellzyklus.
     link: /services/interval-monitor
-  - title: Preis & URL Prüfung
-    details: Ein hexagonaler Service zur Prüfung der Produktpreise und URLs.
-    link: /services/price-url
+  - title: URL Validierung
+    details: Ein Service zur Validierung der Produkt-URLs.
+    link: /services/url-validation
+  - title: Preisüberwachung
+    details: Ein Service zur Überwachung der Produktpreise.
+    link: /services/price-check
   - title: Bestellverwaltung
     details: Ein Service zur Verwaltung der Bestellungen.
     link: /services/order-management
+  - title: Frontend
+    details: Ein Next.js Frontend zur Verwendung der Services.
+    link: /services/frontend
 ---
