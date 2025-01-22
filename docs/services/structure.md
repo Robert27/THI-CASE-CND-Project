@@ -1,3 +1,0 @@
-# Aufbau
-
-<!-- Content for Aufbau -->

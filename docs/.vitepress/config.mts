@@ -66,7 +66,7 @@ function sidebarServices(): DefaultTheme.SidebarItem[] {
       collapsed: false,
       items: [
         { text: "Philosophie", link: "philosophy" },
-        { text: "Aufbau", link: "structure" },
+        { text: "Aufbau", link: "overview" },
         { text: "Limitationen", link: "limitations" },
         { text: "Sicherheit", link: "security" },
       ],

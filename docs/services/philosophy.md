@@ -5,3 +5,7 @@ Ziel ist es, eine benutzerfreundliche und leicht bedienbare Lösung bereitzustel
 Dabei soll der Nutzer das gewünschte Produkt und einen Bestellzyklus in unser Dashboard einpflegen können.
 Nach Ablauf der Frist enthält eine interaktive Übersicht mit den aktuellen Produktpreisen.
 Dies erlaubt eine Anpassung und Korrektur der Bestellobjekte bevor im letzten Schritt die Bestellung getätigt wird.
+
+::: tip Hinweis
+Die genau Architekurskizze ist auf der [Architektur](/services/architecture) Seite zu finden.
+:::
