@@ -4,12 +4,11 @@ Der Intervall Monitoring Service dient der Überwachung des Bestellzyklus.
 Der Service wird in einem festen Intervall ausgeführt und prüft, ob eine Bestellung an dem aktuellen Tag fällig ist. Ist dies der Fall, wird der Bestellservice darüber informiert.
 
 - **Autor**: Robert Eggl
-- **Architektur**: n/a
 - **Technologie**: Quarkus (Java)
 
 ## Architekturbeschreibung
 
-Der **Intervall-Monitoring-Service** ist ein Dienst zur Überwachung des Bestellzyklus.
+Der **Intervall-Monitoring-Service** ist ein Dienst zur Überwachung des Bestellzyklus. Er wird regulär alle 4 Studen ausgeführt, im Mock-Modus alle 15 Sekunden.
 
 ### Funktionsweise
 
