@@ -1,9 +1,9 @@
 # Nutzerverwaltung
 
 Dieser Nutzerverwalungs Service verwaltet die Nutzeraccounts von Smartorder.
-Er bietet die Möglichkeit Nutzeraccounts zu erstellen, verändern und Löshen.
+Er bietet die Möglichkeit Nutzeraccounts zu erstellen, verändern und Löschen.
 
-Die Endpunkte dieses Services wird hauptsächlich von anderen Services verwendet.
+Die Endpunkte dieses Services werden hauptsächlich von anderen Services verwendet.
 
 - **Autor**: Andreas Ziegltrum
 - **Architektur**: Hexagonal
