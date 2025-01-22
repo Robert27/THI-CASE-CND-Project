@@ -28,6 +28,7 @@ services:
       DB_NAME: database
       DB_USERNAME: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
     ports:
       - "8080:8080"
     expose:

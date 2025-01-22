@@ -8,7 +8,6 @@ COPY src /tmp/src/
 RUN gradle build --no-daemon --parallel
 
 FROM eclipse-temurin:23-jre-alpine
-RUN apk --no-cache add bash curl
 WORKDIR /app
 COPY --from=builder /tmp/build/libs/*.jar /app/app.jar
 EXPOSE 8080

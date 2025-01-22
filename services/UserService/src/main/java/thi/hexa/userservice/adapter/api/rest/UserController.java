@@ -2,9 +2,12 @@ package thi.hexa.userservice.adapter.api.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import thi.hexa.userservice.adapter.api.jwt.JwtController;
 import thi.hexa.userservice.adapter.api.rest.dto.*;
 import thi.hexa.userservice.adapter.api.rest.exception.BadRequestException;
 import thi.hexa.userservice.adapter.api.rest.exception.ResourceNotFoundException;
+import thi.hexa.userservice.adapter.api.rest.exception.UnautherizedException;
+import thi.hexa.userservice.domain.AuthInfo;
 import thi.hexa.userservice.domain.User;
 import thi.hexa.userservice.domain.UserService;
 
@@ -18,6 +21,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private JwtController jwtController;
 
     @GetMapping("/{user_id}")
     public UserResponse findUser(@PathVariable int user_id){
@@ -56,7 +62,11 @@ public class UserController {
     }
 
     @PostMapping("/{user_id}/changepw")
-    public ChangePasswordResponse changePassword(@PathVariable int user_id, @RequestBody ChangePasswordRequest changePasswordRequest){
+    public ChangePasswordResponse changePassword(@PathVariable int user_id, @RequestBody ChangePasswordRequest changePasswordRequest,  @RequestHeader("Authorization") String authHeader){
+        AuthInfo authInfo = extractAuthInfo(authHeader);
+        if (authInfo == null || authInfo.getUserId() != user_id){
+            throw new UnautherizedException("Invalid user");
+        }
         boolean b = userService.changePassword(user_id, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
         if(b){
             return new ChangePasswordResponse(b,"success");
@@ -64,7 +74,11 @@ public class UserController {
         return new ChangePasswordResponse(b,"Password not changed");
     }
     @DeleteMapping("/{user_id}")
-    public void deleteUser(@PathVariable int user_id){
+    public void deleteUser(@PathVariable int user_id, @RequestHeader("Authorization") String authHeader){
+        AuthInfo authInfo = extractAuthInfo(authHeader);
+        if (authInfo == null || authInfo.getUserId() != user_id){
+            throw new UnautherizedException("Invalid user");
+        }
         userService.deleteUser(user_id);
     }
 
@@ -76,5 +90,13 @@ public class UserController {
             il.add(u.getUser_id());
         }
         return new UserIdsResponse(il);
+    }
+
+    private AuthInfo extractAuthInfo(String authHeader) {
+        if (!authHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("Authorization header must start with Bearer");
+        }
+        String token = authHeader.substring(7);
+        return jwtController.getAuthInfo(token);
     }
 }

@@ -51,6 +51,7 @@ dependencies {
     implementation 'net.devh:grpc-server-spring-boot-starter:3.0.0.RELEASE'
     implementation 'io.grpc:grpc-stub:1.64.0'
     implementation 'io.grpc:grpc-protobuf:1.65.1'
+    implementation 'io.jsonwebtoken:jjwt:0.12.3'
 }
 
 
