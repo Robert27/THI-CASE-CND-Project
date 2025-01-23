@@ -14,6 +14,27 @@ NGINX leitet die Anfragen an die entsprechenden Services weiter, sodass alle Bac
 - Docs: `http://localhost:4000/docs`
 - APIs: `http://localhost:4000/rest/<service_name>/<path>`
 
+## Abhängigkeiten
+
+Die `depends_on`-Funktionen sind so konfiguriert, dass die Services in der richtigen Reihenfolge gestartet werden. Die Datenbank wird zuerst gestartet, gefolgt von den Backend Services, NGINX und dem Frontend.
+Die Services sind so konfiguriert, dass sie warten, bis die Datenbank bereit ist und die Dienste mit den jeweils verwendeten gRPC-Servers erfolgreich ihre healtchecks durchgeführt haben.
+Dadurch verzögert sich der gesamte Startvorgang, allerdings wird dadurch sichergestellt, dass alle Services korrekt gestartet sind und es zu keinen Fehlern kommt.
+
+## Ressourcen
+
+Ebenso sind exemplarisch Ressourcenlimits und Reservierungen für die Services konfiguriert. Diese können in der `docker-compose.yml` entnommen und angepasst werden.
+
+```yaml
+deploy:
+  resources:
+    limits:
+      cpus: "0.5"
+      memory: "512M"
+    reservations:
+      cpus: "0.25"
+      memory: "256M"
+```
+
 ## Umgebungsvariablen
 
 Die vertraulichen Umgebungsvariablen sind in einer `.env` Datei im Root des Projekts abgelegt. Diese Datei wird von Docker Compose beim Starten der Services eingelesen. Es wird empfohlen, für die Produktion eigene Umgebungsvariablen zu verwenden.

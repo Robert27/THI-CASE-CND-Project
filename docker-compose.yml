@@ -11,10 +11,12 @@ services:
       - ./services/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
     restart: unless-stopped
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres && psql -U postgres -d database -c 'SELECT 1'"]
       interval: 5s
       timeout: 10s
-      retries: 5
+      retries: 10
+    ports:
+      - "5432:5432"
     deploy:
       resources:
         limits:
@@ -35,10 +37,10 @@ services:
       JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
     healthcheck:
       test: ["CMD-SHELL", "curl localhost:8080/actuator/health | grep UP || exit 1"]
-      interval: 5s
-      timeout: 17s
-      retries: 3
-      start_period: 60s
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
     expose:
       - 9091
       - 8080
@@ -66,9 +68,9 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "curl localhost:8081/actuator/health | grep UP || exit 1"]
       interval: 5s
-      timeout: 17s
-      retries: 3
-      start_period: 60s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
     depends_on:
       - userservice
     deploy:
@@ -92,17 +94,19 @@ services:
       GRPC_URL_HOST: url-validator
       GRPC_URL_PORT: 9092
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8080/q/health | grep UP || exit 1"]
+      test: "curl -f http://localhost:8080/q/health"
       interval: 10s
       timeout: 5s
-      retries: 3
-      start_period: 40s
+      retries: 10
+      start_period: 30s
     expose:
       - 8080
       - 9090
     restart: unless-stopped
     depends_on:
       database:
+        condition: service_healthy
+      url-validator:
         condition: service_healthy
     deploy:
       resources:
@@ -130,15 +134,21 @@ services:
       GRPC_ORDERLIST_HOST: order-list
       MOCK_ENABLED: ${MOCK_ENABLED}
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8081/q/health | grep UP || exit 1"]
+      test: "curl -f http://localhost:8081/q/health"
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 10
       start_period: 40s
     expose:
       - 8081
     restart: unless-stopped
     depends_on:
+      userservice:
+        condition: service_healthy
+      object-management:
+        condition: service_healthy
+      order-list:
+        condition: service_healthy
       database:
         condition: service_healthy
     deploy:
@@ -161,8 +171,14 @@ services:
     expose:
       - 3000
     restart: unless-stopped
+    healthcheck:
+      test: "curl -f http://localhost:3000"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
     depends_on:
-      - authservice
+      - nginx
     deploy:
       resources:
         limits:
@@ -181,12 +197,22 @@ services:
       - ./services/nginx.conf:/etc/nginx/nginx.conf:ro
     restart: unless-stopped
     depends_on:
-      - userservice
-      - authservice
-      - object-management
-      - interval-monitor
-      - frontend
-      - order-list
+      userservice:
+        condition: service_healthy
+      authservice:
+        condition: service_healthy
+      object-management:
+        condition: service_healthy
+      interval-monitor:
+        condition: service_healthy
+      order-list:
+        condition: service_healthy
+    healthcheck:
+      test: "curl -f http://localhost:4000"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
     deploy:
       resources:
         limits:
@@ -210,11 +236,11 @@ services:
       GRPC_OBJECTS_PORT: 9090
       GRPC_OBJECTS_HOST: object-management
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:8082/q/health | grep UP || exit 1" ]
+      test: "curl -f http://localhost:8082/q/health"
       interval: 10s
       timeout: 5s
-      retries: 3
-      start_period: 40s
+      retries: 10
+      start_period: 30s
     expose:
       - 9093
       - 8082
@@ -222,6 +248,11 @@ services:
     depends_on:
       database:
         condition: service_healthy
+      object-management:
+        condition: service_healthy
+      get-item-info:
+        condition: service_healthy
+      
     deploy:
       resources:
         limits:
@@ -234,11 +265,11 @@ services:
   url-validator:
     image: ghcr.io/robert27/thi-case-cnd-project/url-validator:latest
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:8085/q/health | grep UP || exit 1" ]
+      test: "curl -f http://localhost:8085/q/health"
       interval: 10s
       timeout: 5s
-      retries: 3
-      start_period: 40s
+      retries: 10
+      start_period: 30s
     expose:
       - 9092
       - 8085
@@ -265,16 +296,18 @@ services:
       GRPC_URL_PORT: 9092
       GRPC_URL_HOST: url-validator
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:8086/q/health | grep UP || exit 1" ]
+      test: "curl -f http://localhost:8086/q/health"
       interval: 10s
       timeout: 5s
-      retries: 3
-      start_period: 40s
+      retries: 10
+      start_period: 30s
     expose:
       - 8086
       - 9094
     depends_on:
       database:
+        condition: service_healthy
+      object-management:
         condition: service_healthy
     deploy:
       resources:
