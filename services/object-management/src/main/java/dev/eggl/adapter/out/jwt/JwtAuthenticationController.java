@@ -24,6 +24,7 @@ public class JwtAuthenticationController implements AuthenticationUseCase {
             String username = jwt.getClaim("username");
 
             if (userId == null || username == null) {
+                System.out.println("Invalid JWT provided");
                 throw new AuthenticationFailedException("Missing subject or username");
             }
 
@@ -31,6 +32,7 @@ public class JwtAuthenticationController implements AuthenticationUseCase {
             return new AuthenticatedUser(Integer.parseInt(userId), username);
 
         } catch (ParseException e) {
+            System.out.println("Failed to verify JWT token");
             throw new AuthenticationFailedException("Invalid token", e);
         }
     }
