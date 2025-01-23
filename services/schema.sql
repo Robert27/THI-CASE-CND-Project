@@ -63,8 +63,7 @@ create table if not exists order_object
             on delete cascade,
     log_id       integer
         constraint fk_log
-            references item_price_log
-            on delete cascade,
+            references item_price_log,
     cycle_date   varchar(20) not null,
     order_status varchar(20)
         constraint order_object_order_status_check
