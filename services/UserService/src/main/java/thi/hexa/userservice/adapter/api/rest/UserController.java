@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("user")
 @CrossOrigin(origins = "*")
-public class UserController {
+public class UserController{
 
     @Autowired
     private UserService userService;
@@ -73,7 +73,7 @@ public class UserController {
     }
 
     @PostMapping("/{user_id}/changepw")
-    public ChangePasswordResponse changePassword(@PathVariable int user_id, @RequestBody ChangePasswordRequest changePasswordRequest,  @RequestHeader("Authorization") String authHeader){
+    public ChangePasswordResponse changePassword(@PathVariable int user_id, @RequestBody ChangePasswordRequest changePasswordRequest, @RequestHeader("Authorization") String authHeader){
         AuthInfo authInfo = extractAuthInfo(authHeader);
         if (authInfo == null || authInfo.getUserId() != user_id){
             throw new UnautherizedException("Invalid user");

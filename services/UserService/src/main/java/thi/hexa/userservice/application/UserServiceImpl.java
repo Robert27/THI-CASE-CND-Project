@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import thi.hexa.userservice.domain.User;
 import thi.hexa.userservice.domain.UserService;
+import thi.hexa.userservice.ports.outgoing.MetadataCollector;
+import thi.hexa.userservice.ports.outgoing.SomeOtherOutgoingPort;
 import thi.hexa.userservice.ports.outgoing.UserRepository;
 
 import java.util.List;
@@ -15,6 +17,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SomeOtherOutgoingPort someOtherOutgoingPort;
+
+    @Autowired
+    private MetadataCollector metadataCollector;
+
     @Override
     public User createUser(String username, String password) {
         User u = new User(null,username, hashPassword(password));
@@ -23,6 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(int userId) {
+        metadataCollector.collectMetadata("");
         return userRepository.findByUserID(userId).orElse(null);
     }
 
@@ -60,6 +69,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() {
+        someOtherOutgoingPort.getInfo("allUsers");
         return userRepository.getAllUsers();
     }
 

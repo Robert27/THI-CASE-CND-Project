@@ -2,7 +2,7 @@ package thi.hexa.userservice.adapter.api.jwt;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
-import thi.hexa.userservice.adapter.api.common.JwtUtil;
+import thi.hexa.userservice.ports.in.common.JwtUtil;
 import thi.hexa.userservice.domain.AuthInfo;
 
 @Service
