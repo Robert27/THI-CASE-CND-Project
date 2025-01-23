@@ -122,7 +122,7 @@ services:
       GRPC_USERS_HOST: userservice
       GRPC_ORDERLIST_PORT: 9093
       GRPC_ORDERLIST_HOST: order-list
-      MOCK_ENABLED: true
+      MOCK_ENABLED: ${MOCK_ENABLED}
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8081/q/health | grep UP || exit 1"]
       interval: 10s

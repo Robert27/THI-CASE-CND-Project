@@ -90,6 +90,7 @@ services:
       GRPC_USERS_HOST: userservice
       GRPC_ORDERLIST_PORT: 9093
       GRPC_ORDERLIST_HOST: order-list
+      MOCK_ENABLED: ${MOCK_ENABLED}
     ports:
       - "8083:8081"
     depends_on:

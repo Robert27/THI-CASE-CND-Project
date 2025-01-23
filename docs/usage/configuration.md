@@ -1,6 +1,6 @@
 # Konfiguration
 
-Vor Verwendung sollten einige Konfigurationen vorgenommen werden. Diese können je nach Deployment-Umgebung variieren. Etwa müssen bei der Verwendung von Docker die Variablen in der `docker-compose.yml` angepasst werden, während bei der Verwendung von Kubernetes die `values.yaml`-Datei angepasst werden muss.
+Vor Verwendung sollten einige Konfigurationen vorgenommen werden. Diese können je nach Deployment-Umgebung variieren. Etwa müssen bei der Verwendung von Docker die Variablen in der `docker-compose.yml` bzw. `.env` angepasst werden, während bei der Verwendung von Kubernetes die `values.yaml`-Datei angepasst werden muss.
 
 ## Encryption Key
 
