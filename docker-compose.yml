@@ -36,7 +36,7 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
     healthcheck:
-      test: ["CMD-SHELL", "curl localhost:8080/actuator/health | grep UP || exit 1"]
+      test: ["CMD-SHELL", "curl -f localhost:8080/actuator/health"]
       interval: 10s
       timeout: 10s
       retries: 10
@@ -66,7 +66,7 @@ services:
       - 8081
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl localhost:8081/actuator/health | grep UP || exit 1"]
+      test: ["CMD-SHELL", "curl -f localhost:8081/actuator/health"]
       interval: 5s
       timeout: 10s
       retries: 10

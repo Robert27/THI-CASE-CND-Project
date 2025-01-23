@@ -42,5 +42,5 @@ spec:
       restartPolicy: Always
       livenessProbe:
           {{- toYaml .Values.userservice.livenessProbe | nindent 10 }}
-        readinessProbe:
+      readinessProbe:
           {{- toYaml .Values.userservice.readinessProbe | nindent 10 }}
