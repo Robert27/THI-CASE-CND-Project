@@ -15,8 +15,8 @@ services:
       interval: 5s
       timeout: 10s
       retries: 10
-    ports:
-      - "5432:5432"
+    expose:
+      - 5432
     deploy:
       resources:
         limits:
