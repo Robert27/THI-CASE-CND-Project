@@ -229,6 +229,59 @@ Anschließend ist die Anwendung über `http://localhost:8082` erreichbar.
 
 ---
 
+## Dockerfile
+
+Das Dockerfile des Order-List-Service umfasst die folgenden Schritte:
+
+1.  Das Maven Image als Build-Stage Image "builder" definieren:
+    ```dockerfile
+    FROM maven:3.9.9-eclipse-temurin-21 AS builder
+    ```
+2. "/app" als Arbeitsverzeichnes innerhalb des Container-Filesystems definieren:
+
+    ```dockerfile
+    WORKDIR /app
+    ```
+3. Kopieren der Projektdateien in den Container:
+   ```dockerfile
+    COPY pom.xml ./
+    COPY src ./src
+    ```
+4. Installation von Abhängigkeiten:
+   ```dockerfile
+    RUN mvn package
+    ```
+5. Festlegen des Basis Image für die Laufzeitumgebung:
+   ```dockerfile
+    FROM registry.access.redhat.com/ubi8/openjdk-21:1.20
+    ```
+6.  Sprache des Containers auf Englisch setzen
+    ```dockerfile
+    ENV LANGUAGE='en_US:en'
+    ```
+7.  Dateien und Verzeichnisse aus dem Build-Stage "builder" in das aktuelle Image kopieren:
+    ```dockerfile
+    COPY --from=builder /app/target/quarkus-app/lib/ /deployments/lib/
+    COPY --from=builder /app/target/quarkus-app/*.jar /deployments/
+    COPY --from=builder /app/target/quarkus-app/app/ /deployments/app/
+    COPY --from=builder /app/target/quarkus-app/quarkus/ /deployments/quarkus/
+    ```
+7.  Dokumentieren, dass der Container auf Port 8082 lauscht und Benutzer, unter dem der Container ausgeführt wird, auf die Benutzer-ID 185 (nicht root) setzen:
+    ```dockerfile
+    EXPOSE 8082
+    USER 185
+    ```
+8.  Konfigurieren von Parametern und Dateiverzeichnis zum Starten der Java-Anwendung:
+    ```dockerfile
+    ENV JAVA_OPTS_APPEND="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+    ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
+    ```
+9.  Starten der Anwendung mit einem Startskript:
+    ```dockerfile
+    ENTRYPOINT [ "/opt/jboss/container/java/run/run-java.sh" ]
+    ```
+
+---
 ## Zusammenfassung:
 
 Der Order List Service bietet eine zentrale Verwaltung für Bestelllisten. Er integriert mehrere externe Dienste (Preisabfrage, Artikelverwaltung, externe Bestellabwicklung), sodass **Endkunden** oder **interne Services** lediglich gegen eine REST- oder gRPC-Schnittstelle arbeiten müssen und keine Details der externen Systeme kennen. Die Anwendung folgt einer klar getrennten **Ports-&-Adapters-Architektur**, was eine gute Wartbarkeit und Erweiterbarkeit sicherstellt.
