@@ -2,7 +2,7 @@ package thi.hexa.userservice.adapter.api.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import thi.hexa.userservice.adapter.api.jwt.JwtController;
+import thi.hexa.userservice.ports.in.common.JwtPort;
 import thi.hexa.userservice.adapter.api.rest.dto.*;
 import thi.hexa.userservice.adapter.api.rest.exception.BadRequestException;
 import thi.hexa.userservice.adapter.api.rest.exception.ResourceNotFoundException;
@@ -23,7 +23,7 @@ public class UserController{
     private UserService userService;
 
     @Autowired
-    private JwtController jwtController;
+    private JwtPort jwtController;
 
     @GetMapping("/{user_id}")
     public UserResponse findUser(@PathVariable int user_id, @RequestHeader("Authorization") String authHeader){

@@ -1,12 +1,11 @@
-package thi.hexa.userservice.adapter.api.jwt;
+package thi.hexa.userservice.ports.in.common;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
-import thi.hexa.userservice.ports.in.common.JwtUtil;
 import thi.hexa.userservice.domain.AuthInfo;
 
 @Service
-public class JwtController {
+public class JwtPort {
     public AuthInfo getAuthInfo(String token) {
         Claims claims = JwtUtil.verifyToken(token);
         if (claims == null) {
