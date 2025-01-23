@@ -62,7 +62,7 @@ export default function Settings() {
     },
     onSuccess: () => {
       toast.success("Password changed successfully");
-      signOut({ callbackUrl: "/login" });
+      signOut({ callbackUrl: "/api/auth/signin" });
       localStorage.removeItem("next-auth.session-token");
     },
     onError: (error) => {
