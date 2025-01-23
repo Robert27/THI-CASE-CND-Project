@@ -1,9 +1,10 @@
 # Docker Compose
 
 Neben den einzelnen Backend Services, dem Frontend und dieser Dokumentation enthält das `docker-compose.yml` Setup auch folgende Services:
-- PostgreSQL Datenbank 
+
+- PostgreSQL Datenbank
 - NGINX als Reverse Proxy
-Beim Startup werden alle Services gebaut / gepulled und gestartet.
+  Beim Startup werden alle Services gebaut / gepulled und gestartet.
 
 Die Datenbank Migration wird durch ein `schema.sql` Script initialisiert, das beim Starten der Datenbank ausgeführt wird. Dadurch entfällt der Bedarf an einem zusätzlichen Migrationsservice oder einer Migration je Service.
 
@@ -16,6 +17,7 @@ NGINX leitet die Anfragen an die entsprechenden Services weiter, sodass alle Bac
 ## Umgebungsvariablen
 
 Die vertraulichen Umgebungsvariablen sind in einer `.env` Datei im Root des Projekts abgelegt. Diese Datei wird von Docker Compose beim Starten der Services eingelesen. Es wird empfohlen, für die Produktion eigene Umgebungsvariablen zu verwenden.
+Nähere Informationen dazu finden Sie in der [Konfigurationsdokumentation](/usage/configuration).
 
 ## Vorgebaute Container verwenden
 

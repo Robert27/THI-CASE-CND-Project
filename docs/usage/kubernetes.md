@@ -37,6 +37,17 @@ kubectl create secret docker-registry ghcr-secret \
 kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "ghcr-secret"}]}' -n smartorder
 ```
 
+## Konfiguration
+
+Die Konfiguration erfolgt über die `values.yaml`-Datei im Helm-Chart-Verzeichnis. Hier können die Umgebungsvariablen für die Anwendung angepasst werden. Dazu zählen beispielsweise die Datenbankverbindung, die Ports oder der Mock-Modus.
+
+Die besonders sensiblen Variablen wie die der private und public keys sollten in einem eigenen Secret hinterlegt werden, ähnlich wie bei der Registry-Konfiguration. Exemplarisch ist dies in der `jwt-secrets.yaml`-Datei zu sehen.
+Nähere Details zur Konfiguration finden Sie in der [Konfigurationsdokumentation](/usage/configuration).
+
+::: danger Achtung
+Die aktuelle `jwt-secrets.yaml` Datei enthält nur Beispieldaten und sollte nicht in der Produktion verwendet werden und nicht auf GitHub veröffentlicht werden, sobald sensible Daten eingetragen sind.
+:::
+
 ## Deployment der Anwendung
 
 ### 1. Abhängigkeiten aktualisieren

@@ -16,6 +16,10 @@ openssl rsa -in private.pem -outform PEM -pubout -out public.pem
 
 Anschließend müssen die Schlüssel in den jeweiligen Umgebungen hinterlegt werden. Dies ist bei Docker in der `.env`-Datei und bei Helm in der `jwt-secrets.yaml`-Datei möglich.
 
+::: danger Achtung
+Falls die Beispieldatein angepasst werden, muss darauf geachtet werden, dass diese nicht in die Versionsverwaltung gelangen. Besonders die privaten Schlüssel sollte geheim gehalten werden.
+:::
+
 ## Mock Mode
 
 Zum Testen des Interval-Monitor Services ist es möglich, diesen im Mock-Modus zu starten. Hierbei wird ein unauthentifizierter REST Endpunkt bereitgestellt, der es erlaubt einen beliebigen Tag zu setzen.
