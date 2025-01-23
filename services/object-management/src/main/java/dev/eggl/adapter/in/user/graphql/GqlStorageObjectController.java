@@ -1,6 +1,8 @@
 package dev.eggl.adapter.in.user.graphql;
 
 import dev.eggl.adapter.in.user.dto.storageObject.DeleteStorageObjectResponse;
+import dev.eggl.adapter.in.user.dto.storageObject.ListStorageObjectResponse;
+import dev.eggl.adapter.in.user.dto.storageObject.StorageObjectResponse;
 import dev.eggl.adapter.in.user.dto.storageObject.UpsertStorageObjectRequest;
 import dev.eggl.domain.model.StorageObject;
 import dev.eggl.port.in.StorageObjectUseCase;
@@ -21,7 +23,6 @@ public class GqlStorageObjectController {
     @Inject
     RoutingContext routingContext;
 
-
     public GqlStorageObjectController(StorageObjectUseCase storageObjectUseCase) {
         this.storageObjectUseCase = storageObjectUseCase;
     }
@@ -35,19 +36,18 @@ public class GqlStorageObjectController {
     }
 
     @Query("items")
-    public List<StorageObject> getAllStorageObjects() throws GraphQLException {
-
+    public ListStorageObjectResponse getAllStorageObjects() throws GraphQLException {
         String token = extractToken();
-
-        return storageObjectUseCase.findAll(token);
+        List<StorageObject> storageObjects = storageObjectUseCase.findAll(token);
+        return ListStorageObjectResponse.fromDomain(storageObjects);
     }
 
     @Mutation("createItem")
     @Transactional
-    public StorageObject createStorageObject(UpsertStorageObjectRequest input) throws GraphQLException {
+    public StorageObjectResponse createStorageObject(UpsertStorageObjectRequest input) throws GraphQLException {
         String token = extractToken();
         try {
-            return storageObjectUseCase.create(
+            StorageObject created = storageObjectUseCase.create(
                     input.name(),
                     input.description(),
                     input.categoryId(),
@@ -55,18 +55,18 @@ public class GqlStorageObjectController {
                     input.quantity(),
                     input.weekday(),
                     token);
+            return StorageObjectResponse.fromDomain(created);
         } catch (Exception e) {
             throw new GraphQLException(e.getMessage());
         }
-
     }
 
     @Mutation("updateItem")
     @Transactional
-    public StorageObject updateStorageObject(int id, UpsertStorageObjectRequest input) throws GraphQLException {
+    public StorageObjectResponse updateStorageObject(int id, UpsertStorageObjectRequest input) throws GraphQLException {
         String token = extractToken();
         try {
-            return storageObjectUseCase.update(
+            StorageObject updated = storageObjectUseCase.update(
                     id,
                     input.name(),
                     input.description(),
@@ -75,6 +75,7 @@ public class GqlStorageObjectController {
                     input.quantity(),
                     input.weekday(),
                     token);
+            return StorageObjectResponse.fromDomain(updated);
         } catch (Exception e) {
             throw new GraphQLException(e.getMessage());
         }
@@ -90,6 +91,5 @@ public class GqlStorageObjectController {
         } catch (Exception e) {
             throw new GraphQLException(e.getMessage());
         }
-
     }
 }
