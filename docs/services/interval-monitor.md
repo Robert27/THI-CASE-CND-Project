@@ -6,6 +6,12 @@ Der Service wird in einem festen Intervall ausgeführt und prüft, ob eine Beste
 - **Autor**: Robert Eggl
 - **Technologie**: Quarkus (Java)
 
+---
+
+**Inhaltsverzeichnis**
+
+[[toc]]
+
 ## Architekturbeschreibung
 
 Der **Intervall-Monitoring-Service** ist ein Dienst zur Überwachung des Bestellzyklus. Er wird regulär alle 4 Studen ausgeführt, im Mock-Modus alle 15 Sekunden.
@@ -61,6 +67,63 @@ Daneben wird von Quarkus automatisch ein Health-Check unter `/q/health` bereitge
 
 ::: warning Hinweis
 Der Mock-Modus ist nur für Entwicklungs- und Testzwecke gedacht und sollte in Produktivumgebungen deaktiviert sein. Es findet keine Überprüfung der Authentifizierung statt.
+:::
+
+## Dockerfile
+
+Das Dockerfile für den Objekt Management Service ist in `src/main/docker/Dockerfile.jvm` zu finden.
+
+Es verwendet Multi-Stage Builds, um das JAR-File zu erstellen und anschließend in einem schlanken Image zu verpacken.
+
+::: code-group
+
+```dockerfile [Build-Stage]
+FROM maven:3.9.9-eclipse-temurin-21 AS builder
+
+WORKDIR /app
+COPY pom.xml ./
+COPY src ./src
+
+RUN mvn package -batch-mode
+```
+
+```dockerfile [Run-Stage]
+FROM registry.access.redhat.com/ubi8/openjdk-21:1.20
+
+ENV LANGUAGE='en_US:en'
+
+COPY --from=builder /app/target/quarkus-app/lib/ /deployments/lib/
+COPY --from=builder /app/target/quarkus-app/*.jar /deployments/
+COPY --from=builder /app/target/quarkus-app/app/ /deployments/app/
+COPY --from=builder /app/target/quarkus-app/quarkus/ /deployments/quarkus/
+
+USER 185
+ENV JAVA_OPTS_APPEND="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
+
+ENTRYPOINT [ "/opt/jboss/container/java/run/run-java.sh" ]
+```
+
+:::
+
+1. Build-Stage: Erstellt das JAR-File mit Maven
+
+- Verwendet das Template `maven:3.9.9-eclipse-temurin-21` als Basisimage
+- Kopiert die `pom.xml` und den `src` Ordner in das Image.
+- Führt den Maven Build aus, um das JAR-File zu erstellen.
+  - Dieser Schritt installiert, testet und baut das Projekt.
+  - `-batch-mode` wird verwendet, um den interaktiven Modus zu deaktivieren.
+
+2. Run-Stage: Verpackt das JAR-File in einem schlanken Image
+
+- Verwendet das Template `registry.access.redhat.com/ubi8/openjdk-21:1.20` als Basisimage
+- Kopiert nur das gebaute JAR-File und die benötigten Dateien in das Image.
+- Setzt die von Quarkus benötigten Umgebungsvariablen. Nähere Infos lassen scih der Quarkus Dokumentation entnehmen.
+- Setzt den User auf `185`, um den Container nicht als Root zu starten.
+- Legt den Entrypoint fest, um die Anwendung zu starten.
+
+::: info Wofür ist das andere Dockerfile?
+Das `Dockerfile.gh` dient dazu, das Multi-Arch Image effizienter mit GitHub Action zu bauen. Nähere Infos lassen sich [hier](/usage/ci) entnehmen.
 :::
 
 ## Start ohne Docker

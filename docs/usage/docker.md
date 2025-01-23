@@ -1,12 +1,17 @@
 # Docker Compose
 
-Neben den einzelnen Backend Services und dem Frontend enthält das Docker Compose Setup auch eine PostgreSQL Datenbank und NGINX als Reverse Proxy. Beim Startup werden alle Services gebaut und gestartet. Mit einem Skirpt wird die Datenbank initialisiert und die Migrationen ausgeführt.
+Neben den einzelnen Backend Services, dem Frontend und dieser Dokumentation enthält das `docker-compose.yml` Setup auch folgende Services:
+- PostgreSQL Datenbank 
+- NGINX als Reverse Proxy
+Beim Startup werden alle Services gebaut / gepulled und gestartet.
+
+Die Datenbank Migration wird durch ein `schema.sql` Script initialisiert, das beim Starten der Datenbank ausgeführt wird. Dadurch entfällt der Bedarf an einem zusätzlichen Migrationsservice oder einer Migration je Service.
 
 NGINX leitet die Anfragen an die entsprechenden Services weiter, sodass alle Backend Services und das Frontend über den gemeinsamen `Port 4000` erreichbar sind, die einzelnen Pfade sind der jeweiligen Service Dokumentation zu entnehmen.
 
 - Frontend: `http://localhost:4000`
 - Docs: `http://localhost:4000/docs`
-- APIs: `http://localhost:4000/rest/<service>/<path>`
+- APIs: `http://localhost:4000/rest/<service_name>/<path>`
 
 ## Umgebungsvariablen
 
