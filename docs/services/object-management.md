@@ -1,7 +1,6 @@
 # Objekt Management Service
 
 Der Objekt Management Service ist ein Service zur Verwaltung von Objekten.
-Er bietet die Möglichkeit je Nutzer Objekte zu erstellen, bearbeiten und löschen.
 
 - **Autor**: Robert Eggl
 - **Architektur**: Hexagonal
@@ -16,8 +15,6 @@ Dieser Service stellt einen integralen Bestandteil des Gesamtsystems dar. Er ist
 ---
 
 Es wird für demonstrierende Zwecke sowohl eine **REST API** als auch eine **GraphQL API angeboten**. Beide Adapter implementieren dabei die gleiche Logik und greifen auf die gleichen Services zu. Die GraphQL API ist dabei als Erweiterung der REST API zu sehen und wird nicht im Frontend verwendet.
-
----
 
 Über diese APIs können die Objekte erstellt, bearbeitet und gelöscht werden. Die API ist durch die JWT Authentifizierung im Message Header geschützt.
 Über einen weiteren Kategorie Endpunkt können alle verfügbaren Kategorien abgerufen werden. Aufgrund des Modularitätsprinzips ist diese Abfrage unabhänging und nicht in der Objektliste enthalten. Dies könnte in einer späteren Version implementiert werden.
