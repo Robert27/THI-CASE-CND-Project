@@ -19,19 +19,26 @@ Die Endpunkte dieses Services werden hauptsächlich von anderen Services verwend
 
 ### Beschreibung
 
+- Dieser Service ist von zentraler Bedeutung. Er verwaltet die Nuzteraccounts und wird vo dem Authentifizierungs Service benötigt. 
+- Die Nuzteraccounts werden hier erstellt und verwaltet.
+
 
 
 #### Inbound Schnittstellen
 
+Es wird eine **Rest API** und eine **gRPC API** angeboten.
 
 
 
 #### Outbound Schnittstellen
 
+- Es besteht eine Datenbankanbindung, um die Entitäten zu speichern und abzurufen.
+- Weiterhin wurden zwei Mock Endpunkte hinzugefügt für Demonstrationszwecke
+
 
 ### Architektur Skizze
 
-
+<img src="../assets/gql/user-hexa" alt="GraphQL Objekt bearbeiten" />
 
 
 ### Sequenzdiagramm
@@ -40,9 +47,8 @@ Die Endpunkte dieses Services werden hauptsächlich von anderen Services verwend
 
 ### Host
 
-- Standalone ist der Service unter `http://localhost:8080` erreichbar.
 
-- Wird die Anwendung jedoch im Docker Compose gestartet, ist der Service unter `http://localhost:4000/rest/user` erreichbar.
+- Wird die Anwendung im Docker Compose gestartet, ist der Service unter `http://localhost:4000/rest/user` erreichbar.
 - Bei Verwendung von Kubernetes ist der Service extern unter `http://localhost/rest/user` erreichbar.
 
 
