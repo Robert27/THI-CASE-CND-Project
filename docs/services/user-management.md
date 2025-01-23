@@ -41,8 +41,6 @@ Es wird eine **Rest API** und eine **gRPC API** angeboten.
 <img src="../assets/user-hexa.png" alt="Architektur Skizze" />
 
 
-### Sequenzdiagramm
-
 
 
 ### Host
@@ -131,7 +129,7 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 2. Run-Stage: Verpackt das JAR-File in einem schlanken Image
 
 - Verwendet das Template `eclipse-temurin:23-jre-alpine` als Basisimage.
-- Installiert zusätzliche Tools wie `bash` und `curl` über `apk --no-cache add`.
+- Installiert zusätzliche Tools für den Healthendpunkt `bash` und `curl` über `apk --no-cache add`.
 - Setzt das Arbeitsverzeichnis auf `/app`.
 - Kopiert das gebaute JAR-File aus dem `builder`-Stage nach `/app` und benennt es als `app.jar`.
 - Öffnet die Ports `8080` und `9091`, um die Anwendung verfügbar zu machen.

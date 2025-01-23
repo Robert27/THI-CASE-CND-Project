@@ -15,8 +15,8 @@ services:
       interval: 5s
       timeout: 10s
       retries: 10
-    ports:
-      - "5432:5432"
+    expose:
+      - 5432
     deploy:
       resources:
         limits:
@@ -172,7 +172,7 @@ services:
       - 3000
     restart: unless-stopped
     healthcheck:
-      test: "curl -f http://localhost:3000"
+      test: "curl -f http://localhost:3000/api/health"
       interval: 10s
       timeout: 5s
       retries: 3
