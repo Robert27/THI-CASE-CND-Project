@@ -35,7 +35,7 @@ Zur Authentifizierung wird ein GitHub Personal Access Token (classic) benötigt.
 
 ## Lokales bauen und starten
 
-Dem Projekt liegt eine `docker-compose.dev.yml` bei, die alle Services des Projekts lokal baut und startet. Für besseres Debugging exposed sie alle Ports der Services, daher ist es nicht empfohlen, diese in Produktivumgebungen zu verwenden.
+Dem Projekt liegt eine `docker-compose.dev.yml` bei, die alle Services des Projekts lokal baut und startet. Für besseres Debugging exposed sie alle Ports der Services, daher ist es nicht empfohlen, diese in Produktivumgebungen zu verwenden. Für alle Funktionen, wie Health-Checks, sollte die normale `docker-compose.yml` verwendet werden.
 
 ```sh
 docker compose -f docker-compose.dev.yml up --build
