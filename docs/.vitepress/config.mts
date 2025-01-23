@@ -5,9 +5,11 @@ export default defineConfig({
   title: "SmartOrder Wiki",
   description: "Ein THI CSE CND Projekt",
   cleanUrls: true,
+  vite: {
+    assetsInclude: ["**/*.PNG", "**/*.png"],
+  },
   base: process.env.BASE_URL,
   lang: "de-DE",
-  assetsInclude: ['**/*.png', '**/*.PNG'],
   themeConfig: {
     nav: [
       { text: "Dokumentation", link: "/services/overview" },
