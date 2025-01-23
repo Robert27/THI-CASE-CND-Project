@@ -28,9 +28,9 @@ spec:
         livenessProbe:
           exec:
             command:
-            - pg_isready
-            - -U
-            - postgres
+            - /bin/sh
+            - -c
+            - pg_isready -U postgres && psql -U postgres -d database -c 'SELECT 1'
           initialDelaySeconds: 30
           periodSeconds: 10
         name: database
