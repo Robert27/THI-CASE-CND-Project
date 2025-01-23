@@ -7,59 +7,75 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.enterprise.context.RequestScoped;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Path("/")
 @RequestScoped
 public class GetItemResource {
 
+    private static final Logger LOG = LoggerFactory.getLogger(GetItemResource.class);
+
     @Inject
     ItemPriceService itemPriceService;
-
 
     @POST
     @Path("/check-price/url")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Response checkPriceByUrl(String url) {
+        LOG.info("checkPriceByUrl aufgerufen mit url={}", url);
+
         try {
-            // Aufruf der Service-Methode
             PriceLog priceLog = itemPriceService.checkPriceByUrl(url);
+            LOG.debug("Rückgabe PriceLog: {}", priceLog);
+
             return Response.ok(priceLog).build();
         } catch (IllegalArgumentException e) {
+            // Hier war z.B. die URL null oder leer
+            LOG.warn("IllegalArgumentException in checkPriceByUrl: {}", e.getMessage());
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(e.getMessage())
                     .build();
         } catch (IllegalStateException e) {
+            // URL war ungültig oder nicht erreichbar
+            LOG.warn("IllegalStateException in checkPriceByUrl: {}", e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(e.getMessage())
                     .build();
         } catch (Exception e) {
+            // Andere (unbekannte) Fehler
+            LOG.error("Unbekannter Fehler in checkPriceByUrl", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(e.getMessage())
                     .build();
         }
     }
 
-
     @POST
     @Path("/check-price/id")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Response checkPriceById(Integer itemId) {
+        LOG.info("checkPriceById aufgerufen mit itemId={}", itemId);
+
         try {
-            // Aufruf der Service-Methode
             PriceLog priceLog = itemPriceService.checkPriceById(itemId);
+            LOG.debug("Rückgabe PriceLog: {}", priceLog);
+
             return Response.ok(priceLog).build();
         } catch (IllegalArgumentException e) {
+            LOG.warn("IllegalArgumentException in checkPriceById: {}", e.getMessage());
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(e.getMessage())
                     .build();
         } catch (IllegalStateException e) {
+            LOG.warn("IllegalStateException in checkPriceById: {}", e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(e.getMessage())
                     .build();
         } catch (Exception e) {
+            LOG.error("Unbekannter Fehler in checkPriceById", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(e.getMessage())
                     .build();
@@ -70,15 +86,20 @@ public class GetItemResource {
     @Path("/get-log/{logId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getLogById(@PathParam("logId") Integer logId) {
+        LOG.info("getLogById aufgerufen mit logId={}", logId);
+
         try {
-            // Aufruf der Service-Methode
             PriceLog log = itemPriceService.getLogById(logId);
+            LOG.debug("Rückgabe PriceLog: {}", log);
+
             return Response.ok(log).build();
         } catch (IllegalArgumentException e) {
+            LOG.warn("IllegalArgumentException in getLogById: {}", e.getMessage());
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(e.getMessage())
                     .build();
         } catch (Exception e) {
+            LOG.error("Unbekannter Fehler in getLogById", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(e.getMessage())
                     .build();

@@ -9,14 +9,18 @@ import jakarta.inject.Singleton;
 import pricecheck.PriceCheckRequest;
 import pricecheck.PriceCheckReply;
 import pricecheck.PriceCheckServiceGrpc;
-
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 @GrpcService
 @Singleton
 public class PriceCheckGrpcService extends PriceCheckServiceGrpc.PriceCheckServiceImplBase {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PriceCheckGrpcService.class);
 
     @Inject
     ItemPriceService itemPriceService;
@@ -24,14 +28,18 @@ public class PriceCheckGrpcService extends PriceCheckServiceGrpc.PriceCheckServi
     @Override
     @Blocking
     public void checkPrices(PriceCheckRequest request, StreamObserver<PriceCheckReply> responseObserver) {
+        // Log-Einstieg
+        LOG.info("GRPC checkPrices aufgerufen mit Request: {}", request);
+
         try {
-            System.out.println("Received request: " + request);
             List<Integer> itemIds = request.getItemIdsList();
-            System.out.println("Item IDs: " + itemIds);
+            LOG.debug("Item IDs empfangen: {}", itemIds);
 
+            // Aufruf des Domänen-Services
             List<BulkCheckResult> results = itemPriceService.bulkCheckItems(itemIds);
-            System.out.println("Results: " + results);
+            LOG.debug("Ergebnisse vom ItemPriceService: {}", results);
 
+            // Zusammenbauen der Antwort
             PriceCheckReply.Builder replyBuilder = PriceCheckReply.newBuilder();
             for (BulkCheckResult result : results) {
                 replyBuilder.addResults(
@@ -46,15 +54,21 @@ public class PriceCheckGrpcService extends PriceCheckServiceGrpc.PriceCheckServi
                 );
             }
 
-            responseObserver.onNext(replyBuilder.build());
+            // Senden der Antwort
+            PriceCheckReply reply = replyBuilder.build();
+            LOG.debug("Antwort wird gesendet: {}", reply);
+            responseObserver.onNext(reply);
             responseObserver.onCompleted();
+            LOG.info("GRPC checkPrices erfolgreich abgeschlossen.");
+
         } catch (Exception e) {
-            System.err.println("Error processing request: " + e.getMessage());
-            e.printStackTrace();
-            responseObserver.onError(io.grpc.Status.INTERNAL
-                    .withDescription("Internal server error: " + e.getMessage())
-                    .withCause(e)
-                    .asRuntimeException());
+            LOG.error("Fehler in checkPrices: {}", e.getMessage(), e);
+            responseObserver.onError(
+                    io.grpc.Status.INTERNAL
+                            .withDescription("Internal server error: " + e.getMessage())
+                            .withCause(e)
+                            .asRuntimeException()
+            );
         }
     }
 }
