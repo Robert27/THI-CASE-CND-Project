@@ -1,6 +1,6 @@
-package dev.eggl.adapter.in.rest.category;
+package dev.eggl.adapter.in.user.rest;
 
-import dev.eggl.adapter.in.rest.category.dto.ListCategoryResponse;
+import dev.eggl.adapter.in.user.dto.category.ListCategoryResponse;
 import dev.eggl.domain.model.Category;
 import dev.eggl.port.in.CategoryListUseCase;
 import jakarta.ws.rs.GET;

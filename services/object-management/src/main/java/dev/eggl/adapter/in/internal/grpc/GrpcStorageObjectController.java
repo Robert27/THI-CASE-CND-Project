@@ -1,4 +1,4 @@
-package dev.eggl.adapter.in.grpc;
+package dev.eggl.adapter.in.internal.grpc;
 
 import dev.eggl.domain.model.StorageObject;
 import dev.eggl.objects.ObjectService;

@@ -1,4 +1,4 @@
-package dev.eggl.adapter.in.rest.storageObject.dto;
+package dev.eggl.adapter.in.user.dto.storageObject;
 
 public record UpsertStorageObjectRequest(
         String name,

@@ -1,9 +1,9 @@
-package dev.eggl.adapter.in.rest.storageObject;
+package dev.eggl.adapter.in.user.rest;
 
-import dev.eggl.adapter.in.rest.storageObject.dto.DeleteStorageObjectResponse;
-import dev.eggl.adapter.in.rest.storageObject.dto.ListStorageObjectResponse;
-import dev.eggl.adapter.in.rest.storageObject.dto.StorageObjectResponse;
-import dev.eggl.adapter.in.rest.storageObject.dto.UpsertStorageObjectRequest;
+import dev.eggl.adapter.in.user.dto.storageObject.DeleteStorageObjectResponse;
+import dev.eggl.adapter.in.user.dto.storageObject.ListStorageObjectResponse;
+import dev.eggl.adapter.in.user.dto.storageObject.StorageObjectResponse;
+import dev.eggl.adapter.in.user.dto.storageObject.UpsertStorageObjectRequest;
 import dev.eggl.domain.model.StorageObject;
 import dev.eggl.port.in.StorageObjectUseCase;
 import io.grpc.StatusRuntimeException;
@@ -17,7 +17,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
-import static dev.eggl.adapter.in.rest.common.ControllerCommons.*;
+import static dev.eggl.adapter.in.user.rest.common.ControllerCommons.*;
 
 @Path("/item")
 @Produces(MediaType.APPLICATION_JSON)

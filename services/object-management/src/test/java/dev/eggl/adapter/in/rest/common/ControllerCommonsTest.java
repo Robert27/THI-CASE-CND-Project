@@ -1,5 +1,6 @@
 package dev.eggl.adapter.in.rest.common;
 
+import dev.eggl.adapter.in.user.rest.common.ControllerCommons;
 import io.quarkus.security.AuthenticationFailedException;
 import jakarta.ws.rs.core.HttpHeaders;
 import org.junit.jupiter.api.Test;

@@ -74,7 +74,6 @@ public class JpaStorageObjectRepositoryImpl implements StorageObjectRepository {
         updatedStorageObjectJpaEntity.setReorderUrl(storageObjectJpaEntity.getReorderUrl());
         updatedStorageObjectJpaEntity.setQuantity(storageObjectJpaEntity.getQuantity());
         updatedStorageObjectJpaEntity.setWeekday(storageObjectJpaEntity.getWeekday());
-        // TODO: Update the updated timestamp
         panacheRepository.persist(updatedStorageObjectJpaEntity);
         return StorageObjectMapper.toDomainEntity(storageObjectJpaEntity);
     }

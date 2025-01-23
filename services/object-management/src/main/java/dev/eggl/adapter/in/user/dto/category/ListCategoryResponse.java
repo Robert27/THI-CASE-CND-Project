@@ -1,4 +1,4 @@
-package dev.eggl.adapter.in.rest.category.dto;
+package dev.eggl.adapter.in.user.dto.category;
 
 import dev.eggl.domain.model.Category;
 
