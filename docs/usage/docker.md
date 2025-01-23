@@ -62,6 +62,7 @@ Dem Projekt liegt eine `docker-compose.dev.yml` bei, die alle Services des Proje
 docker compose -f docker-compose.dev.yml up --build
 ```
 
-::: note Anmerkung
-Das dritte Docker Compose File `docker-compose.slim.yml` ist für das Deployment auf einem leistungsschwachen System gedacht. Es verwendet die vorgebauten Container und stellt keine Mindestanforderungen an die Ressourcen.
-:::
+## CI/CD
+
+Das dritte Docker Compose File `docker-compose.slim.yml` war für das Deployment auf einem leistungsschwachen System gedacht. Es verwendet die vorgebauten Container und stellt keine Mindestanforderungen an die Ressourcen, auch auf time-outs wurde verzichtet.
+Ziel war es die Anwendung auf https://smartorder.eggl.dev zu deployen, allerdings war die Performance des Servers trotz des angepassten Docker Compose Files zu schwach, um alle Container zu starten.

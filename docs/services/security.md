@@ -8,6 +8,8 @@ Im Token ist neben dem Nutzernamen auch die User-ID enthalten, um die Identifika
 
 Weiterhin verwended wird ein spzialer JWT Token, für den Zugriff auf Auth Schnittsellen des Nutzerverwaltungs Service, verwended.
 
+Derzeit werden JWT Token nicht durch das Aufrufen des Logouts invalidiert.
+
 ::: warning Hinweis
 Folglich wird drigend empfohlen den privaten und öffentlichen Schlüssel, welcher als Demo im Repository liegt, zu ersetzen. Die Schlüssel können in der `.env` bzw. bei Helm in `jwt-secrets.yaml` (bei Verwendung von Kubernetes) angepasst werden. Weitere Informationen lassen sich in der [Konfiguration](/usage/configuration#encryption-key) finden.
 :::
