@@ -7,6 +7,7 @@ export default defineConfig({
   cleanUrls: true,
   base: process.env.BASE_URL,
   lang: "de-DE",
+  assetsInclude: ['**/*.png', '**/*.PNG'],
   themeConfig: {
     nav: [
       { text: "Dokumentation", link: "/services/overview" },
