@@ -1,159 +1,152 @@
 "use client";
-import React, { useState } from "react";
-import { Button, Input } from "@heroui/react";
+
+import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { Card, CardBody, CardHeader, Button } from "@heroui/react";
+import { LuTrash2 } from "react-icons/lu";
+import { redirect } from "next/navigation";
 
 import { httpHost } from "../providers";
 
-import { AuthLayout } from "@/components/auth/AuthLayout";
+import { PasswordChangeForm } from "@/components/auth/PasswordChangeForm";
 
-export default function AccountPage() {
-  const { data: session } = useSession();
-  const userId = session?.user?.sub;
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [isError, setIsError] = useState(false);
-  const router = useRouter();
+export default function Settings() {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin");
+    },
+  });
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  // Change Password Mutation
-  const changePwMutation = useMutation({
-    mutationFn: async (payload: {
+  const passwordMutation = useMutation({
+    mutationFn: async ({
+      oldPassword,
+      password,
+    }: {
       oldPassword: string;
-      newPassword: string;
+      password: string;
     }) => {
-      const res = await fetch(`${httpHost}/rest/user/user/${userId}/changepw`, {
+      if (oldPassword === password) {
+        throw new Error("New password cannot be the same as the old password");
+      }
+
+      const url =
+        httpHost + "/rest/user/user/" + session?.user?.sub + "/changepw";
+      const body = JSON.stringify({
+        oldPassword: oldPassword,
+        newPassword: password,
+      });
+
+      console.log("url", url);
+      console.log("body", body);
+      const res = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session?.accessToken}`,
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          oldPassword: oldPassword,
+          newPassword: password,
+        }),
       });
 
       if (!res.ok) {
         const errorData = await res.json();
 
-        throw new Error(errorData.message || "Password change failed");
+        throw new Error(errorData.message || "Failed to change password");
       }
-      const data = await res.json();
-
-      if (!data.success === true) {
-        throw new Error("Password change failed");
-      }
-
-      return data;
     },
     onSuccess: () => {
-      setIsError(false);
-      setMessage("Password updated successfully! Please log in again.");
-      signOut({ redirect: false });
+      toast.success("Password changed successfully");
+      signOut({ callbackUrl: "/login" });
       localStorage.removeItem("next-auth.session-token");
-      router.push("/login");
     },
-    onError: (err: any) => {
-      setMessage(err.message);
-      setIsError(true);
+    onError: (error) => {
+      console.error("Password change error:", error);
+      toast.error(error.message);
     },
   });
 
-  // Delete Account Mutation
-  const deleteAccountMutation = useMutation({
+  const deleteMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch(`${httpHost}/rest/user/user/${userId}`, {
+      const url = httpHost + "/rest/user/user/" + session?.user?.sub;
+      const res = await fetch(url, {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${session?.accessToken}`,
         },
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
-
-        throw new Error(errorData.message || "Account deletion failed");
+        throw new Error("Failed to delete account");
       }
     },
     onSuccess: () => {
-      signOut({ redirect: false });
-      localStorage.removeItem("next-auth.session-token");
-      router.push("/");
-
       toast.success("Account deleted successfully");
+      signOut({ callbackUrl: "/login" });
     },
-    onError: (err: any) => {
-      setMessage(err.message);
-      setIsError(true);
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
-  const handleChangePassword = (e: React.FormEvent) => {
-    e.preventDefault();
-    setMessage("");
-    changePwMutation.mutate({ oldPassword, newPassword });
-  };
-
-  const handleDeleteAccount = () => {
-    if (window.confirm("Really delete your account?")) {
-      setMessage("");
-      deleteAccountMutation.mutate();
-    }
-  };
-
   return (
-    <AuthLayout
-      errorMessage={message}
-      isError={isError}
-      subtitle="Manage your account settings and password"
-      title="Account Settings"
-    >
-      <form className="space-y-8" onSubmit={handleChangePassword}>
-        <div className="space-y-4">
-          <Input
-            required
-            className="hover:scale-101 transition-transform"
-            classNames={{
-              input: "text-base",
-              inputWrapper: "py-2",
-            }}
-            label="Old Password"
-            type="password"
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
+    <div className="container mx-auto p-4 space-y-4 mt-10">
+      <Card className="max-w-xl mx-auto backdrop-blur-xl bg-default-100/40">
+        <CardHeader>
+          <h2 className="text-lg font-semibold">Change Password</h2>
+        </CardHeader>
+        <CardBody>
+          <PasswordChangeForm
+            isPending={passwordMutation.isPending}
+            onSubmit={(oldPassword: string, password: string): void =>
+              passwordMutation.mutate({ oldPassword, password })
+            }
           />
-          <Input
-            required
-            className="hover:scale-101 transition-transform"
-            classNames={{
-              input: "text-base",
-              inputWrapper: "py-2",
-            }}
-            label="New Password"
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-        </div>
-        <div className="space-y-4">
-          <Button
-            className="w-full bg-gradient-to-r from-primary to-secondary text-white font-semibold 
-                     py-3 rounded-lg transition-transform hover:scale-102 active:scale-98"
-            type="submit"
-          >
-            Change Password
-          </Button>
-          <Button
-            className="w-full bg-danger text-white font-semibold py-3 rounded-lg 
-                     transition-transform hover:scale-102 active:scale-98"
-            onPress={handleDeleteAccount}
-          >
-            Delete Account
-          </Button>
-        </div>
-      </form>
-    </AuthLayout>
+        </CardBody>
+      </Card>
+
+      <Card className="max-w-xl mx-auto backdrop-blur-xl bg-default-100/40">
+        <CardHeader>
+          <h2 className="text-lg font-semibold text-danger">Delete Account</h2>
+        </CardHeader>
+        <CardBody>
+          {!showDeleteConfirm ? (
+            <Button
+              className="bg-danger text-white"
+              startContent={<LuTrash2 />}
+              onPress={() => setShowDeleteConfirm(true)}
+            >
+              Delete Account
+            </Button>
+          ) : (
+            <div className="space-y-4">
+              <div className="flex gap-2">
+                <Button
+                  className="bg-danger text-white"
+                  isLoading={deleteMutation.isPending}
+                  onPress={() => deleteMutation.mutate()}
+                >
+                  Yes, delete my account
+                </Button>
+                <Button
+                  variant="flat"
+                  onPress={() => setShowDeleteConfirm(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+              <p className="text-sm text-danger">
+                Are you sure? This action cannot be undone.
+              </p>
+            </div>
+          )}
+        </CardBody>
+      </Card>
+    </div>
   );
 }

@@ -39,10 +39,9 @@ const Register: React.FC = () => {
       toast.success("Registration successful");
       setTimeout(() => {
         window.location.href = "/login";
-      }, 2000); // Redirect after 2 seconds to show confetti
+      }, 1750);
     },
     onError: (error) => {
-      // Handle error
       console.error("Error registering user", error);
       setErrorMessage(error.message);
     },
@@ -57,13 +56,16 @@ const Register: React.FC = () => {
   return (
     <>
       {showConfetti && (
-        <Confetti
-          colors={["#b008da", "#167af5", "#d63ef4", "#0eb4f5"]}
-          effectCount={60}
-          launchSpeed={1.3}
-          particleCount={60}
-          shapeSize={20}
-        />
+        <div className="fixed inset-0 z-50 pointer-events-none">
+          <Confetti
+            colors={["#b008da", "#167af5", "#d63ef4", "#0eb4f5"]}
+            launchSpeed={1}
+            particleCount={80}
+            shapeSize={20}
+            spreadDeg={100}
+            y={0.35}
+          />
+        </div>
       )}
       <AuthLayout
         errorMessage={errorMessage}
@@ -76,6 +78,7 @@ const Register: React.FC = () => {
           bottomText="Already have an account?"
           buttonText="Register"
           isPending={mutation.isPending}
+          isRegister={true}
           password={password}
           setPassword={setPassword}
           setUsername={setUsername}

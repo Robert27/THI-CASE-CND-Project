@@ -19,8 +19,8 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
   isError = true,
 }) => {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="w-full max-w-md p-8 space-y-8 bg-background rounded-xl shadow-lg m-4">
+    <div className="min-h-screen flex items-center justify-center relative">
+      <div className="w-full max-w-md p-8 space-y-8 backdrop-blur-xl bg-default-100/40 rounded-xl shadow-lg m-4">
         <div className="flex flex-col items-center space-y-6">
           <Logo
             className="transform hover:scale-105 transition-transform"
@@ -30,7 +30,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
             <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
               {title}
             </h1>
-            <p className="text-foreground-500">{subtitle}</p>
+            <p className="text-foreground-500 font-semibold">{subtitle}</p>
           </div>
         </div>
 

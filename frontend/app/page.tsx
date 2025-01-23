@@ -4,7 +4,7 @@ import { button as buttonStyles } from "@heroui/theme";
 import { useSession } from "next-auth/react";
 import { FaBook } from "react-icons/fa6";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Confetti from "react-confetti-boom";
 
 import { siteConfig } from "@/config/site";
@@ -17,28 +17,57 @@ export default function Home() {
   const { data: session } = useSession();
   const [showConfetti, setShowConfetti] = useState(false);
 
+  useEffect(() => {
+    if (showConfetti) {
+      const timer = setTimeout(() => setShowConfetti(false), 7500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showConfetti]);
+
   const handleSmartOrderClick = () => {
-    setShowConfetti(true);
-    setTimeout(() => setShowConfetti(false), 2000);
+    setShowConfetti((prev) => !prev);
   };
 
   return (
     <QueryClientProvider client={queryClient}>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
         {showConfetti && (
-          <Confetti
-            colors={["#b008da", "#167af5", "#d63ef4", "#0eb4f5"]}
-            effectCount={60}
-            launchSpeed={1.3}
-            particleCount={60}
-            shapeSize={20}
-          />
+          <>
+            <div className=" top-10 absolute w-full h-full">
+              <Confetti
+                colors={["#b008da", "#167af5", "#d63ef4", "#0eb4f5", "#f5a623"]}
+                effectCount={1}
+                launchSpeed={0.9}
+                particleCount={30}
+                shapeSize={20}
+                y={0.2}
+              />
+              <Confetti
+                colors={["#b008da", "#167af5", "#d63ef4", "#0eb4f5"]}
+                fadeOutHeight={1}
+                mode="fall"
+                particleCount={45}
+                shapeSize={20}
+              />
+            </div>
+          </>
         )}
         <div className="inline-block max-w-xl text-center justify-center">
           {session?.user?.username && (
-            <div className="text-3xl font-bold mb-4 animate-wiggle">
+            <span
+              className="text-3xl font-bold mb-4 animate-wiggle cursor-pointer"
+              role="button"
+              tabIndex={0}
+              onClick={handleSmartOrderClick}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  handleSmartOrderClick();
+                }
+              }}
+            >
               Hello {session.user.username} 👋
-            </div>
+            </span>
           )}
           <div className="space-y-4">
             <h1 className="text-5xl font-bold">

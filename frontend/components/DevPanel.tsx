@@ -60,9 +60,9 @@ export default function DevPanel() {
               inputWrapper: [
                 "shadow-xl",
                 "bg-transparent",
-                "border",
+                "border-2",
                 "border-default-500",
-                "dark:border-default-400",
+                "dark:border-default-400/75",
                 "group-data-[focus=true]:border-default-700",
                 "!cursor-text",
               ],
