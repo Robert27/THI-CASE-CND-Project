@@ -38,7 +38,7 @@ Es wird eine **Rest API** und eine **gRPC API** angeboten.
 
 ### Architektur Skizze
 
-<img src="../assets/gql/user-hexa" alt="GraphQL Objekt bearbeiten" />
+<img src="../assets/user-hexa" alt="GraphQL Objekt bearbeiten" />
 
 
 ### Sequenzdiagramm
