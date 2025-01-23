@@ -83,7 +83,7 @@ kubectl logs [pod-name]
 ### 4. Zugriff auf die Anwendung
 
 - Warten Sie, bis alle Pods den Status "Running" erreicht haben
-- Die Anwendung ist dann unter `http://localhost` erreichbar
+- Die Anwendung ist dann unter `http://localhost` erreichbar (Port 80)
 - Bei Problemen prüfen Sie:
   - Pod-Status (`kubectl get pods `)
   - Services (`kubectl get services `)
