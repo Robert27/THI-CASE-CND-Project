@@ -61,3 +61,7 @@ Dem Projekt liegt eine `docker-compose.dev.yml` bei, die alle Services des Proje
 ```sh
 docker compose -f docker-compose.dev.yml up --build
 ```
+
+::: note Anmerkung
+Das dritte Docker Compose File `docker-compose.slim.yml` ist für das Deployment auf einem leistungsschwachen System gedacht. Es verwendet die vorgebauten Container und stellt keine Mindestanforderungen an die Ressourcen.
+:::
