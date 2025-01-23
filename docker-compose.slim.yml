@@ -1,0 +1,253 @@
+services:
+  database:
+    image: postgres:17.2
+    container_name: database
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: database
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./services/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres && psql -U postgres -d database -c 'SELECT 1'"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    expose:
+      - 5432
+
+  userservice:
+    image: ghcr.io/robert27/thi-case-cnd-project/user-service:latest
+    environment:
+      DB_HOST: database
+      DB_NAME: database
+      DB_PORT: 5432
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
+    healthcheck:
+      test: ["CMD-SHELL", "curl localhost:8080/actuator/health | grep UP || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    expose:
+      - 9091
+      - 8080
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+
+  authservice:
+    image: ghcr.io/robert27/thi-case-cnd-project/auth-service:latest
+    environment:
+      JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
+      USERSERVICE_URL: http://userservice:8080/user
+    expose:
+      - 8081
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl localhost:8081/actuator/health | grep UP || exit 1"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    depends_on:
+      - userservice
+
+  object-management:
+    image: ghcr.io/robert27/thi-case-cnd-project/object-management:latest
+    environment:
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_PORT: 5432
+      DB_HOST: database
+      DB_NAME: database
+      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
+      GRPC_URL_HOST: url-validator
+      GRPC_URL_PORT: 9092
+    healthcheck:
+      test: "curl -f http://localhost:8080/q/health"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    expose:
+      - 8080
+      - 9090
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+      url-validator:
+        condition: service_healthy
+
+  interval-monitor:
+    image: ghcr.io/robert27/thi-case-cnd-project/interval-monitor:latest
+    environment:
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_PORT: 5432
+      DB_HOST: database
+      DB_NAME: database
+      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
+      GRPC_OBJECTS_PORT: 9090
+      GRPC_OBJECTS_HOST: object-management
+      GRPC_USERS_PORT: 9091
+      GRPC_USERS_HOST: userservice
+      GRPC_ORDERLIST_PORT: 9093
+      GRPC_ORDERLIST_HOST: order-list
+      MOCK_ENABLED: ${MOCK_ENABLED}
+    healthcheck:
+      test: "curl -f http://localhost:8081/q/health"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+    expose:
+      - 8081
+    restart: unless-stopped
+    depends_on:
+      userservice:
+        condition: service_healthy
+      object-management:
+        condition: service_healthy
+      order-list:
+        condition: service_healthy
+      database:
+        condition: service_healthy
+
+  frontend:
+    image: ghcr.io/robert27/thi-case-cnd-project/frontend:latest
+    environment:
+      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      AUTH_SERVICE_URL: http://authservice:8081/login
+      NEXT_PUBLIC_HTTP_HOST: http://localhost:4000
+      DEPLOYMENT_TYPE: compose
+    expose:
+      - 3000
+    restart: unless-stopped
+    healthcheck:
+      test: "curl -f http://localhost:3000/api/health"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      - nginx
+
+  nginx:
+    image: nginx:1.27
+    container_name: nginx
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./services/nginx.conf:/etc/nginx/nginx.conf:ro
+    restart: unless-stopped
+    depends_on:
+      userservice:
+        condition: service_healthy
+      authservice:
+        condition: service_healthy
+      object-management:
+        condition: service_healthy
+      interval-monitor:
+        condition: service_healthy
+      order-list:
+        condition: service_healthy
+    healthcheck:
+      test: "curl -f http://localhost:4000"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  order-list:
+    image: ghcr.io/robert27/thi-case-cnd-project/order-list:latest
+    environment:
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_PORT: 5432
+      DB_HOST: database
+      DB_NAME: database
+      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
+      GRPC_PRICECHECK_PORT: 9094
+      GRPC_PRICECHECK_HOST: get-item-info
+      GRPC_OBJECTS_PORT: 9090
+      GRPC_OBJECTS_HOST: object-management
+    healthcheck:
+      test: "curl -f http://localhost:8082/q/health"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    expose:
+      - 9093
+      - 8082
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+      object-management:
+        condition: service_healthy
+      get-item-info:
+        condition: service_healthy
+
+  url-validator:
+    image: ghcr.io/robert27/thi-case-cnd-project/url-validator:latest
+    healthcheck:
+      test: "curl -f http://localhost:8085/q/health"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    expose:
+      - 9092
+      - 8085
+    restart: unless-stopped
+
+
+  get-item-info:
+    image: ghcr.io/robert27/thi-case-cnd-project/get-item-info:latest
+    environment:
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_PORT: 5432
+      DB_HOST: database
+      DB_NAME: database
+      GRPC_OBJECTS_PORT: 9090
+      GRPC_OBJECTS_HOST: object-management
+      GRPC_URL_PORT: 9092
+      GRPC_URL_HOST: url-validator
+    healthcheck:
+      test: "curl -f http://localhost:8086/q/health"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    expose:
+      - 8086
+      - 9094
+    depends_on:
+      database:
+        condition: service_healthy
+      object-management:
+        condition: service_healthy
+
+  docs:
+    image: ghcr.io/robert27/thi-case-cnd-project/docs:latest
+    restart: unless-stopped
+    expose:
+      - 80
+
+
+volumes:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge
