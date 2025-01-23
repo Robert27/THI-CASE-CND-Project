@@ -26,6 +26,8 @@ spec:
           value: {{ quote .Values.frontend.frontend.env.nextauthSecret }}
         - name: AUTH_SERVICE_URL
           value: http://{{ include "helm.fullname" . }}-authservice:8080/login
+        - name: DEPLOYMENT_TYPE
+          value: {{ .Values.deploymentType }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ quote .Values.kubernetesClusterDomain }}
         image: {{ .Values.frontend.frontend.image }}

@@ -60,6 +60,7 @@ frontend:
     env:
       authServiceUrl: http://{{ include "helm.fullname" . }}-authservice:8080/login
       nextauthSecret: 9n0Gnw+JJ64DsMSXdejaLVNNlLtVzNmhijQlYorTa3Q=
+      deploymentType: helm
     image: ghcr.io/robert27/thi-case-cnd-project/frontend:latest
   ports:
   - name: frontend-http

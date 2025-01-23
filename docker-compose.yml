@@ -152,6 +152,7 @@ services:
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       AUTH_SERVICE_URL: http://authservice:8081/login
       NEXT_PUBLIC_HTTP_HOST: http://localhost:4000
+      DEPLOYMENT_TYPE: compose
     expose:
       - 3000
     restart: unless-stopped

@@ -4,6 +4,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 const AUTH_SERVICE_URL =
   process.env.AUTH_SERVICE_URL || "http://localhost:4000/rest/auth/login";
+const TYPE = process.env.DEPLOYMENT_TYPE || "local";
 
 console.log("AUTH_SERVICE_URL:", AUTH_SERVICE_URL);
 const authOptions = {
@@ -87,6 +88,32 @@ const authOptions = {
   pages: {
     signIn: "/login",
     error: "/login",
+  },
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token" + TYPE,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+      },
+    },
+    callbackUrl: {
+      name: "next-auth.callback-url-ttte" + TYPE,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+      },
+    },
+    csrfToken: {
+      name: "next-auth.csrf-token-ttte" + TYPE,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+      },
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
 };

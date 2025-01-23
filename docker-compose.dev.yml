@@ -104,6 +104,7 @@ services:
       JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       AUTH_SERVICE_URL: http://authservice:8081/login
+      DEPLOYMENT_TYPE: compose-dev
     expose:
       - 3000
     depends_on:
