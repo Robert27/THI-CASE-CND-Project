@@ -109,7 +109,7 @@ function sidebarUsage(): DefaultTheme.SidebarItem[] {
       text: "Verwendung",
       collapsed: false,
       items: [
-        { text: "Docker", link: "docker" },
+        { text: "Docker Compose", link: "docker" },
         { text: "Kubernetes", link: "kubernetes" },
         { text: "Ohne Docker", link: "local" },
       ],
