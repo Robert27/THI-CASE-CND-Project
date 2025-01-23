@@ -6,7 +6,7 @@ import { signOut, useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import { Card, CardBody, CardHeader, Button } from "@heroui/react";
 import { LuTrash2 } from "react-icons/lu";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 import { httpHost } from "../providers";
 
@@ -19,6 +19,7 @@ export default function Settings() {
       redirect("/api/auth/signin");
     },
   });
+  const router = useRouter();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const passwordMutation = useMutation({
@@ -62,8 +63,9 @@ export default function Settings() {
     },
     onSuccess: () => {
       toast.success("Password changed successfully");
-      signOut({ callbackUrl: "/api/auth/signin" });
+      signOut({ redirect: false });
       localStorage.removeItem("next-auth.session-token");
+      router.push("/login");
     },
     onError: (error) => {
       console.error("Password change error:", error);
