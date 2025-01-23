@@ -24,3 +24,15 @@ spec:
         name: url-validator
         resources:
           {{ include "helm.resources" (list "urlValidator" .) | nindent 10 }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.urlValidator.livenessProbe.httpGet.path | quote }}
+            port: {{ .Values.urlValidator.livenessProbe.httpGet.port }}
+          initialDelaySeconds: {{ .Values.urlValidator.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.urlValidator.livenessProbe.periodSeconds }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.urlValidator.readinessProbe.httpGet.path | quote }}
+            port: {{ .Values.urlValidator.readinessProbe.httpGet.port }}
+          initialDelaySeconds: {{ .Values.urlValidator.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.urlValidator.readinessProbe.periodSeconds }}

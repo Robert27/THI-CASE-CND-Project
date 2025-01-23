@@ -47,4 +47,16 @@ spec:
         name: order-list
         resources:
           {{ include "helm.resources" (list "orderList" .) | nindent 10 }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.orderList.livenessProbe.httpGet.path | quote }}
+            port: {{ .Values.orderList.livenessProbe.httpGet.port }}
+          initialDelaySeconds: {{ .Values.orderList.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.orderList.livenessProbe.periodSeconds }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.orderList.readinessProbe.httpGet.path | quote }}
+            port: {{ .Values.orderList.readinessProbe.httpGet.port }}
+          initialDelaySeconds: {{ .Values.orderList.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.orderList.readinessProbe.periodSeconds }}
       restartPolicy: Always

@@ -42,3 +42,15 @@ spec:
         name: get-item-info
         resources:
           {{ include "helm.resources" (list "getItemInfo" .) | nindent 10 }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.getItemInfo.livenessProbe.httpGet.path | quote }}
+            port: {{ .Values.getItemInfo.livenessProbe.httpGet.port }}
+          initialDelaySeconds: {{ .Values.getItemInfo.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.getItemInfo.livenessProbe.periodSeconds }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.getItemInfo.readinessProbe.httpGet.path | quote }}
+            port: {{ .Values.getItemInfo.readinessProbe.httpGet.port }}
+          initialDelaySeconds: {{ .Values.getItemInfo.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.getItemInfo.readinessProbe.periodSeconds }}
