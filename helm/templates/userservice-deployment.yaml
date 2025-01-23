@@ -39,8 +39,8 @@ spec:
         name: userservice
         resources:
           {{ include "helm.resources" (list "userservice" .) | nindent 10 }}
-      restartPolicy: Always
-      livenessProbe:
+        livenessProbe:
           {{- toYaml .Values.userservice.livenessProbe | nindent 10 }}
-      readinessProbe:
+        readinessProbe:
           {{- toYaml .Values.userservice.readinessProbe | nindent 10 }}
+      restartPolicy: Always
