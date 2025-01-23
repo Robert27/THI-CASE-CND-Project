@@ -84,7 +84,6 @@ public class UrlValidationServiceImpl extends UrlValidationServiceGrpc.UrlValida
 
         } catch (IOException e) {
             // (5) IOException => nicht erreichbar
-            LOGGER.warning("URL not reachable due to IOException: " + url);
             ValidateUrlResponse response = ValidateUrlResponse.newBuilder()
                     .setValid(true)
                     .setReachable(false)
