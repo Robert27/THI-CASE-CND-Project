@@ -1,3 +1,4 @@
+version: "3.9"
 services:
   database:
     image: postgres:17.2
@@ -15,6 +16,14 @@ services:
       interval: 5s
       timeout: 10s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"
+        reservations:
+          cpus: "0.25"
+          memory: "256M"
 
   userservice:
     image: ghcr.io/robert27/thi-case-cnd-project/user-service:latest
@@ -38,6 +47,14 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"
+        reservations:
+          cpus: "0.25"
+          memory: "256M"
 
   authservice:
     image: ghcr.io/robert27/thi-case-cnd-project/auth-service:latest
@@ -49,6 +66,14 @@ services:
     restart: unless-stopped
     depends_on:
       - userservice
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "256M"
+        reservations:
+          cpus: "0.25"
+          memory: "128M"
 
   object-management:
     image: ghcr.io/robert27/thi-case-cnd-project/object-management:latest
@@ -74,6 +99,14 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"
+        reservations:
+          cpus: "0.25"
+          memory: "256M"
 
   interval-monitor:
     image: ghcr.io/robert27/thi-case-cnd-project/interval-monitor:latest
@@ -103,6 +136,14 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"
+        reservations:
+          cpus: "0.25"
+          memory: "256M"
 
   frontend:
     image: ghcr.io/robert27/thi-case-cnd-project/frontend:latest
@@ -116,6 +157,14 @@ services:
     restart: unless-stopped
     depends_on:
       - authservice
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"
+        reservations:
+          cpus: "0.25"
+          memory: "256M"
 
   nginx:
     image: nginx:1.27
@@ -132,6 +181,14 @@ services:
       - interval-monitor
       - frontend
       - order-list
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "256M"
+        reservations:
+          cpus: "0.25"
+          memory: "128M"
 
   order-list:
     image: ghcr.io/robert27/thi-case-cnd-project/order-list:latest
@@ -159,6 +216,14 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"
+        reservations:
+          cpus: "0.25"
+          memory: "256M"
 
   url-validator:
     image: ghcr.io/robert27/thi-case-cnd-project/url-validator:latest
@@ -172,6 +237,14 @@ services:
       - 9092
       - 8085
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "256M"
+        reservations:
+          cpus: "0.25"
+          memory: "128M"
 
   get-item-info:
     image: ghcr.io/robert27/thi-case-cnd-project/get-item-info:latest
@@ -197,16 +270,31 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"
+        reservations:
+          cpus: "0.25"
+          memory: "256M"
 
   docs:
     image: ghcr.io/robert27/thi-case-cnd-project/docs:latest
     restart: unless-stopped
     expose:
       - 80
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "256M"
+        reservations:
+          cpus: "0.25"
+          memory: "128M"
 
 volumes:
   db_data:
-
 
 networks:
   app-network:
