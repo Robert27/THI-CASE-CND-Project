@@ -1,4 +1,4 @@
-package thi.hexa.userservice.adapter.api.common;
+package thi.hexa.userservice.ports.in.common;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
