@@ -6,22 +6,32 @@ Der Objekt Management Service ist ein Service zur Verwaltung von Objekten.
 - **Architektur**: Hexagonal
 - **Technologie**: Quarkus (Java)
 
+---
+
+**Inhaltsverzeichnis**
+[[toc]]
+
 ## Architektur
 
 ### Beschreibung
 
-Dieser Service stellt einen integralen Bestandteil des Gesamtsystems dar. Er ist für die Verwaltung von Objekten zuständig, die von den Nutzern erstellt werden. Die Objekte sind dabei den Nutzern zugeordnet und können in Kategorien eingeteilt werden. Jedes Objekt ist einem Wochentag zugeordnet und kann eine Nachbestell URL enthalten, welche zuvor mithilfe des URL-Validierungsdienstes validiert wurde.
+- Dieser Service stellt einen integralen Bestandteil des Gesamtsystems dar. Er ist für die Verwaltung von Objekten zuständig, die von den Nutzern erstellt werden.
+- Die Objekte mit gewünschter Anzahl sind dabei den Nutzern zugeordnet und können in Kategorien eingeteilt werden.
+- Jedes Objekt ist einem Wochentag zugeordnet und kann eine Nachbestell URL enthalten, welche zuvor mithilfe des URL-Validierungsdienstes validiert wurde.
 
----
+#### Inbound Schnittstellen
 
 Es wird für demonstrierende Zwecke sowohl eine **REST API** als auch eine **GraphQL API angeboten**. Beide Adapter implementieren dabei die gleiche Logik und greifen auf die gleichen Services zu. Die GraphQL API ist dabei als Erweiterung der REST API zu sehen und wird nicht im Frontend verwendet.
 
-Über diese APIs können die Objekte erstellt, bearbeitet und gelöscht werden. Die API ist durch die JWT Authentifizierung im Message Header geschützt.
-Über einen weiteren Kategorie Endpunkt können alle verfügbaren Kategorien abgerufen werden. Aufgrund des Modularitätsprinzips ist diese Abfrage unabhänging und nicht in der Objektliste enthalten. Dies könnte in einer späteren Version implementiert werden.
+- Ein Category Port wird angeboten, um die verfügbaren Kategorien abzurufen. Er wird mit beiden Adaptern realisiert und ist nicht durch die Authentifizierung geschützt.
+- Der StorageObject Port dient den CRUD Operationen für die Objekte. Er ist durch die Authentifizierung geschützt und ebenso in beiden Adaptern implementiert.
+- Der Internal StorageObject Port wird für die Kommunikation zwischen den Services verwendet und ist nicht durch die Authentifizierung geschützt. Er wird mittels gRPC realisiert und dient dem [Interval Service](/services/interval-monitor) und dem [Besteck Service](/services/order-management), um effizient Objekte abzurufen.
 
----
+#### Outbound Schnittstellen
 
-Des Weiteren wird ein interner gRPC Service angeboten, der die Kommunikation zwischen den Services ermöglicht. Der Objekt Management Service bietet so für den Intervall- und Besteck-Service die Möglichkeit, Objekte abzurufen. Dabei entfällt der Bedarf einer Authentifizierung, da die Kommunikation intern erfolgt.
+- Es besteht eine Datenbankanbindung, um die Entitäten zu speichern und abzurufen.
+- Daneben wird der URL Validierungsdienst via gRPC angesprochen, um die Nachbestell URL zu validieren. Dies geschieht bei der Erstellung und Bearbeitung der gespeicherten URL.
+- Zudem wird für die maximale Modularität auch die JWT Authentifizierung über einen eigenen Port gehandhabt, anstatt die Authentifizierung redundant im REST und GraphQL Adapter zu implementieren.
 
 ### Architketur Skizze
 
@@ -29,7 +39,7 @@ Des Weiteren wird ein interner gRPC Service angeboten, der die Kommunikation zwi
 
 ### Sequenzdiagramm
 
-Das folgende Sequenzdiagramm zeigt den vereinfachten Ablauf der Objektverwaltung ohne die Berücksichtigung der hexagonalen Architektur.
+Das folgende Sequenzdiagramm zeigt den vereinfachten Ablauf der Objektverwaltung ohne die Berücksichtigung der hexagonalen Architektur. Auch die GraphQL API wird hier nicht berücksichtigt.
 ::: details Sequenzdiagramm anzeigen
 ![Objekt Management Sequenzdiagramm](../assets/object-sequence.svg)
 :::
@@ -132,7 +142,7 @@ mutation {
 
 ### gRPC
 
-gRPC dient zur Kommunikation zwischen den Services und ist daher nicht von außen erreichbar.
+gRPC dient zur Kommunikation zwischen den Services und ist daher nicht von außen erreichbar, weshalb die Notwendigkeit einer Authentifizierung entfällt.
 
 ::: details gRPC Service anzeigen
 
@@ -141,6 +151,63 @@ gRPC dient zur Kommunikation zwischen den Services und ist daher nicht von auße
 | GetStorageObjectsByIds | StorageObjectIdsRequest | StorageObjectsReply | Abrufen von Speicherobjekten anhand ihrer IDs |
 | FindAllDayUsers        | DayUsersRequest         | DayUsersReply       | Finden aller Nutzer-Objekte eines Tages       |
 
+:::
+
+## Dockerfile
+
+Das Dockerfile für den Objekt Management Service ist in `src/main/docker/Dockerfile.jvm` zu finden.
+
+Es verwendet Multi-Stage Builds, um das JAR-File zu erstellen und anschließend in einem schlanken Image zu verpacken.
+
+::: code-group
+
+```dockerfile [Build-Stage]
+FROM maven:3.9.9-eclipse-temurin-21 AS builder
+
+WORKDIR /app
+COPY pom.xml ./
+COPY src ./src
+
+RUN mvn package -batch-mode
+```
+
+```dockerfile [Run-Stage]
+FROM registry.access.redhat.com/ubi8/openjdk-21:1.20
+
+ENV LANGUAGE='en_US:en'
+
+COPY --from=builder /app/target/quarkus-app/lib/ /deployments/lib/
+COPY --from=builder /app/target/quarkus-app/*.jar /deployments/
+COPY --from=builder /app/target/quarkus-app/app/ /deployments/app/
+COPY --from=builder /app/target/quarkus-app/quarkus/ /deployments/quarkus/
+
+USER 185
+ENV JAVA_OPTS_APPEND="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
+
+ENTRYPOINT [ "/opt/jboss/container/java/run/run-java.sh" ]
+```
+
+:::
+
+1. Build-Stage: Erstellt das JAR-File mit Maven
+
+- Verwendet das Template `maven:3.9.9-eclipse-temurin-21` als Basisimage
+- Kopiert die `pom.xml` und den `src` Ordner in das Image.
+- Führt den Maven Build aus, um das JAR-File zu erstellen.
+  - Dieser Schritt installiert, testet und baut das Projekt.
+  - `-batch-mode` wird verwendet, um den interaktiven Modus zu deaktivieren.
+
+2. Run-Stage: Verpackt das JAR-File in einem schlanken Image
+
+- Verwendet das Template `registry.access.redhat.com/ubi8/openjdk-21:1.20` als Basisimage
+- Kopiert nur das gebaute JAR-File und die benötigten Dateien in das Image.
+- Setzt die von Quarkus benötigten Umgebungsvariablen. Nähere Infos lassen scih der Quarkus Dokumentation entnehmen.
+- Setzt den User auf `185`, um den Container nicht als Root zu starten.
+- Legt den Entrypoint fest, um die Anwendung zu starten.
+
+::: info Wofür ist das andere Dockerfile?
+Das `Dockerfile.gh` dient dazu, das Multi-Arch Image effizienter mit GitHub Action zu bauen. Nähere Infos lassen sich [hier](/usage/ci) entnehmen.
 :::
 
 ## Start ohne Docker
