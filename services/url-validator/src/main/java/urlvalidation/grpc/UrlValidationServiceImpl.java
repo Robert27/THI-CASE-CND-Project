@@ -73,7 +73,7 @@ public class UrlValidationServiceImpl extends UrlValidationServiceGrpc.UrlValida
 
         } catch (MalformedURLException e) {
             // (4) Ungültige URL
-            LOGGER.log(Level.SEVERE, "Malformed URL: " + url, e);
+            LOGGER.log(Level.SEVERE, "Malformed URL: " + url);
             ValidateUrlResponse response = ValidateUrlResponse.newBuilder()
                     .setValid(false)
                     .setReachable(false)
@@ -84,6 +84,7 @@ public class UrlValidationServiceImpl extends UrlValidationServiceGrpc.UrlValida
 
         } catch (IOException e) {
             // (5) IOException => nicht erreichbar
+            LOGGER.log(Level.SEVERE, "URL not reachable: " + url);
             ValidateUrlResponse response = ValidateUrlResponse.newBuilder()
                     .setValid(true)
                     .setReachable(false)
