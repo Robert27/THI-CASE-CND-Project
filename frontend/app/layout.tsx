@@ -54,7 +54,7 @@ export default function RootLayout({
               </div>
             </div>
             {/* Blur Overlay */}
-            <div className="fixed inset-0 bg-background/45 backdrop-blur-[100px] -z-20" />
+            <div className="fixed inset-0 bg-background/45 backdrop-blur-[85px] -z-20" />
             {/* Dot Grid Overlay */}
             <div className="fixed inset-0 dot-grid opacity-70 -z-10 pointer-events-none" />
             <div className="relative z-0">
