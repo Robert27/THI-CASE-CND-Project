@@ -63,6 +63,12 @@ services:
     expose:
       - 8081
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl localhost:8081/actuator/health | grep UP || exit 1"]
+      interval: 5s
+      timeout: 17s
+      retries: 3
+      start_period: 60s
     depends_on:
       - userservice
     deploy:

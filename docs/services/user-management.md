@@ -67,7 +67,7 @@ Die REST API bietet die Möglichkeit, Objekte zu erstellen, bearbeiten und lösc
 | DELETE | [/user/{id}](#deleteuser)                  | Löschen eines Nutzeraccounts                                         | J |
 | Post   | [/user/checkpassword](#postcheckpassword)  | Endpunkt für Authservice für die Überprufung von Passworten          | J |
 | GET    | [/user/userids](#getuserids)               | Übergibt Liste aller vorhanden userids                               | N |
-| GET    | [/acctuator/health](#gethealth)            | Health Endpunkt                                                      | N |
+| GET    | [/actuator/health](#gethealth)             | Health Endpunkt                                                      | N |
 
 
 ### gRPC
