@@ -40,3 +40,7 @@ spec:
         resources:
           {{ include "helm.resources" (list "userservice" .) | nindent 10 }}
       restartPolicy: Always
+      livenessProbe:
+          {{- toYaml .Values.userservice.livenessProbe | nindent 10 }}
+        readinessProbe:
+          {{- toYaml .Values.userservice.readinessProbe | nindent 10 }}

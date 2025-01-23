@@ -23,6 +23,18 @@ authservice:
     limits:
       memory: "512Mi"
       cpu: "1"
+  livenessProbe:
+    httpGet:
+      path: /actuator/health
+      port: 8081
+    initialDelaySeconds: 60
+    periodSeconds: 5
+  readinessProbe:
+    httpGet:
+      path: /actuator/health
+      port: 8081
+    initialDelaySeconds: 60
+    periodSeconds: 5
 
 database:
   database: 
@@ -265,6 +277,18 @@ userservice:
       cpu: "500m"
   type: ClusterIP
   image: ghcr.io/robert27/thi-case-cnd-project/user-service:latest
+  livenessProbe:
+    httpGet:
+      path: /actuator/health
+      port: 8080
+    initialDelaySeconds: 60
+    periodSeconds: 5
+  readinessProbe:
+    httpGet:
+      path: /actuator/health
+      port: 8080
+    initialDelaySeconds: 60
+    periodSeconds: 5
 
 defaultResources:
   requests:
