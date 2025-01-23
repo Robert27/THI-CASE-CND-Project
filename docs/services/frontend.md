@@ -6,6 +6,13 @@ Natürlich bietet es auch die Möglichkeit, sich als Nutzer zu registrieren, ein
 - **Technologie**: Next.js (React)
 - **Autor**: Robert Eggl
 
+## Authentifizierung
+
+Das Frontend verwendet NextAuth.js für die Authentifizierung. Es bietet die Möglichkeit, sich mit einer User-Email und einem Passwort einzuloggen, wobei der erhaltene JWT-Token im Cookie gespeichert wird. Dieser wird für die Authentifizierung bei den API-Requests verwendet.
+
+Die Umgebungsvariablen `DEPLOYMENT_TYPE` stellt sicher, dass bei verschiedenen Deployments der richtige Authentifizierungs-Cookie verwendet wird.
+Dadurch wird sichergestellt, dass wenn `localhost` sowohl für die Dev-Umgebung, aber auch das Docker Compose Setup verwendet wird, der richtige Cookie verwendet wird und nicht noch der Nutzer angemeldet ist, obwohl sich Backend geändert hat.
+
 ## Verwenden ohne Docker
 
 Zum entwickeln und testen des Frontends ohne Docker, können Sie die folgenden Schritte befolgen. Allerdings wird empfohlen, die API über das Docker Compose Setup zu verwenden.
