@@ -28,3 +28,5 @@ Das Projekt besteht aus folgenden Microservices:
 ## Architektur-Skizze
 
 In dieser Gesamtarchitektur-Skizze sind die Abhängigkeiten zwischen den Services dargestellt.
+
+![Gesamtskizze](../assets/gesamtdiagram.PNG)
