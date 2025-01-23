@@ -416,7 +416,9 @@ export default function ObjectsPage() {
               </TableBody>
             </Table>
             <div className="text-sm text-default-500 text-center mt-4">
-              Total items: {items?.totalItems || 0}
+              {searchQuery
+                ? `Showing ${filteredItems.length} of ${items?.totalItems || 0} items`
+                : `Total items: ${items?.totalItems || 0}`}
             </div>
           </div>
         </div>

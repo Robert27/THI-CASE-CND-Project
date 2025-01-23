@@ -90,8 +90,8 @@ export default function UniversalObjectModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.categoryId || !formData.weekday) return;
-
+    if (formData.categoryId === undefined || formData.weekday === undefined)
+      return;
     setIsSubmitting(true);
     try {
       const submitData =
@@ -104,7 +104,7 @@ export default function UniversalObjectModal({
       setTimeout(() => {
         setIsSubmitting(false);
       }, 500);
-    } catch (error) {
+    } catch {
       setIsSubmitting(false);
     }
   };
@@ -113,7 +113,7 @@ export default function UniversalObjectModal({
     try {
       await navigator.clipboard.writeText(text);
       toast.success("Link copied to clipboard!");
-    } catch (err) {
+    } catch {
       toast.error("Failed to copy link");
     }
   };
@@ -136,7 +136,10 @@ export default function UniversalObjectModal({
     formData.name?.trim() !== "" &&
     formData.categoryId !== null &&
     formData.reorderUrl?.trim() !== "" &&
-    formData.weekday !== null;
+    formData.weekday !== undefined;
+
+  console.log("canSubmit", canSubmit);
+  console.log("formData", formData);
 
   return (
     <Modal isOpen={isOpen} size="2xl" onClose={onClose}>

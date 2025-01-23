@@ -53,7 +53,7 @@ const useLoadingMessages = () => {
   React.useEffect(() => {
     const interval = setInterval(() => {
       setCurrentMessage((prev) => (prev + 1) % messages.length);
-    }, 1500);
+    }, 1750);
 
     return () => clearInterval(interval);
   }, []);
