@@ -21,6 +21,7 @@ public class JpaStorageObjectRepositoryImpl implements StorageObjectRepository {
     public StorageObject save(StorageObject storageObject) {
         StorageObjectJpaEntity storageObjectJpaEntity = StorageObjectMapper.toJpaEntity(storageObject);
         panacheRepository.persist(storageObjectJpaEntity);
+        System.out.println("Successfully created storage object with id: " + storageObjectJpaEntity.getId());
         return StorageObjectMapper.toDomainEntity(storageObjectJpaEntity);
     }
 
@@ -52,7 +53,8 @@ public class JpaStorageObjectRepositoryImpl implements StorageObjectRepository {
 
         return results.stream().collect(
                 java.util.stream.Collectors.groupingBy(StorageObjectJpaEntity::getUserId,
-                        java.util.stream.Collectors.mapping(StorageObjectJpaEntity::getId, java.util.stream.Collectors.toList())));
+                        java.util.stream.Collectors.mapping(StorageObjectJpaEntity::getId,
+                                java.util.stream.Collectors.toList())));
     }
 
     @Override
@@ -75,6 +77,7 @@ public class JpaStorageObjectRepositoryImpl implements StorageObjectRepository {
         updatedStorageObjectJpaEntity.setQuantity(storageObjectJpaEntity.getQuantity());
         updatedStorageObjectJpaEntity.setWeekday(storageObjectJpaEntity.getWeekday());
         panacheRepository.persist(updatedStorageObjectJpaEntity);
+        System.out.println("Successfully updated storage object with id: " + updatedStorageObjectJpaEntity.getId());
         return StorageObjectMapper.toDomainEntity(storageObjectJpaEntity);
     }
 
@@ -86,6 +89,7 @@ public class JpaStorageObjectRepositoryImpl implements StorageObjectRepository {
             throw new IllegalArgumentException("Storage object not found");
         }
         panacheRepository.delete(storageObjectJpaEntity);
+        System.out.println("Successfully deleted storage object with id: " + storageObjectJpaEntity.getId());
         return StorageObjectMapper.toDomainEntity(storageObjectJpaEntity);
     }
 

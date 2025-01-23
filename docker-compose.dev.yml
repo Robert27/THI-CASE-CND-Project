@@ -110,7 +110,7 @@ services:
       - authservice
 
   nginx:
-    image: nginx:latest
+    image: nginx:1.27
     container_name: nginx
     ports:
       - "4000:4000"
